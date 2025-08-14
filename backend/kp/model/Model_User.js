@@ -43,6 +43,41 @@ class Model_User{
             }
         });
     }
+
+   static getAllWithUsers() {
+        return new Promise((resolve, reject) => {
+            const query = `
+                SELECT 
+                    u.id_users, u.email, u.user_level,
+                    p.id_peserta_magang, p.nama, p.nomor_identitas, p.instansi, 
+                    p.foto_diri, p.dokumen_pendukung, 
+                    p.tanggal_mulai_magang, p.tanggal_selesai_magang, 
+                    p.jenjang, p.kategori
+                FROM users AS u
+                LEFT JOIN peserta_magang AS p ON u.id_users = p.id_users
+            `;
+
+            db.query(query, (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+
+                // Parse dokumen_pendukung jika ada
+                const parsedResults = results.map(row => {
+                    if (row.dokumen_pendukung) {
+                        try {
+                            row.dokumen_pendukung = JSON.parse(row.dokumen_pendukung);
+                        } catch (e) {
+                            row.dokumen_pendukung = [];
+                        }
+                    }
+                    return row;
+                });
+
+                resolve(parsedResults);
+            });
+        });
+    }
 }
 
 module.exports = Model_User;
