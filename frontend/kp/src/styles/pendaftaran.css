@@ -1,0 +1,325 @@
+.pendaftaran-page {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to bottom right, #EAEFF5, #A5B8D4);
+    min-height: 100vh;
+}
+
+/* HERO SECTION */
+.hero {
+    background-color: #1A3359;
+    padding: 20px 0 160px;
+}
+.header {
+    max-width: 1100px;
+    margin: auto;
+    padding: 0 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.logo-wrap img {
+    height: 50px;
+}
+.logo-wrap p {
+    font-family: 'Rubik One', sans-serif;
+    color: white;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+.header a {
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    text-decoration: none;
+}
+.header a:hover {
+    text-decoration: underline;
+}
+
+/* TITLE */
+.title {
+    text-align: center;
+    margin-top: 50px;
+    color: white;
+    padding: 0 15px;
+}
+.title h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+    font-weight:600
+}
+.title hr {
+    border: none;
+    border-top: 1px solid #FEFFFE;
+    width: 42rem;
+    margin: 10px auto 0;
+}
+.title p {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 10px;
+}
+
+/* FORM BOX */
+.form-box {
+    position: relative;
+    background: rgba(254, 255, 254, 0.55);
+    max-width: 800px;
+    width: 90%;
+    margin: -120px auto 20px;
+    padding: 60px 20px 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin: 20px auto;
+}
+
+.form-box.first {
+    margin: -120px auto 20px; /* khusus form pertama */
+}
+
+/* TOP INFO */
+.top-info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(234,239,245,0.8);
+    padding: 10px 15px;
+    border-radius: 15px 15px 0 0;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.top-info button {
+    background: #7B97C1;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #FEFFFE;
+    transition: all 0.2s ease;
+}
+.top-info button:hover {
+    background: #5F7EA7;
+    transform: scale(1.05);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+.top-info button:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* FORM SECTION */
+.form-section {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.kolom {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.form-section p {
+    font-size: 11px;
+}
+
+/* FOTO + JENJANG + KATEGORI */
+.foto-jenjang {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+.upload-box {
+    flex: 0 0 107px;
+    height: 107px;
+    border: 1px dashed #2D5A9C;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    background: #FEFFFE;
+    cursor: pointer;
+}
+.upload-box input {
+    display: none;
+}
+.samping-foto {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* INPUT & SELECT */
+.kolom input,
+.kolom select {
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 25px;
+    border: 1px solid #95AFC6;
+    background-color: #FEFFFE;
+    font-size: 14px;
+    outline: none;
+}
+.kolom input:focus,
+.kolom select:focus {
+    border-color: #2D5A9C;
+    box-shadow: 0 0 5px rgba(45, 90, 156, 0.4);
+}
+
+/* SELECT CUSTOM ARROW */
+select {
+    appearance: none;
+    background: white url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 12px center;
+    background-size: 18px;
+}
+
+/* ROW 2 INPUT */
+.row-dua {
+    display: flex;
+    gap: 10px;
+}
+.row-dua input {
+    flex: 1;
+}
+
+/* INPUT FILE */
+.input-file-wrap {
+    position: relative;
+    width: 100%;
+    padding: 11px 20px;
+    border-radius: 25px;
+    border: 1px solid #95AFC6;
+    background-color: #FEFFFE;
+    font-size: 14px;
+    cursor: pointer;
+    overflow: hidden;
+}
+.input-file-wrap input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+.input-file-wrap .placeholder-text {
+    color: #777;
+}
+.input-file-wrap:hover {
+    border-color: #2D5A9C;
+    box-shadow: 0 0 5px rgba(45, 90, 156, 0.4);
+}
+
+/* SUBMIT BUTTON */
+.submit-btn {
+    text-align: center;
+    margin-bottom: 40px;
+}
+.submit-btn button {
+    width: 100%;
+    max-width: 120px;
+    padding: 12px;
+    background-color: #2D5A9C;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    margin-bottom: 50px;
+}
+.submit-btn button:hover {
+    background-color: #20406F;
+    box-shadow: 0 6px 10px rgba(0,0,0,0.25);
+}
+.submit-btn button:active {
+    transform: translateY(2px);
+    box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+}
+
+
+
+/* Tombol Scroll ke Atas */
+.scroll-top-btn {
+    position: fixed;
+    bottom: 30px; /* jarak dari bawah halaman */
+    right: 30px;  /* jarak dari kanan halaman */
+    font-size: 30px; /* ukuran icon */
+    color: #2D5A9C; /* warna icon */
+    background: rgba(255, 255, 255, 0.85); /* latar belakang semi-transparan */
+
+    border-radius: 50%; /* bentuk bulat */
+    padding: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    z-index: 999; /* agar selalu di atas */
+}
+
+.scroll-top-btn:hover {
+    color: #FEFFFE;
+    background-color: #2D5A9C;
+    transform: scale(1.1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .form-section {
+        flex-direction: column;
+    }
+    .foto-jenjang {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .samping-foto {
+        flex-direction: row;
+        gap: 10px;
+    }
+    .samping-foto select {
+        flex: 1;
+    }
+    .row-dua {
+        flex-direction: column;
+    }
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    .header a {
+        font-size: 11px;
+        line-height: 1.4;
+        margin-left: 0;
+    }
+    .submit-btn button{
+        margin-bottom: 50px; 
+    }
+}
+
+
+
