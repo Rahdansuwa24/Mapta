@@ -28,10 +28,24 @@ const fileFilter = (req, file, cb) => {
     cb(null, true);
 };
 
+function hapusFiles(files) {
+    if (!files) return;
+    for (const field in files) {
+        files[field].forEach(file => {
+            const dir = file.fieldname === 'foto_diri' ? imageDir : docDir;
+            const filepath = path.join(dir, file.filename);
+            fs.unlink(filepath, err => {
+                if (err) console.error('Gagal hapus file:', file.filename);
+                else console.log('File dihapus:', file.filename);
+            });
+        });
+    }
+}
+
 const upload = multer({
     storage: storage,
     limits: { fileSize: 5 * 1024 * 1024 }, // 1MB
     fileFilter: fileFilter
 });
 
-module.exports = {fs, upload}
+module.exports = {fs, upload, hapusFiles}

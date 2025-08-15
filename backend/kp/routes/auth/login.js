@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
         const result = await Model_Users.login(email, password);
         res.json(result);
     } catch (error) {
-        res.status(error.status || 500).json({ message: error.message });
+        res.status(error.status).json({ message: error.message });
     }
 });
 
