@@ -31,7 +31,7 @@ const fileFilter = (req, file, cb) => {
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         ];
         if (!allowedTypes.includes(file.mimetype)) {
-            return cb(new Error('Format file tidak diperbolehkan! Hanya gambar (JPEG, PNG, JPG, WEBP, DOC, PDF'), false);
+            return cb(new Error('Format file tidak diperbolehkan! Hanya gambar (DOC, PDF'), false);
         }
     }
 

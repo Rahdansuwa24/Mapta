@@ -8,8 +8,12 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var logUser = require('./routes/auth/login')
 var regisPeserta = require('./routes/peserta/register')
+var dashboardAdmin = require('./routes/admin/dashboard')
+var jadwalAdmin =  require('./routes/admin/jadwal')
 
 var app = express();
+var dotenv = require('dotenv')
+dotenv.config()
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,6 +31,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login', logUser)
 app.use('/peserta', regisPeserta)
+app.use('/admin/dasbor', dashboardAdmin)
+app.use('/admin/jadwal', jadwalAdmin)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

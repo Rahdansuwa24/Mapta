@@ -9,7 +9,6 @@ router.post('/', async (req, res) => {
     if (!email || !password) {
         return res.status(400).json({ message: 'email dan password tidak boleh kosong' });
     }
-
     try {
         const result = await Model_Users.login(email, password);
         res.json(result);

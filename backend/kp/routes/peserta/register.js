@@ -132,8 +132,7 @@ router.post('/register', upload.fields([
 router.get('/', async (req, res) => {
     try {
         const data = await Model_User.getAllWithUsers();
-        console.log(data)
-        res.json({ status: true, data });
+        res.json(data);
     } catch (err) {
         res.status(500).json({ status: false, error: err.message });
     }
