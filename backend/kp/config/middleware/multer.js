@@ -19,10 +19,20 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/jpg','image/png', 'image/webp', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-
-    if (!allowedTypes.includes(file.mimetype)) {
-        return cb(new Error('Format file tidak diperbolehkan! Hanya gambar (JPEG, PNG, JPG, WEBP, DOC, PDF'), false);
+    if(file.fieldname === 'foto_diri'){
+        const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        if (!allowedImageTypes.includes(file.mimetype)) {
+            return cb(new Error('Foto diri harus berupa gambar (JPEG, PNG, WEBP)!'), false);
+        }
+    }
+    else if(file.fieldname === 'dokumen_pendukung'){
+        const allowedTypes = [
+            'application/pdf', 'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ];
+        if (!allowedTypes.includes(file.mimetype)) {
+            return cb(new Error('Format file tidak diperbolehkan! Hanya gambar (JPEG, PNG, JPG, WEBP, DOC, PDF'), false);
+        }
     }
 
     cb(null, true);

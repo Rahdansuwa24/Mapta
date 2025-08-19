@@ -12,10 +12,11 @@ router.post('/register', upload.fields([
     try {
         const { kategori, users, nama, nomor_identitas, instansi, tanggal_mulai_magang, tanggal_selesai_magang, jenjang, email, password } = req.body;
         const user_level = 'siswa';
+        const validatePass = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-        // Validasi file
+        // Validasi file upload
         if (!req.files || !req.files['foto_diri'] || req.files['foto_diri'].length === 0) {
-            hapusFiles(req.files); // hapus kalau gagal
+            hapusFiles(req.files);
             return res.status(400).json({ status: false, message: "Foto diri wajib diunggah" });
         }
         if (!req.files['dokumen_pendukung'] || req.files['dokumen_pendukung'].length === 0) {
@@ -23,22 +24,41 @@ router.post('/register', upload.fields([
             return res.status(400).json({ status: false, message: "Dokumen pendukung wajib diunggah" });
         }
 
-        // Cek email
-        const existingUser = await Model_User.getEmail(email);
-        if (existingUser && existingUser.length > 0) {
+        const fotoFile = req.files['foto_diri'][0];
+        if (!fotoFile.mimetype.startsWith('image/')) {
             hapusFiles(req.files);
-            return res.status(400).json("Gunakan Email lain, email sudah ada yang sama");
+            return res.status(400).json({ status: false, message: "Foto diri harus berupa file gambar" });
+        }
+        for (const doc of req.files['dokumen_pendukung']) {
+            if (!doc.mimetype.startsWith('application/')) {
+                hapusFiles(req.files);
+                return res.status(400).json({ status: false, message: "Dokumen pendukung harus PDF atau DOC/DOCX" });
+            }
         }
 
-        // Jika users array (kelompok)
         if (Array.isArray(users) && users.length > 0) {
+            for (const user of users) {
+                if (!user.email || !user.password || !user.nama || !user.nomor_identitas || !user.instansi || !user.tanggal_mulai_magang || !user.tanggal_selesai_magang || !user.jenjang) {
+                    hapusFiles(req.files);
+                    return res.status(400).json({ message: 'Pastikan semua data anggota sudah diisi' });
+                }
+                if (!validatePass.test(user.password)) {
+                    hapusFiles(req.files);
+                    return res.status(400).json({
+                        status: false,
+                        message: 'Password harus mengandung minimal 1 huruf besar, 1 angka, dan panjang minimal 8 karakter'
+                    });
+                }
+                const existingUser = await Model_User.getEmail(user.email);
+                if (existingUser && existingUser.length > 0) {
+                    hapusFiles(req.files);
+                    return res.status(400).json({ message: `Email ${user.email} sudah digunakan, ganti email lain` });
+                }
+            }
+
             const insertedUsers = [];
             try {
                 for (const user of users) {
-                    if (!user.email || !user.password || !user.nama || !user.nomor_identitas || !req.files['foto_diri'] || !user.instansi || !user.tanggal_mulai_magang || !user.tanggal_selesai_magang || !req.files['dokumen_pendukung'] || !user.jenjang) {
-                        hapusFiles(req.files);
-                        return res.status(400).json({ message: 'Pastikan semua data sudah diisi' });
-                    }
                     const akunPeserta = await Model_User.registerAkun(user.email, user.password, user_level);
                     const idAkun = akunPeserta.insertId;
 
@@ -64,35 +84,42 @@ router.post('/register', upload.fields([
             }
         }
 
-        // Untuk individu
-        if (!email || !password || !nama || !nomor_identitas || !req.files['foto_diri'] || !instansi || !tanggal_mulai_magang || !tanggal_selesai_magang || !req.files['dokumen_pendukung'] || !jenjang) {
+        if (!email || !password || !nama || !nomor_identitas || !instansi || !tanggal_mulai_magang || !tanggal_selesai_magang || !jenjang) {
             hapusFiles(req.files);
             return res.status(400).json({ message: 'Pastikan semua data sudah diisi' });
         }
-
-        try {
-            const akunPeserta = await Model_User.registerAkun(email, password, user_level);
-            const idAkun = akunPeserta.insertId;
-
-            const pesertaData = {
-                nama,
-                nomor_identitas,
-                foto_diri: req.files['foto_diri'][0].filename,
-                instansi,
-                tanggal_mulai_magang,
-                tanggal_selesai_magang,
-                kategori: kategori || 'individu',
-                dokumen_pendukung: JSON.stringify(req.files['dokumen_pendukung'].map(file => file.filename)),
-                jenjang,
-                id_users: idAkun
-            };
-
-            await Model_Peserta.registerUser(pesertaData);
-            return res.status(201).json({ message: 'Registrasi individu berhasil' });
-        } catch (dbError) {
+        if (!validatePass.test(password)) {
             hapusFiles(req.files);
-            return res.status(500).json({ message: 'Gagal registrasi individu', error: dbError.message });
+            return res.status(400).json({
+                status: false,
+                message: 'Password harus mengandung minimal 1 huruf besar, 1 angka, dan panjang minimal 8 karakter'
+            });
         }
+
+        const existingUserIndividu = await Model_User.getEmail(email);
+        if (existingUserIndividu && existingUserIndividu.length > 0) {
+            hapusFiles(req.files);
+            return res.status(400).json({ message: "Gunakan email lain, email sudah ada yang sama" });
+        }
+
+        const akunPeserta = await Model_User.registerAkun(email, password, user_level);
+        const idAkun = akunPeserta.insertId;
+
+        const pesertaData = {
+            nama,
+            nomor_identitas,
+            foto_diri: req.files['foto_diri'][0].filename,
+            instansi,
+            tanggal_mulai_magang,
+            tanggal_selesai_magang,
+            kategori: kategori || 'individu',
+            dokumen_pendukung: JSON.stringify(req.files['dokumen_pendukung'].map(file => file.filename)),
+            jenjang,
+            id_users: idAkun
+        };
+
+        await Model_Peserta.registerUser(pesertaData);
+        return res.status(201).json({ message: 'Registrasi individu berhasil' });
 
     } catch (err) {
         hapusFiles(req.files);
@@ -101,6 +128,7 @@ router.post('/register', upload.fields([
 });
 
 
+//router getlAll data
 router.get('/', async (req, res) => {
     try {
         const data = await Model_User.getAllWithUsers();
