@@ -20,7 +20,8 @@ class Model_User{
             const token = jwt.sign(
                 {
                     id: user.id_users,
-                    email: user.email
+                    email: user.email,
+                    user_level: user.user_level
                 },
                 process.env.JWT_SECRET,
                 { expiresIn: '1h' }
