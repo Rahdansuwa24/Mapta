@@ -98,6 +98,14 @@ class Model_Admin{
             throw(error)
         }
     }
+    static async getIdUsersForPIC(id){
+        try{
+            const [result] = await db.query(`select  pic.*, users.email, users.password from pic left join users on pic.id_users = users.id_users where pic.id_pic = ?`, [id])
+            return result
+        }catch(error){
+            throw(error)
+        }
+    }
     static async storePIC(data){
         try{
             const [result] = await db.query(`insert into pic set ?`, [data])
@@ -157,7 +165,8 @@ static async storeAspek(data){
     }
     static async deleteAspek(id){
         try{
-            const [result] = await db.query(`delete from aspek where id_aspek = ?`, [id])
+            const placeHolder = id.map(()=>'?').join(',')
+            const [result] = await db.query(`delete from aspek where id_aspek in (${placeHolder})`, [id])
             return result
         }catch(error){
             throw(error)
