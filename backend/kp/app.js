@@ -10,6 +10,9 @@ var logUser = require('./routes/auth/login')
 var regisPeserta = require('./routes/peserta/register')
 var dashboardAdmin = require('./routes/admin/dashboard')
 var jadwalAdmin =  require('./routes/admin/jadwal')
+var picAdmin =  require('./routes/admin/pic')
+var aspekAdmin =  require('./routes/admin/aspek')
+var sertifAdmin =  require('./routes/admin/sertifikat')
 
 var app = express();
 var dotenv = require('dotenv')
@@ -33,6 +36,9 @@ app.use('/login', logUser)
 app.use('/peserta', regisPeserta)
 app.use('/admin/dasbor', dashboardAdmin)
 app.use('/admin/jadwal', jadwalAdmin)
+app.use('/admin/pic', picAdmin)
+app.use('/admin/aspek', aspekAdmin)
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

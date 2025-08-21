@@ -44,6 +44,16 @@ class Model_User{
             }
     }
 
+    static async updateAkunPIC(id, email, password){
+        try{
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const [result] = await db.query(`update users set email = ?, password = ? where id_users = ?`, [email, hashedPassword, id])
+            return result
+        }catch(error){
+            throw(error)
+        }
+    }
+
     static async getAllWithUsers() {
     const query = `SELECT u.id_users, u.email, u.user_level, p.id_peserta_magang, p.nama, p.nomor_identitas, p.instansi, p.foto_diri, p.dokumen_pendukung, p.tanggal_mulai_magang, p.tanggal_selesai_magang,p.jenjang, p.kategori FROM users AS u LEFT JOIN peserta_magang AS p ON u.id_users = p.id_users`;
         try {
