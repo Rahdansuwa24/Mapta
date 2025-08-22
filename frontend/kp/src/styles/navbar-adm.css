@@ -1,0 +1,158 @@
+/* NAVBAR ATAS*/
+.navbar {
+    background-color: #EAEFF5;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    position: fixed;
+    left: 220px;
+    right: 0;
+    top: 0;
+    z-index: 100; /* pastikan navbar tetap di atas semua */
+}
+
+.logout-btn {
+    background-color: #FF4D4F;
+    color: #FEFEFE;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+.logout-btn:hover { background-color: #D9363E; }
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: #FEFEFE;
+    border-radius: 20px;
+    padding: 5px 10px;
+}
+.search-bar input { border: none; outline: none; }
+
+/* Icon Button */
+.icon-btn {
+    margin-right: 30px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #1A3359;
+    position: relative; /* penting untuk badge */
+}
+
+/* Badge merah */
+.notif-badge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background-color: red;
+    color: #FEFEFE;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 50%;
+    line-height: 1;
+    min-width: 16px;
+    text-align: center;
+}
+
+/* Profile */
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: 30px;
+    font-size: 12px;
+    color: #333;
+}
+.profile .name { font-weight: bold; }
+.profile .position { font-size: 11px; color: #666; }
+
+/* Popup Notifikasi */
+.notif-popup {
+    position: absolute;
+    top: 60px; /* sejajar bawah navbar */
+    left: -120px;
+    right: auto;
+    background-color: #FEFEFE;
+    border: 1px solid #d9d9d9;
+    border-radius: 10px;
+    padding: 12px 15px;
+    width: 280px;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 200;
+    font-size: 13px;
+    color: #1A3359;
+
+    /* animasi muncul */
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeSlideDown 0.3s forwards;
+}
+/* Scrollbar custom biar rapi */
+.notif-popup::-webkit-scrollbar {
+    width: 6px;
+}
+.notif-popup::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+.notif-popup::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* Animasi fade + slide untuk popup */
+@keyframes fadeSlideDown {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.notif-popup p {
+    font-weight: bold;
+    margin: 0 0 8px;
+    font-size: 14px;
+    color: #1A3359;
+}
+
+.notif-popup ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Animasi list item masuk */
+.notif-popup ul li {
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateX(-10px);
+    animation: slideInItem 0.3s forwards;
+}
+
+/* Staggered delay untuk tiap item */
+.notif-popup ul li:nth-child(1) { animation-delay: 0.05s; }
+.notif-popup ul li:nth-child(2) { animation-delay: 0.1s; }
+.notif-popup ul li:nth-child(3) { animation-delay: 0.15s; }
+/* tambahkan delay lebih banyak jika peserta lebih banyak */
+
+@keyframes slideInItem {
+    0% { opacity: 0; transform: translateX(-10px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+.notif-popup ul li:last-child {
+    border-bottom: none;
+}
+
+/* Hover effect list item */
+.notif-popup ul li:hover {
+    background-color: #f0f4fa;
+    transform: translateX(2px);
+    transition: all 0.2s ease;
+}
