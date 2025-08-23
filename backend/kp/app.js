@@ -13,6 +13,7 @@ var jadwalAdmin =  require('./routes/admin/jadwal')
 var picAdmin =  require('./routes/admin/pic')
 var aspekAdmin =  require('./routes/admin/aspek')
 var sertifAdmin =  require('./routes/admin/sertifikat')
+var jadwalPic =  require('./routes/pic/jadwal')
 
 var app = express();
 var dotenv = require('dotenv')
@@ -38,6 +39,8 @@ app.use('/admin/dasbor', dashboardAdmin)
 app.use('/admin/jadwal', jadwalAdmin)
 app.use('/admin/pic', picAdmin)
 app.use('/admin/aspek', aspekAdmin)
+app.use('/admin/sertifikat', sertifAdmin)
+app.use('/pic/sertifikat', jadwalPic)
 
 
 // catch 404 and forward to error handler
