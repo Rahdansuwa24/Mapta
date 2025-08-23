@@ -1,11 +1,10 @@
-// PAGE DASHBOARD ADMIN
+// PAGE DITERIMA ADMIN
 
 import React, { useEffect, useState } from "react";
-import SidebarAdm from "../../components/sidebar-adm";
-import NavbarAdm from "../../components/navbar-adm";
+import SidebarAdmTm from "../../components/sidebar-adm";
+import NavbarAdmTm from "../../components/navbar-adm";
 import { LuAlignJustify } from "react-icons/lu";
 import { FaEllipsisVertical } from "react-icons/fa6";
-import { FaCheck } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 
 import "../../styles/dashboard.css";
@@ -13,9 +12,9 @@ import "../../styles/dashboard.css";
 import profil1 from "../../assets/images/profil1.jpg";
 import profil2 from "../../assets/images/profil2.jpeg";
 
-function Dashboard() {
+function Diterima() {
     useEffect(() => {
-        document.title = "Admin Dashboard";
+        document.title = "Admin Penerimaan";
     }, []);
 
     const pesertaDummy = [
@@ -27,10 +26,11 @@ function Dashboard() {
             tglMulai: "01-09-2025",
             tglSelesai: "30-11-2025",
             kategori: "Individu",
+            status: "Diterima",
             email: "budi.santoso@gmail.com",
             password: "budi123",
             profil: profil1,
-            dokumen: ["Surat_Pengantar.pdf", "Proposal.pdf", "Proposal.pdf", "Proposal.pdf", "Proposal.pdf"]
+            dokumen: ["Surat_Pengantar.pdf", "Proposal.pdf"]
         },
         {
             id: 2,
@@ -40,8 +40,9 @@ function Dashboard() {
             tglMulai: "01-09-2025",
             tglSelesai: "30-11-2025",
             kategori: "Individu",
-            email: "budi.santoso@gmail.com",
-            password: "budi123",
+            status: "Diterima",
+            email: "danang.cosmos@gmail.com",
+            password: "danang123",
             profil: profil1,
             dokumen: ["Surat_Pengantar.pdf", "Proposal.pdf"]
         },
@@ -53,6 +54,7 @@ function Dashboard() {
             tglMulai: "01-09-2025",
             tglSelesai: "30-11-2025",
             kategori: "Kelompok",
+            status: "Diterima",
             email: "siti.aisyah@gmail.com",
             password: "siti123",
             profil: profil2,
@@ -66,32 +68,7 @@ function Dashboard() {
             tglMulai: "05-09-2025",
             tglSelesai: "05-12-2025",
             kategori: "Individu",
-            email: "ahmad.fauzi@gmail.com",
-            password: "ahmad123",
-            profil: profil1,
-            dokumen: ["Surat_Pengantar.pdf"]
-        },
-        {
-            id: 5,
-            nama: "Ahmad Haidar",
-            nim: "1122334455",
-            instansi: "Universitas Negeri Surabaya",
-            tglMulai: "05-09-2025",
-            tglSelesai: "05-12-2025",
-            kategori: "Kelompok",
-            email: "ahmad.fauzi@gmail.com",
-            password: "ahmad123",
-            profil: profil1,
-            dokumen: ["Surat_Pengantar.pdf"]
-        },
-        {
-            id: 6,
-            nama: "Ahmad Lexy",
-            nim: "1122334455",
-            instansi: "Universitas Airlangga",
-            tglMulai: "05-09-2025",
-            tglSelesai: "05-12-2025",
-            kategori: "Kelompok",
+            status: "Diterima",
             email: "ahmad.fauzi@gmail.com",
             password: "ahmad123",
             profil: profil1,
@@ -100,38 +77,55 @@ function Dashboard() {
     ];
 
     const [showModal, setShowModal] = useState(false);
+    const [uploadedStatus, setUploadedStatus] = useState({});
     const [selectedPeserta, setSelectedPeserta] = useState(null);
     const [filterInstansi, setFilterInstansi] = useState("");
-    const [openInstansi, setOpenInstansi] = useState({}); // state untuk toggle tabel per instansi
+    const [openInstansi, setOpenInstansi] = useState({});
+    const [fileUploads, setFileUploads] = useState({});
 
     const handleOpenModal = (peserta) => {
         setSelectedPeserta(peserta);
         setShowModal(true);
     };
 
-    // Filter peserta jika dropdown dipilih
+    const handleFileChange = (pesertaId, e) => {
+        setFileUploads({
+            ...fileUploads,
+            [pesertaId]: e.target.files[0]
+        });
+    };
+
+    const handleUpload = (pesertaId) => {
+        if (fileUploads[pesertaId]) {
+        alert(
+            `File "${fileUploads[pesertaId].name}" berhasil diupload untuk peserta ID ${pesertaId}`
+        );
+        setUploadedStatus({ ...uploadedStatus, [pesertaId]: true });
+        setFileUploads({ ...fileUploads, [pesertaId]: null });
+        } else {
+        alert("Pilih file terlebih dahulu!");
+        }
+    };
+
     const pesertaFiltered = filterInstansi
         ? pesertaDummy.filter((p) => p.instansi === filterInstansi)
         : pesertaDummy;
 
-    // ambil daftar instansi unik
     const instansiList = [
-    ...new Set(pesertaDummy.map((p) => p.instansi))
+        ...new Set(pesertaDummy.map((p) => p.instansi))
     ];
 
-    // Kelompokkan peserta berdasarkan instansi
     const pesertaPerInstansi = pesertaFiltered.reduce((acc, peserta) => {
         if (!acc[peserta.instansi]) acc[peserta.instansi] = [];
         acc[peserta.instansi].push(peserta);
         return acc;
     }, {});
 
-    // fungsi toggle
-        const toggleInstansi = (instansi) => {
+    const toggleInstansi = (instansi) => {
         setOpenInstansi((prev) => ({
-        ...prev,
-        [instansi]: !prev[instansi], // ubah true <-> false
-    }));
+            ...prev,
+            [instansi]: !prev[instansi],
+        }));
     };
 
     useEffect(() => {
@@ -144,13 +138,13 @@ function Dashboard() {
 
     return (
         <div className="app-layout">
-            <SidebarAdm />
+            <SidebarAdmTm />
             <div className="content-area">
-                <NavbarAdm />
+                <NavbarAdmTm />
 
                 <section className="main">
                     <div className="submain">
-                        <p className="judul-submain">Peserta Magang yang Mendaftar</p>
+                        <p className="judul-submain">Peserta Magang yang Diterima</p>
                         <select
                             className="dropdown-instansi"
                             value={filterInstansi}
@@ -159,13 +153,12 @@ function Dashboard() {
                             <option value="">Pilih Instansi</option>
                             {instansiList.map((instansi, idx) => (
                                 <option key={idx} value={instansi}>
-                                {instansi}
+                                    {instansi}
                                 </option>
                             ))}
                         </select>
                     </div>
 
-                    {/* Loop setiap instansi */}
                     {Object.keys(pesertaPerInstansi).map((instansi) => {
                         const pesertaInstansi = pesertaPerInstansi[instansi];
                         const individu = pesertaInstansi.filter((p) => p.kategori === "Individu");
@@ -185,11 +178,10 @@ function Dashboard() {
                                     </div>
                                 </div>
 
-                                {/* contain-table muncul kalau openInstansi[instansi] true */}
                                 <div
-                                className={`contain-table-wrapper ${
-                                    openInstansi[instansi] ? "open" : "closed"
-                                } ${!openInstansi[instansi] ? "with-gap" : ""}`}
+                                    className={`contain-table-wrapper ${
+                                        openInstansi[instansi] ? "open" : "closed"
+                                    } ${!openInstansi[instansi] ? "with-gap" : ""}`}
                                 >
                                     <div className="contain-table">
                                         {/* TABEL INDIVIDU */}
@@ -206,6 +198,8 @@ function Dashboard() {
                                                     <th>Tanggal Mulai Magang</th>
                                                     <th>Tanggal Selesai Magang</th>
                                                     <th>Kategori</th>
+                                                    <th>Status</th>
+                                                    <th>Upload Surat Penerimaan</th>
                                                     <th>Aksi</th>
                                                     </tr>
                                                 </thead>
@@ -221,25 +215,25 @@ function Dashboard() {
                                                         <td>{peserta.tglMulai}</td>
                                                         <td>{peserta.tglSelesai}</td>
                                                         <td>{peserta.kategori}</td>
+                                                        <td>
+                                                            <span className="status-label diterima">{peserta.status}</span>
+                                                        </td>
+                                                        <td>
+                                                            <div className="upload-container">
+                                                                <input 
+                                                                    type="file" 
+                                                                    id={`file-${peserta.id}`} 
+                                                                    onChange={(e) => handleFileChange(peserta.id, e)} 
+                                                                />
+                                                                <label htmlFor={`file-${peserta.id}`}>
+                                                                    {fileUploads[peserta.id] ? fileUploads[peserta.id].name : "Upload File"}
+                                                                </label>
+                                                                <button onClick={() => handleUpload(peserta.id)}>Upload</button>
+                                                            </div>
+                                                        </td>
                                                         <td className="aksi-cell">
                                                             <div className="aksi-wrapper">
-                                                                <span 
-                                                                    style={{ color: "green", cursor: "pointer" }} 
-                                                                    title="Setujui"
-                                                                >
-                                                                    <FaCheck />
-                                                                </span>
-                                                                <span 
-                                                                    style={{ color: "red", cursor: "pointer" }} 
-                                                                    title="Tolak"
-                                                                >
-                                                                    <FaTimes />
-                                                                </span>
-                                                                <FaEllipsisVertical
-                                                                    style={{ cursor: "pointer" }}
-                                                                    title="Detail Profil"
-                                                                    onClick={() => handleOpenModal(peserta)}
-                                                                />
+                                                            <FaEllipsisVertical style={{ cursor: "pointer" }} title="Detail Profil" onClick={() => handleOpenModal(peserta)} />
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -264,6 +258,8 @@ function Dashboard() {
                                                     <th>Tanggal Mulai Magang</th>
                                                     <th>Tanggal Selesai Magang</th>
                                                     <th>Kategori</th>
+                                                    <th>Status</th>
+                                                    <th>Upload Surat Penerimaan</th>
                                                     <th>Aksi</th>
                                                     </tr>
                                                 </thead>
@@ -279,25 +275,25 @@ function Dashboard() {
                                                         <td>{peserta.tglMulai}</td>
                                                         <td>{peserta.tglSelesai}</td>
                                                         <td>{peserta.kategori}</td>
+                                                        <td>
+                                                            <span className="status-label diterima">{peserta.status}</span>
+                                                        </td>
+                                                        <td>
+                                                            <div className="upload-container">
+                                                                <input 
+                                                                    type="file" 
+                                                                    id={`file-${peserta.id}`} 
+                                                                    onChange={(e) => handleFileChange(peserta.id, e)} 
+                                                                />
+                                                                <label htmlFor={`file-${peserta.id}`}>
+                                                                    {fileUploads[peserta.id] ? fileUploads[peserta.id].name : "Upload File"}
+                                                                </label>
+                                                                <button onClick={() => handleUpload(peserta.id)}>Upload</button>
+                                                            </div>
+                                                        </td>
                                                         <td className="aksi-cell">
                                                             <div className="aksi-wrapper">
-                                                                <span 
-                                                                    style={{ color: "green", cursor: "pointer" }} 
-                                                                    title="Setujui"
-                                                                >
-                                                                    <FaCheck />
-                                                                </span>
-                                                                <span 
-                                                                    style={{ color: "red", cursor: "pointer" }} 
-                                                                    title="Tolak"
-                                                                >
-                                                                    <FaTimes />
-                                                                </span>
-                                                                <FaEllipsisVertical
-                                                                    style={{ cursor: "pointer" }}
-                                                                    title="Detail Profil"
-                                                                    onClick={() => handleOpenModal(peserta)}
-                                                                />
+                                                            <FaEllipsisVertical style={{ cursor: "pointer" }} title="Detail Profil" onClick={() => handleOpenModal(peserta)} />
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -307,63 +303,105 @@ function Dashboard() {
                                             </div>
                                             </>
                                         )}
-                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         );
                     })}
                 </section>
 
-                {/* MODAL */}
+                {/* MODAL DETAIL PESERTA */}
                 {showModal && selectedPeserta && (
-                    <div className="overlay" onClick={() => setShowModal(false)}>
-                        <div className="modal" onClick={(e) => e.stopPropagation()}>
-                            <div className="modal-header">
-                                <span>Detail Peserta</span>
-                                <div className="close-btn" onClick={() => setShowModal(false)}>
+                    <div className="peserta-overlay" onClick={() => setShowModal(false)}>
+                        <div className="peserta-modal" onClick={(e) => e.stopPropagation()}>
+                            
+                            {/* Header */}
+                            <div className="peserta-modal-header">
+                                <span>Detail Peserta {selectedPeserta.nama}</span>
+                                <div className="peserta-close-btn" onClick={() => setShowModal(false)}>
                                     <FaTimes />
                                 </div>
                             </div>
-                            <div className="modal-body">
-                                <div className="profile-pic">
-                                    <img
-                                        src={selectedPeserta.profil}
-                                        alt="Profil"
-                                        style={{ width: "90px", height: "90px", borderRadius: "10px" }}
-                                    />
-                                </div>
-                                <div className="detail-item">
-                                    <b>Nama :</b>
-                                    <p>{selectedPeserta.nama}</p>
-                                </div>
-                                <div className="detail-item">
-                                    <b>NIM/NIP :</b>
-                                    <p>{selectedPeserta.nim}</p>
-                                </div>
-                                <div className="detail-item">
-                                    <b>Instansi :</b>
-                                    <p>{selectedPeserta.instansi}</p>
-                                </div>
-                                <div className="detail-item">
-                                    <b>Tanggal Mulai - Tanggal Selesai :</b>
-                                    <p>
-                                        {selectedPeserta.tglMulai} hingga {selectedPeserta.tglSelesai}
-                                    </p>
-                                </div>
-                                <div className="detail-item">
-                                    <b>Kategori :</b>
-                                    <p>{selectedPeserta.kategori}</p>
-                                </div>
-                                <div className="detail-item">
-                                    <b>Email :</b>
-                                    <p>{selectedPeserta.email}</p>
-                                </div>
-                                <div className="detail-item">
-                                    <b>Password :</b>
-                                    <p>{selectedPeserta.password}</p>
+
+                            {/* Body */}
+                            <div className="peserta-modal-body">
+
+                                {/* Foto Profil + Tombol Edit/Save di samping */}
+                                <div className="peserta-top-section">
+                                    <div className="peserta-profile-pic">
+                                        <img
+                                            src={selectedPeserta.profil}
+                                            alt="Profil"
+                                            style={{ width: "90px", height: "90px", borderRadius: "10px" }}
+                                        />
+                                    </div>
+                                    <div className="peserta-modal-actions-wide">
+                                        {!selectedPeserta.isEditing ? (
+                                            <button className="btn-edit" onClick={() => setSelectedPeserta({...selectedPeserta, isEditing: true})}>
+                                                Edit Profil
+                                            </button>
+                                        ) : (
+                                            <button className="btn-save" onClick={() => setSelectedPeserta({...selectedPeserta, isEditing: false})}>
+                                                Simpan
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
 
-                                <div className="detail-item">
+                                {/* Input data peserta dua kolom */}
+                                <div className="peserta-detail-grid">
+                                    <div className="peserta-detail-item">
+                                        <b>Nama :</b>
+                                        <input className="peserta-input" type="text" value={selectedPeserta.nama} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, nama: e.target.value})} />
+                                    </div>
+
+                                    <div className="peserta-detail-item">
+                                        <b>NIM/NIP :</b>
+                                        <input className="peserta-input" type="text" value={selectedPeserta.nim} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, nim: e.target.value})} />
+                                    </div>
+
+                                    <div className="peserta-detail-item">
+                                        <b>Instansi :</b>
+                                        <input className="peserta-input" type="text" value={selectedPeserta.instansi} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, instansi: e.target.value})} />
+                                    </div>
+
+                                    <div className="peserta-detail-item">
+                                        <b>Email :</b>
+                                        <input className="peserta-input" type="text" value={selectedPeserta.email} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, email: e.target.value})} />
+                                    </div>
+
+                                    <div className="peserta-detail-item">
+                                        <b>Password :</b>
+                                        <input className="peserta-input" type="text" value={selectedPeserta.password} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, password: e.target.value})} />
+                                    </div>
+
+                                    <div className="peserta-detail-item">
+                                        <b>Tanggal Mulai - Selesai :</b>
+                                        <input className="peserta-input" type="text" value={`${selectedPeserta.tglMulai} hingga ${selectedPeserta.tglSelesai}`} disabled />
+                                    </div>
+
+                                    <div className="peserta-detail-item">
+                                        <b>Kategori :</b>
+                                        <input className="peserta-input" type="text" value={selectedPeserta.kategori} disabled />
+                                    </div>
+
+                                    <div className="peserta-detail-item">
+                                        <b>Status :</b>
+                                        <input className="peserta-input" type="text" value={selectedPeserta.status || "Belum ada"} disabled />
+                                    </div>
+
+                                    <div className="peserta-detail-item">
+                                        <b>Status Upload Sertifikat:</b>{" "}
+                                        {uploadedStatus[selectedPeserta.id] ? (
+                                        <span className="status-label sukses">Sudah Upload</span>
+                                        ) : (
+                                        <span className="status-label gagal">Belum Upload</span>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Dokumen tetap */}
+                                <div className="peserta-detail-item">
                                     <b>Dokumen :</b>
                                     <div className="dokumen-list">
                                         {selectedPeserta.dokumen.map((doc, index) => (
@@ -377,6 +415,7 @@ function Dashboard() {
                                         ))}
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -386,4 +425,4 @@ function Dashboard() {
     );
 }
 
-export default Dashboard;
+export default Diterima;
