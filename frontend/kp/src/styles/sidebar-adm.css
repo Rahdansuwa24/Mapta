@@ -1,0 +1,158 @@
+/* SIDEBAR */
+.sidebar {
+    width: 220px;
+    background-color: #142846;
+    color: #FEFEFE;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0; 
+}
+
+.sidebar-header {
+    background-color: #0E1E35;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    justify-content: center;
+}
+
+.sidebar-header img { 
+    height: 35px; 
+    margin-right: 10px; 
+}
+
+.sidebar-header h1 {
+    font-family: 'Rubik One', sans-serif;
+    font-size: 20px;
+    margin: 0;
+}
+
+.nav {
+    padding: 15px;
+    font-size: 12px;
+    color: #ccc;
+}
+
+/* NAV ITEMS */
+.nav-items {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    text-decoration: none;
+    color: #FEFEFE;
+    transition: background 0.3s;
+}
+
+.nav-item .icon {
+    font-size: 18px;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Hover & active state nav item */
+.nav-item:hover,
+.nav-item.active {
+    background-color: #0E1E35;
+}
+
+/* DROPDOWN */
+.dropdown {
+    width: 100%;
+}
+
+/* Dropdown toggle (flex baris) */
+.dropdown-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    padding: 12px 20px;
+    gap: 10px;
+    transition: background 0.3s;
+}
+
+/* Dropdown toggle hover & active jika ada item aktif */
+.dropdown.open .dropdown-toggle,
+.dropdown-toggle:hover {
+    background-color: #0E1E35;
+}
+
+.dropdown-toggle .left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Animasi fade + slide untuk dropdown content */
+@keyframes fadeSlideDown {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-content {
+    display: flex;
+    flex-direction: column;
+    background-color: #142846;
+    width: 100%;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+
+    max-height: 0;   /* start closed */
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+/* Dropdown terbuka */
+.dropdown.open .dropdown-content {
+    max-height: 500px; /* cukup untuk semua item */
+    opacity: 1;
+}
+
+/* Optional: animasi keyframe tambahan */
+.dropdown-content.fade-slide {
+    animation: fadeSlideDown 0.25s ease forwards;
+}
+
+/* Dropdown items */
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    padding-left: 50px;
+    font-size: 14px;
+    background-color: #142846;
+    transition: background 0.3s, transform 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    color: #FEFEFE;
+}
+
+.dropdown-item .icon {
+    font-size: 16px;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Hover effect dropdown item */
+.dropdown-item:hover {
+    background-color: #0E1E35;
+    transform: translateX(5px);
+}
+
+/* Active state dropdown item */
+.dropdown-item.active {
+    background-color: #0E1E35;
+}
