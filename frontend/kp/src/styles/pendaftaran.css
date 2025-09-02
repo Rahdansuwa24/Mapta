@@ -139,17 +139,54 @@
     align-items: center;
 }
 .upload-box {
+    position: relative;
     flex: 0 0 107px;
     height: 107px;
     border: 1px dashed #2D5A9C;
     border-radius: 15px;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 14px;
+    font-size: 13px;
     background: #FEFFFE;
     cursor: pointer;
+    overflow: hidden; /* supaya gambar tidak keluar kotak */
+}
+
+.file-preview {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    background: #f1f1f1;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.file-item span {
+    margin-right: 8px;
+}
+
+.remove-file-btn {
+    background: #ff5c5c;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    cursor: pointer;
+}
+.upload-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* isi penuh */
 }
 .upload-box input {
     display: none;
