@@ -32,8 +32,6 @@ export default function PendaftaranMagang() {
             dokumen: [],
         }
     ])
-    // const [dokumenPendukung, setDokumenPendukung] = useState([]);
-    // const [fotoDiri, setFotoDiri] = useState([]);
     const [kuota, setKuota] = useState(0);
 
     useEffect(()=>{
