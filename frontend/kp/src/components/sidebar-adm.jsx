@@ -5,6 +5,8 @@ import { BiSolidCalendar } from "react-icons/bi";
 import { RiBallPenFill } from "react-icons/ri";
 import { IoDocumentText } from "react-icons/io5";
 import { HiUserGroup } from "react-icons/hi2";
+import { MdApps } from "react-icons/md";
+import { MdArticle } from "react-icons/md";
 import { FaCheck, FaTimes, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import logoMapta from "../assets/images/logo_mapta.png";
 
@@ -13,6 +15,7 @@ import "../styles/sidebar-adm.css";
 export default function Sidebar() {
     const location = useLocation();
     const [openDropdown, setOpenDropdown] = useState(false);
+    const [openAspekDropdown, setOpenAspekDropdown] = useState(false);
 
     // buka dropdown otomatis jika salah satu itemnya aktif
     useEffect(() => {
@@ -21,6 +24,12 @@ export default function Sidebar() {
         location.pathname === "/admin-penolakan"
         ) {
         setOpenDropdown(true);
+        }
+        if (
+        location.pathname === "/admin-penilaian" ||
+        location.pathname === "/admin-data-penilaian"
+        ) {
+        setOpenAspekDropdown(true);
         }
     }, [location.pathname]);
 
@@ -42,7 +51,7 @@ export default function Sidebar() {
             </div>
             </Link>
 
-            {/* Dropdown */}
+            {/* Dropdown Daftar */}
             <div className={`dropdown ${openDropdown ? "open" : ""}`}>
             <div
                 className="dropdown-toggle"
@@ -56,8 +65,6 @@ export default function Sidebar() {
                 {openDropdown ? <FaChevronUp /> : <FaChevronDown />}
                 </span>
             </div>
-
-            {/* Selalu render dropdown-content, tapi kontrol visibilitas via CSS */}
             <div className={`dropdown-content fade-slide`}>
                 <Link to="/admin-penerimaan">
                 <div className={`dropdown-item ${isActive("/admin-penerimaan") ? "active" : ""}`}>
@@ -82,12 +89,36 @@ export default function Sidebar() {
             </div>
             </Link>
 
-            <Link to="/admin-penilaian">
-            <div className={`nav-item ${isActive("/admin-penilaian") ? "active" : ""}`}>
-                <span className="icon"><RiBallPenFill /></span>
-                Aspek Penilaian
+            {/* Dropdown Aspek Penilaian */}
+            <div className={`dropdown ${openAspekDropdown ? "open" : ""}`}>
+            <div
+                className="dropdown-toggle"
+                onClick={() => setOpenAspekDropdown(!openAspekDropdown)}
+            >
+                <div className="left">
+                <span className="icon"><MdApps /></span>
+                Aspek
+                </div>
+                <span className="chevron">
+                {openAspekDropdown ? <FaChevronUp /> : <FaChevronDown />}
+                </span>
             </div>
-            </Link>
+            <div className={`dropdown-content fade-slide`}>
+                <Link to="/admin-penilaian">
+                <div className={`dropdown-item ${isActive("/admin-penilaian") ? "active" : ""}`}>
+                    <span className="icon"><RiBallPenFill /></span>
+                    Buat Aspek
+                </div>
+                </Link>
+
+                <Link to="/admin-data-penilaian">
+                <div className={`dropdown-item ${isActive("/admin-data-penilaian") ? "active" : ""}`}>
+                    <span className="icon"><MdArticle /></span>
+                    Data Nilai Aspek
+                </div>
+                </Link>
+            </div>
+            </div>
 
             <Link to="/admin-sertifikat">
             <div className={`nav-item ${isActive("/admin-sertifikat") ? "active" : ""}`}>

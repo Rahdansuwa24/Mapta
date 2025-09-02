@@ -1,3 +1,4 @@
+/* INI BARU */
 .pendaftaran-page {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(to bottom right, #EAEFF5, #A5B8D4);
@@ -27,12 +28,12 @@
 }
 .logo-wrap p {
     font-family: 'Rubik One', sans-serif;
-    color: white;
+    color: #FEFEFE;
     font-size: 20px;
     letter-spacing: 2px;
 }
 .header a {
-    color: white;
+    color: #FEFEFE;
     font-weight: bold;
     font-size: 12px;
     text-decoration: none;
@@ -45,7 +46,7 @@
 .title {
     text-align: center;
     margin-top: 50px;
-    color: white;
+    color: #FEFEFE;
     padding: 0 15px;
 }
 .title h1 {
@@ -119,6 +120,7 @@
 /* FORM SECTION */
 .form-section {
     display: flex;
+    margin-top: 10px;  /* ini baru */
     gap: 20px;
     flex-wrap: wrap;
 }
@@ -138,6 +140,8 @@
     gap: 15px;
     align-items: center;
 }
+
+/* INI BARU */
 .upload-box {
     position: relative;
     flex: 0 0 107px;
@@ -153,41 +157,12 @@
     overflow: hidden; /* supaya gambar tidak keluar kotak */
 }
 
-.file-preview {
-    margin-top: 8px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.file-item {
-    display: flex;
-    align-items: center;
-    background: #f1f1f1;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.file-item span {
-    margin-right: 8px;
-}
-
-.remove-file-btn {
-    background: #ff5c5c;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 12px;
-    cursor: pointer;
-}
 .upload-box img {
     width: 100%;
     height: 100%;
     object-fit: cover;  /* isi penuh */
 }
+
 .upload-box input {
     display: none;
 }
@@ -218,7 +193,7 @@
 /* SELECT CUSTOM ARROW */
 select {
     appearance: none;
-    background: white url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 12px center;
+    background: #FEFEFE url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 12px center;
     background-size: 18px;
 }
 
@@ -267,7 +242,7 @@ select {
     max-width: 120px;
     padding: 12px;
     background-color: #2D5A9C;
-    color: white;
+    color: #FEFEFE;
     border: none;
     border-radius: 25px;
     font-size: 16px;

@@ -1,0 +1,299 @@
+/* NAVBAR ATAS */
+/* ini baru */
+.nu-navbar {
+    background-color: #EAEFF5;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    position: fixed;
+    left: 260px;    /* geser dikit biar ga nabrak sidebar */
+    right: 20px;    /* kasih jarak kanan */
+    top: 20px;      /* kasih jarak atas */
+    border-radius: 25px; /* curve */
+    z-index: 10009;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.nu-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.nu-logout-btn {
+    background-color: #FF4D4F;
+    color: #FEFEFE;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+.nu-logout-btn:hover { background-color: #D9363E; }
+
+.nu-search-bar {
+    display: flex;
+    align-items: center;
+    background: #FEFEFE;
+    border-radius: 20px;
+    padding: 5px 10px;
+}
+.nu-search-bar input { border: none; outline: none; }
+
+/* Icon Button */
+.nu-icon-btn {
+    margin-right: 30px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #1A3359;
+    position: relative; /* penting untuk badge */
+}
+
+/* Badge merah */
+.nu-notif-badge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background-color: red;
+    color: #FEFEFE;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 50%;
+    line-height: 1;
+    min-width: 16px;
+    text-align: center;
+}
+
+/* Profile */
+.nu-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: 30px;
+    font-size: 12px;
+    color: #333;
+}
+.nu-profile .nu-name { font-weight: bold; }
+.nu-profile .nu-position { font-size: 11px; color: #666; }
+
+/* Popup Notifikasi */
+.nu-notif-popup {
+    position: absolute;
+    top: 60px; /* sejajar bawah navbar */
+    left: -120px;
+    right: auto;
+    background-color: #FEFEFE;
+    border: 1px solid #d9d9d9;
+    border-radius: 10px;
+    padding: 12px 15px;
+    width: 280px;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 200;
+    font-size: 13px;
+    color: #1A3359;
+
+    /* animasi muncul */
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeSlideDown 0.3s forwards;
+}
+/* Scrollbar custom biar rapi */
+.nu-notif-popup::-webkit-scrollbar {
+    width: 6px;
+}
+.nu-notif-popup::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+.nu-notif-popup::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* Animasi fade + slide untuk popup */
+@keyframes fadeSlideDown {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.nu-notif-popup p {
+    font-weight: bold;
+    margin: 0 0 8px;
+    font-size: 14px;
+    color: #1A3359;
+}
+
+.nu-notif-popup ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Animasi list item masuk */
+.nu-notif-item {
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateX(-10px);
+    animation: slideInItem 0.3s forwards;
+}
+
+/* Staggered delay untuk tiap item */
+.nu-notif-item:nth-child(1) { animation-delay: 0.05s; }
+.nu-notif-item:nth-child(2) { animation-delay: 0.1s; }
+.nu-notif-item:nth-child(3) { animation-delay: 0.15s; }
+/* tambahkan delay lebih banyak jika peserta lebih banyak */
+
+@keyframes slideInItem {
+    0% { opacity: 0; transform: translateX(-10px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+.nu-notif-item:last-child {
+    border-bottom: none;
+}
+
+/* Hover effect list item */
+.nu-notif-item:hover {
+    background-color: #f0f4fa;
+    transform: translateX(2px);
+    transition: all 0.2s ease;
+}
+
+/* ========== RESPONSIVE MODE ========== */
+@media (max-width: 768px) {
+    .nu-navbar {
+        left: 0;          
+        right: 0;
+        top: 0;
+        border-radius: 0; 
+        height: 55px;
+        padding: 0 12px;
+        margin-left: 10px;
+    }
+
+    .nu-logout-btn {
+        display: none; /* sembunyikan logout */
+    }
+
+    .nu-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end; /* geser ke kanan */
+        width: 100%;
+    }
+
+    /* Search lebih kecil */
+    .nu-search-bar {
+        display: flex;
+        align-items: center;
+        background: #FEFEFE;
+        border-radius: 16px;
+        padding: 3px 8px;
+        max-width: 140px; /* batasi ukuran */
+    }
+
+    .nu-search-bar input {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .nu-profile {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        font-size: 11px;
+    }
+
+    .nu-profile .nu-name {
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .nu-profile .nu-position {
+        font-size: 10px;
+        color: #666;
+    }
+}
+
+@media (max-width: 480px) {
+    .nu-navbar {
+        height: 50px;
+        padding: 0 8px;
+    }
+
+    .nu-search-bar {
+        display: none;
+    }
+
+    .nu-search-bar input {
+        font-size: 11px;
+    }
+
+    .nu-profile {
+        font-size: 10px;
+    }
+
+    .nu-profile .nu-name {
+        font-size: 11px;
+    }
+
+    .nu-profile .nu-position {
+        font-size: 9px;
+    }
+}
+
+/* ========== TABLET MODE (max-width: 1024px) ========== */
+@media (max-width: 1024px) {
+    .nu-navbar {
+        right: 10px;
+        top: 15px;
+        height: 55px;
+        padding: 0 15px;
+        border-radius: 20px;
+    }
+
+    .nu-search-bar {
+        max-width: 180px;
+        padding: 4px 10px;
+    }
+
+    .nu-search-bar input {
+        font-size: 13px;
+    }
+
+    .nu-profile {
+        margin-left: 20px;
+        font-size: 12px;
+    }
+
+    .nu-profile .nu-name { font-size: 13px; }
+    .nu-profile .nu-position { font-size: 11px; }
+}
+
+/* ========== EXTRA SMALL (max-width: 360px) ========== */
+@media (max-width: 360px) {
+    .nu-navbar {
+        height: 48px;
+        padding: 0 6px;
+    }
+
+    .nu-icon-btn {
+        margin-right: 15px;
+        font-size: 18px;
+    }
+
+    .nu-profile {
+        font-size: 9px;
+        margin-left: 10px;
+    }
+
+    .nu-profile .nu-name { font-size: 10px; }
+    .nu-profile .nu-position { font-size: 8px; }
+}

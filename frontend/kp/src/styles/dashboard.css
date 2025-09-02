@@ -24,7 +24,7 @@ section.main {
 }
 
 .dropdown-instansi {
-    padding: 8px 12px;
+    padding: 8px 20px;
     border-radius: 8px;
     border: 1px solid #ccc;
     outline: none;
@@ -196,60 +196,6 @@ tbody tr:nth-child(even) {
     object-fit: cover;
 }
 
-
-
-
-/* Style input file */
-
-/* Container untuk input file + tombol upload */
-.upload-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px; /* jarak antara input dan tombol */
-}
-
-/* Input file */
-.upload-container input[type="file"] {
-    display: none;
-}
-
-/* Label kustom untuk input file */
-.upload-container label {
-    display: inline-block;
-    padding: 3px 8px;
-    font-size: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f4f4f4;
-    cursor: pointer;
-    text-align: center;
-    width: 100px; /* lebar input file */
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-/* Tombol Upload */
-.upload-container button {
-    padding: 3px 8px;
-    font-size: 12px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4CAF50;
-    color: #FEFEFE;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-    flex-shrink: 0;
-}
-
-.upload-container button:hover {
-    background-color: #45a049;
-}
-
-
-
-
     /* Overlay untuk dashboard*/
     .overlay {
         display: flex; /* awalnya disembunyikan */
@@ -311,10 +257,23 @@ tbody tr:nth-child(even) {
     .profile-pic {
         width: 90px; 
         height: 90px;
-        background: #d4dceb;
-        border-radius: 10px;
-        margin: 0 auto 20px auto;
+        border-radius: 20px;       /* bikin bulat */
+        margin: 0 auto 20px auto; /* center horizontal + ada jarak bawah */
+        overflow: hidden;         /* biar gambar tidak keluar */
+        border: 1px solid #d4dceb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f2f4f9; 
     }
+    .profile-pic img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;        /* foto selalu proporsional */
+        object-position: center;  /* fokus tengah */
+        display: block;
+    }
+
 
 
 
@@ -383,6 +342,55 @@ tbody tr:nth-child(even) {
 
 
 
+    
+
+/* Style input file */
+
+/* Container untuk input file + tombol upload */
+.upload-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px; /* jarak antara input dan tombol */
+}
+
+/* Input file */
+.upload-container input[type="file"] {
+    display: none;
+}
+
+/* Label kustom untuk input file */
+.upload-container label {
+    display: inline-block;
+    padding: 3px 8px;
+    font-size: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f4f4f4;
+    cursor: pointer;
+    text-align: center;
+    width: 100px; /* lebar input file */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Tombol Upload */
+.upload-container button {
+    padding: 3px 8px;
+    font-size: 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: #FEFEFE;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    flex-shrink: 0;
+}
+
+.upload-container button:hover {
+    background-color: #45a049;
+}
 
 /* Overlay dan Modal untuk peserta diterima dan ditolak */
 .peserta-overlay { 
