@@ -12,7 +12,8 @@ class Model_Admin{
     }
     static async getDataCalonPesertaDiterima(){
         try{
-            const [result] = await db.query(`SELECT distinct u.*, p.* FROM users u LEFT JOIN peserta_magang p ON u.id_users = p.id_users where p.status_penerimaan = 'diterima' ORDER BY p.instansi, p.kategori`)
+            const [result] = await db.query(`SELECT distinct u.*, p.*, k.id_kelompok FROM users u LEFT JOIN peserta_magang p ON u.id_users = p.id_users
+            left join kelompok k on k.id_kelompok = p.id_kelompok where p.status_penerimaan = 'diterima' ORDER BY p.instansi, p.kategori, p.id_kelompok`)
             return result
         }catch(error){
             throw(error)
@@ -37,6 +38,14 @@ class Model_Admin{
     static async updateStatus(id, status_penerimaan){
         try{
             const [result] = await db.query(`update peserta_magang set ? where id_peserta_magang = ?`, [status_penerimaan, id])
+            return result
+        }catch(error){
+            throw(error)
+        }
+    }
+    static async updateSuratBalasan(id, surat_balasan){
+        try{
+            const [result] = await db.query(`update peserta_magang set ? where id_peserta_magang = ?`, [surat_balasan, id])
             return result
         }catch(error){
             throw(error)

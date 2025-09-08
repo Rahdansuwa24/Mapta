@@ -27,7 +27,7 @@ class Model_User{
                 { expiresIn: '1h' }
             );
 
-            return { status: 200, token };
+            return { status: 200, token};
 
         }catch (err) {
             return { status: 500, message: 'Server error', error: err.message };
