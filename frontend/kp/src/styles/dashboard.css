@@ -248,10 +248,34 @@ tbody tr:nth-child(even) {
     }
 
     /* Body */
-    .modal-body {
-        padding: 20px;
-        overflow-y: auto;         /* scroll jika konten tinggi */
-    }
+
+.modal-body {
+  flex: 1;                  /* supaya body mengisi sisa tinggi modal */
+  padding: 20px;
+  overflow-y: auto;         /* bagian ini yang di-scroll */
+  word-wrap: break-word;    /* pecah kata panjang */
+  overflow-wrap: break-word;/* pecah kata panjang (browser modern) */
+  max-width: 100%;          /* biar tidak melebar */
+}
+
+.detail-item p {
+  margin: 4px 0;
+  white-space: normal;      /* jangan satu baris terus */
+  word-break: break-word;
+}
+
+/* Dokumen list */
+.dokumen-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 100%;          /* batasi lebar */
+}
+
+.dokumen-item span {
+  display: block;
+  word-break: break-word;   /* kalau nama file panjang, pecah */
+}
 
     /* Foto Profil */
     .profile-pic {
