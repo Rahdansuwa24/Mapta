@@ -53,8 +53,19 @@ export default function LoginPage() {
             }
         }catch(error){
             console.error("Login error:", error);
-            alert("Terjadi kesalahan server");
+             if (error.response) {
+            const errorMessage = error.response.data.message;
+
+            if (errorMessage) {
+                alert(errorMessage);
+            } else {
+                alert("Terjadi kesalahan, coba lagi.");
+            }
+            } else {
+                alert("Tidak dapat terhubung ke server. Periksa koneksi internet Anda.");
+            }
         }
+        
     }
     return (
         <section className="login-section">

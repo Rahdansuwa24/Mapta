@@ -21,20 +21,7 @@ function Penilaian() {
     const [checked, setChecked] = useState({});
 
     // Data dummy awal
-    const [aspekList, setAspekList] = useState([
-        { nama: "Pelayanan Perpustakaan dan Kearsipan", departemen: "Pelayanan Perpustakaan dan Informasi", kategori: "Aspek Teknis" },
-        { nama: "Pengelolaan Bahan Pustaka dan Arsip", departemen: "Deposit, Akuisisi, Pelestarian dan Pengolahan Bahan Perpustakaan", kategori: "Aspek Teknis" },
-        { nama: "Preservasi Bahan Pustaka dan Arsip", departemen: "Deposit, Akuisisi, Pelestarian dan Pengolahan Bahan Perpustakaan", kategori: "Aspek Teknis" },
-        { nama: "Digitalisasi Arsip", departemen: "Penyelamatan dan Pendayagunaan Kearsipan", kategori: "Aspek Teknis" },
-        { nama: "Literasi Informasi", departemen: "Pengembangan Sumber Daya", kategori: "Aspek Teknis" },
-        { nama: "Manajamem Kearsipan", departemen: "Pembinaan dan Pengawasan Kearsipan", kategori: "Aspek Teknis" },
-
-        { nama: "Kehadiran", kategori: "Aspek Non Teknis", departemen: "GLOBAL" },
-        { nama: "Skill/Keahlian", kategori: "Aspek Non Teknis", departemen: "GLOBAL" },
-        { nama: "Kreatifitas", kategori: "Aspek Non Teknis", departemen: "GLOBAL" },
-        { nama: "Komunikasi", kategori: "Aspek Non Teknis", departemen: "GLOBAL" },
-        { nama: "Sikap/Etika", kategori: "Aspek Non Teknis", departemen: "GLOBAL" },
-    ]);
+    const [aspekList, setAspekList] = useState([]);
 
     useEffect(()=>{
         fetchAspek()
@@ -95,7 +82,7 @@ function Penilaian() {
 
     // Hapus aspek yang dicentang
     const handleDeleteChecked = () => {
-        const filtered = aspekList.filter((a) => !checked[a.nama]);
+        const filtered = aspekList.filter((a) => !checked[a.subjek]);
         setAspekList(filtered);
         setChecked({});
     };
@@ -103,22 +90,22 @@ function Penilaian() {
     // Helper: kelompokkan data by departemen
     const groupByDepartemen = (list) => {
         return list.reduce((acc, item) => {
-            if (!acc[item.departemen]) acc[item.departemen] = [];
-            acc[item.departemen].push(item);
+            if (!acc[item.bidang]) acc[item.bidang] = [];
+            acc[item.bidang].push(item);
             return acc;
         }, {});
     };
 
     const aspekTeknis = groupByDepartemen(
-        aspekList.filter((a) => a.kategori === "Aspek Teknis")
+        aspekList.filter((a) => a.aspek === "teknis")
     );
 
     const aspekNonTeknisGlobal = aspekList.filter(
-        (a) => a.kategori === "Aspek Non Teknis" && a.departemen === "GLOBAL"
+        (a) => a.aspek === "non-teknis" && a.bidang === "GLOBAL"
     );
     const aspekNonTeknisCustom = groupByDepartemen(
         aspekList.filter(
-            (a) => a.kategori === "Aspek Non Teknis" && a.departemen !== "GLOBAL"
+            (a) => a.aspek === "non-teknis" && a.bidang !== "GLOBAL"
         )
     );
 
@@ -192,10 +179,10 @@ function Penilaian() {
                                                 >
                                                     <input
                                                         type="checkbox"
-                                                        checked={checked[a.nama] || false}
+                                                        checked={checked[a.subjek] || false}
                                                         onChange={() => handleCheckboxChange(a.nama)}
                                                     />
-                                                    {a.nama}
+                                                    {a.subjek}
                                                 </motion.label>
                                             ))}
                                         </div>
