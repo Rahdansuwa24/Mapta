@@ -1,12 +1,30 @@
 const multer = require('multer')
 const path = require('path');
 const fs = require('fs')
+var Model_Admin = require('../../model/Model_Admin')
 
-const docDir = path.resolve('public/document-admin');
+const docDirDiterima = path.resolve('public/document-admin/diterima');
+const docDirDitolak = path.resolve('public/document-admin/ditolak');
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, docDir);
+    destination: async (req, file, cb) => {
+        try{
+
+            const id = req.params.id
+            const data = await Model_Admin.getDataCalonPesertaByIdWithoutStatus(id);
+            const peserta = Array.isArray(data) ? data[0] : data;
+            if (!peserta) {
+                return cb(new Error("Peserta tidak ditemukan"), null);
+            }
+            console.log(peserta.status_penerimaan)
+            const folder =
+            peserta.status_penerimaan === "ditolak"
+              ? path.resolve(docDirDitolak)
+              : path.resolve(docDirDiterima);
+            cb(null, folder);
+        }catch(error){
+            cb(err, null);
+        }
     },
     filename: (req, file, cb) => {
         const uniqueName = Date.now() + '_' + file.originalname.replace(/\s+/g, '_');
@@ -28,13 +46,10 @@ const fileFilter = (req, file, cb) => {
 };
 
 function hapusFiles(files) {
-     if (!files) return;
-
+    if (!files) return;
     const fileArray = Array.isArray(files) ? files : [files];
-
     fileArray.forEach(file => {
-        const filepath = path.join(file.path);
-        fs.unlink(filepath, err => {
+        fs.unlink(file.path, err => {
             if (err) {
                 console.error('Gagal hapus file:', file.filename, err);
             } else {

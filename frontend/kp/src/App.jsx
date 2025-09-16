@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import "./index.css";
 import LoginPage from "./pages/login";
 import FormPendaftaran from "./pages/pendaftaran";
@@ -17,21 +17,26 @@ import NilaiPeserta from "./pages/userpeserta/nilaipeserta.jsx";
 import JadwalPeserta from "./pages/userpeserta/jadwalpeserta.jsx";
 import SertifikatPeserta from "./pages/userpeserta/sertifikatpeserta.jsx";
 
+function Protection({children}){
+  const token = localStorage.getItem("token")
+  return token ? children : <Navigate to='/login'/>
+}
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/pendaftaran" element={<FormPendaftaran />} />
-        <Route path="/admin-dashboard" element={<Dashboard />} />
-        <Route path="/admin-penerimaan" element={<Diterima />} />
-        <Route path="/admin-penolakan" element={<Ditolak />} />
-        <Route path="/admin-jadwal" element={<Jadwal />} />
-        <Route path="/admin-penilaian" element={<Penilaian />} />
+        <Route path="/admin-dashboard" element={<Protection><Dashboard /></Protection>} />
+        <Route path="/admin-penerimaan" element={<Protection><Diterima /></Protection>} />
+        <Route path="/admin-penolakan" element={<Protection><Ditolak /></Protection>} />
+        <Route path="/admin-jadwal" element={<Protection><Jadwal /></Protection>} />
+        <Route path="/admin-penilaian" element={<Protection><Penilaian /></Protection>} />
         <Route path="/admin-data-penilaian" element={<DataPenilaian />} />
         <Route path="/admin-sertifikat" element={<Sertifikat />} />
-        <Route path="/admin-pic" element={<AkunPIC />} />
-        <Route path="/pic-jadwal" element={<JadwalPIC />} />
+        <Route path="/admin-pic" element={<Protection><AkunPIC /></Protection>} />
+        <Route path="/pic-jadwal" element={<Protection><JadwalPIC /></Protection>} />
         <Route path="/pic-penilaian" element={<PenilaianPIC />} />
         <Route path="/peserta-nilai" element={<NilaiPeserta />} />
         <Route path="/peserta-jadwal" element={<JadwalPeserta />} />

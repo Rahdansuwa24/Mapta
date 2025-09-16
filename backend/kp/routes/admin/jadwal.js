@@ -4,7 +4,7 @@ var verifyToken = require('../../config/middleware/jwt')
 var Model_Admin = require('../../model/Model_Admin')
 
 
-router.get('/', async(req, res)=>{
+router.get('/', verifyToken('admin'),async(req, res)=>{
     try{
         const data = await Model_Admin.getJadwal()
         res.status(200).json({data})
@@ -12,8 +12,24 @@ router.get('/', async(req, res)=>{
         res.status(500).json({ status: false, error: err.message });
     }
 })
+router.get('/peserta', verifyToken('admin'),async(req, res)=>{
+    try{
+        const data = await Model_Admin.getDataPesertaDiterimaJadwal()
+        res.status(200).json({data})
+    }catch(err){
+        res.status(500).json({ status: false, error: err.message });
+    }
+})
+router.get('/getPeriode', verifyToken('admin'),async(req, res)=>{
+    try{
+        const data = await Model_Admin.getPeriode()
+        res.status(200).json({data})
+    }catch(err){
+        res.status(500).json({ status: false, error: err.message });
+    }
+})
 
-router.post('/store', async(req, res)=>{
+router.post('/store', verifyToken('admin'),async(req, res)=>{
     try{
         let {bidang, id_peserta_magang, tanggal_mulai, tanggal_selesai} = req.body
         const data = {
@@ -25,11 +41,12 @@ router.post('/store', async(req, res)=>{
         await Model_Admin.storeJadwal(data)
         res.status(200).json({message: 'penambahan berhasil'})
     }catch(err){
+        console.error(err)
         res.status(500).json({ status: false, error: err.message });
     }
 })
 
-router.get('/(:id)', async(req, res)=>{
+router.get('/jadwal/(:id)', async(req, res)=>{
     try{
        let id = req.params.id
         let data = await Model_Admin.getJadwalById(id)
@@ -38,7 +55,7 @@ router.get('/(:id)', async(req, res)=>{
         res.status(500).json({ status: false, error: err.message });
     }
 })
-router.patch('/update/(:id)', async(req, res)=>{
+router.patch('/update/(:id)', verifyToken('admin'),async(req, res)=>{
     try{
         let id = req.params.id
         let {bidang, id_peserta_magang, tanggal_mulai, tanggal_selesai} = req.body
@@ -51,7 +68,7 @@ router.patch('/update/(:id)', async(req, res)=>{
         res.status(500).json({ status: false, error: err.message });
     }
 })
-router.delete('/delete/(:id)', async(req, res)=>{
+router.delete('/delete/(:id)', verifyToken('admin'),async(req, res)=>{
     try{
         let id = req.params.id
         await Model_Admin.deleteJadwal(id)

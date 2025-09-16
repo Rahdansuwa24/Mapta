@@ -3,6 +3,7 @@ var router = express.Router();
 var verifyToken = require('../../config/middleware/jwt')
 var Model_Admin = require('../../model/Model_Admin')
 const {upload, hapusFiles, file} = require('../../config/middleware/multer-admin')
+const path = require('path');
 
 router.get('/', verifyToken('admin'), async(req, res)=>{
     try{
@@ -38,14 +39,21 @@ router.patch('/update-surat-balasan/(:id)', verifyToken('admin'),  upload.single
         if(!dokumen_baru){
             return res.status(400).json({ message: "surat balasan wajib diunggah" });
         }
-        const dataLama = await Model_Admin.getDataCalonPesertaDiterima()
-        const fileLama = dataLama.surat_balasan
+        const dataLama = await Model_Admin.getDataCalonPesertaByIdWithoutStatus(id)
+        const peserta = Array.isArray(dataLama) ? dataLama[0] : dataLama
+        console.log(peserta)
+        const fileLama = peserta.surat_balasan
+        console.log(fileLama)
         if (fileLama) {
-        const pathLama = path.resolve('public/document-admin', fileLama);
-            fs.unlink(pathLama, (err) => {
-            if (err) console.error('Gagal hapus file lama:', err);
-            else console.log('File lama dihapus:', fileLama);
-            });
+            const docDirDiterima = path.resolve('public/document-admin/diterima');
+            const docDirDitolak = path.resolve('public/document-admin/ditolak');
+            const folder =
+            peserta.status_penerimaan === "ditolak"
+                ? docDirDitolak
+                : docDirDiterima;
+            const filePath = path.resolve(folder, peserta.surat_balasan);
+
+            hapusFiles([{ path: filePath, filename: peserta.surat_balasan }]);
         }
         await Model_Admin.updateSuratBalasan(id, {surat_balasan: dokumen_baru.filename})
         res.status(200).json({message: "surat balasan berhasil diunggah"})

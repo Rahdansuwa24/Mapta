@@ -5,7 +5,7 @@ var Model_Admin = require('../../model/Model_Admin')
 const Model_User = require('../../model/Model_User');
 
 
-router.get('/', async(req, res)=>{
+router.get('/', verifyToken('admin'),async(req, res)=>{
     try{
         const data = await Model_Admin.getAspek()
         res.status(200).json({data})
@@ -14,7 +14,7 @@ router.get('/', async(req, res)=>{
     }
 })
 
-router.post('/store', async(req, res)=>{
+router.post('/store', verifyToken('admin'),async(req, res)=>{
     try{
         let {aspek, subjek} = req.body
         const data = {
@@ -28,7 +28,21 @@ router.post('/store', async(req, res)=>{
     }
 })
 
-router.delete('/delete', async(req, res)=>{
+router.patch('/update/(:id)', verifyToken('admin'),async(req, res)=>{
+    try{
+        let id = req.params.id
+        let {bidang, id_peserta_magang, tanggal_mulai, tanggal_selesai} = req.body
+        let data = {
+            bidang, id_peserta_magang, tanggal_mulai, tanggal_selesai
+        }
+        await Model_Admin.updateAspek(id, data)
+        res.status(200).json({message: 'data berhasil diperbarui'})
+    }catch(err){
+        res.status(500).json({ status: false, error: err.message });
+    }
+})
+
+router.delete('/delete', verifyToken('admin'),async(req, res)=>{
     try{
         const {id} = req.body
         if(!id || id.length === 0) return res.status(400).json({message: 'tidak ada data yang dipilih'})

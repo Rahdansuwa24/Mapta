@@ -7,6 +7,11 @@ import { LuAlignJustify } from "react-icons/lu";
 import { FaTimes } from "react-icons/fa";
 import { TbEdit } from "react-icons/tb";
 import { MdDeleteOutline } from "react-icons/md";
+import axios from 'axios'
+import dayjs from 'dayjs';
+import 'dayjs/locale/id';
+dayjs.locale('id');
+//fer iki buatkan kaya warning diatas kayak yang pendftaran.
 
 import "../../styles/dashboard.css";
 
@@ -14,6 +19,116 @@ function Jadwal() {
     useEffect(() => {
         document.title = "Admin Jadwal";
     }, []);
+
+    useEffect(() => {
+        fetchDataJadwal()
+        fetchDataPeriodekosong()
+        fetchDataPeserta()
+    }, []);
+
+    const fetchDataJadwal = async()=>{
+        const token = localStorage.getItem("token")
+        try{
+            const rest = await axios.get("http://localhost:3000/admin/jadwal", {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            const dataJadwal = rest.data.data
+            setJadwalData(dataJadwal)
+        }catch(error){
+            alert("gagal mengambil data")
+            console.error(error)
+        }
+    }
+
+    const fetchDataPeriodekosong = async()=>{
+        const token = localStorage.getItem("token")
+        const res = await axios.get("http://localhost:3000/admin/jadwal/getPeriode", {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            try{
+                const dataPeriodeKosong = res.data.data
+                setPeriodeKosong(dataPeriodeKosong)
+            }catch(error){
+                alert("gagal mengambil data")
+                console.error(error)
+            }
+    }
+    const fetchDataPeserta = async()=>{
+        const token = localStorage.getItem("token")
+        const res = await axios.get("http://localhost:3000/admin/jadwal/peserta", {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            try{
+                const dataPeserta = res.data.data
+                setDataPeserta(dataPeserta)
+            }catch(error){
+                alert("gagal mengambil data")
+                console.error(error)
+            }
+    }
+
+    const handleSave = async()=>{
+        const token = localStorage.getItem("token");
+        try{
+            if(editingJadwal){
+                await axios.patch(`http://localhost:3000/admin/jadwal/update/${editingJadwal.id_jadwal}`,{
+                    bidang: formJadwal.departemen,
+                    id_peserta_magang: formJadwal.id_peserta_magang,
+                    tanggal_mulai: formJadwal.tanggal_mulai,
+                    tanggal_selesai: formJadwal.tanggal_selesai,
+                },{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                alert("Jadwal berhasil diperbarui");
+            }else{
+                await axios.post(`http://localhost:3000/admin/jadwal/store`,{
+                            
+                    bidang: formJadwal.departemen,
+                    id_peserta_magang: formJadwal.id_peserta_magang, // harus id
+                    tanggal_mulai: formJadwal.tanggal_mulai,
+                    tanggal_selesai: formJadwal.tanggal_selesai,
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                alert("Jadwal berhasil ditambahkan");
+            }
+
+            fetchDataJadwal();
+            setShowModal(false);
+            setEditingJadwal(null);
+        }catch(error){
+            console.error(error);
+            alert("Gagal menyimpan jadwal");
+        }
+    }
+
+    const handleDelete = async(id)=>{
+        const token = localStorage.getItem("token");
+        if(window.confirm("Yakin ingin mengahpus jadwal ini?")){
+            try{
+                await axios.delete(`http://localhost:3000/admin/jadwal/delete/${id}`,{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                alert("Jadwal berhasil dihapus");
+                fetchDataJadwal();
+            }catch(error){
+                console.error(error)
+                alert('gagal menghapus data')
+            }
+        }
+    }
 
     // Dummy data
     const pesertaDummy = [
@@ -55,14 +170,17 @@ function Jadwal() {
     const [openDepartemen, setOpenDepartemen] = useState({});
     const [showModal, setShowModal] = useState(false);
     const [editingJadwal, setEditingJadwal] = useState(null);
-    const [jadwalData, setJadwalData] = useState(jadwalDummy); // simpan jadwal dalam state, bukan const
+    const [jadwalData, setJadwalData] = useState([]);
+    const [periodeKosong, setPeriodeKosong] = useState("") // simpan jadwal dalam state
+    const [dataPeserta, setDataPeserta] = useState([])
+    const [selectedPesertaId, setSelectedPesertaId] = useState("");
 
     // State form jadwal
     const [formJadwal, setFormJadwal] = useState({
         instansi: "",
-        peserta: "",
-        tglMulai: "",
-        tglSelesai: "",
+        id_peserta_magang: "",
+        tanggal_mulai: "",
+        tanggal_selesai: "",
         departemen: "",
     });
 
@@ -78,16 +196,16 @@ function Jadwal() {
 
     // Filter jadwal berdasarkan departemen
     const jadwalFiltered = filterDepartemen
-        ? jadwalDummy.filter((j) => j.departemen === filterDepartemen)
-        : jadwalDummy;
+        ? jadwalData.filter((j) => j.bidang === filterDepartemen)
+        : jadwalData;
 
     // List departemen unik dari jadwal
-    const departemenList = [...new Set(jadwalDummy.map((j) => j.departemen))];
+    const departemenList = [...new Set(jadwalData.map((j) => j.bidang))];
 
     // Grouping jadwal per departemen
     const jadwalPerDepartemen = jadwalFiltered.reduce((acc, item) => {
-        if (!acc[item.departemen]) acc[item.departemen] = [];
-        acc[item.departemen].push(item);
+        if (!acc[item.bidang]) acc[item.bidang] = [];
+        acc[item.bidang].push(item);
         return acc;
     }, {});
 
@@ -97,6 +215,10 @@ function Jadwal() {
         [departemen]: !prev[departemen],
         }));
     };
+    //mendapatkan periode magang dari fetchDataPeserta
+    const periodeFiltered = formJadwal.instansi
+        ? dataPeserta.find((p) => p.id_peserta_magang === parseInt(formJadwal.id_peserta_magang))
+        : null;
 
     useEffect(() => {
         const initialState = {};
@@ -108,7 +230,7 @@ function Jadwal() {
 
     // Ambil peserta sesuai instansi dipilih
     const pesertaFiltered = formJadwal.instansi
-        ? pesertaDummy.filter((p) => p.instansi === formJadwal.instansi)
+        ? dataPeserta.filter((p) => p.instansi === formJadwal.instansi)
         : [];
 
     return (
@@ -126,9 +248,9 @@ function Jadwal() {
                         onClick={() => {
                             setFormJadwal({
                             instansi: "",
-                            peserta: "",
-                            tglMulai: "",
-                            tglSelesai: "",
+                            id_peserta_magang: "",
+                            tanggal_mulai: "",
+                            tanggal_selesai: "",
                             departemen: "",
                             });
                             setEditingJadwal(null); // reset mode edit
@@ -190,13 +312,13 @@ function Jadwal() {
                             </thead>
                             <tbody>
                             {jadwalDept.map((item, idx) => (
-                                <tr key={item.id}>
+                                <tr key={item.id_jadwal}>
                                 <td>{idx + 1}</td>
                                 <td>{item.nama}</td>
                                 <td>{item.instansi}</td>
-                                <td>{item.departemen}</td>
-                                <td>{item.tglMulai}</td>
-                                <td>{item.tglSelesai}</td>
+                                <td>{item.bidang}</td>
+                                <td>{dayjs(item.tanggal_mulai).format("DD MMMM YYYY")}</td>
+                                <td>{dayjs(item.tanggal_selesai).format("DD MMMM YYYY")}</td>
                                 <td className="aksi-cell">
                                 <div className="aksi-wrapper">
                                     <TbEdit
@@ -204,11 +326,11 @@ function Jadwal() {
                                     title="Edit Jadwal"
                                     onClick={() => {
                                         setFormJadwal({
-                                        instansi: item.instansi,
-                                        peserta: item.nama,
-                                        tglMulai: item.tglMulai,
-                                        tglSelesai: item.tglSelesai,
-                                        departemen: item.departemen,
+                                            instansi: item.instansi,
+                                            id_peserta_magang: item.id_peserta_magang,
+                                            tanggal_mulai: dayjs(item.tanggal_mulai).format("YYYY-MM-DD"),
+                                            tanggal_selesai: dayjs(item.tanggal_selesai).format("YYYY-MM-DD"),
+                                            departemen: item.bidang,
                                         });
                                         setEditingJadwal(item); // simpan data sedang diedit
                                         setShowModal(true);
@@ -217,6 +339,7 @@ function Jadwal() {
                                     <MdDeleteOutline
                                     style={{ cursor: "pointer", color: "red", fontSize: "22px" }}
                                     title="Hapus Jadwal"
+                                     onClick={() => handleDelete(item.id_jadwal)}
                                     />
                                 </div>
                                 </td>
@@ -257,11 +380,11 @@ function Jadwal() {
                         className="jadwal-input"
                         value={formJadwal.instansi}
                         onChange={(e) =>
-                        setFormJadwal({ ...formJadwal, instansi: e.target.value, peserta: "" })
+                        setFormJadwal({ ...formJadwal, instansi: e.target.value, id_peserta_magang: "" })
                         }
                     >
                         <option value="">-- Pilih Instansi --</option>
-                        {[...new Set(pesertaDummy.map((p) => p.instansi))].map(
+                        {[...new Set(dataPeserta.map((p) => p.instansi))].map(
                         (inst, idx) => (
                             <option key={idx} value={inst}>
                             {inst}
@@ -276,43 +399,57 @@ function Jadwal() {
                     <b>Peserta :</b>
                     <select
                         className="jadwal-input"
-                        value={formJadwal.peserta}
+                        value={formJadwal.id_peserta_magang}
                         onChange={(e) =>
-                        setFormJadwal({ ...formJadwal, peserta: e.target.value })
+                        setFormJadwal({ ...formJadwal, id_peserta_magang: e.target.value })
                         }
                         disabled={!formJadwal.instansi}
                     >
                         <option value="">-- Pilih Peserta --</option>
                         {pesertaFiltered.map((p) => (
-                        <option key={p.id} value={p.nama}>
+                        <option key={p.id_peserta_magang} value={p.id_peserta_magang}>
                             {p.nama}
                         </option>
                         ))}
                     </select>
                     </div>
 
+                    {/* tampilkan periode tanggal magang peserta*/}
+                    <div className="jadwal-detail-item">
+                    <b>Periode Magang :</b>
+                        <input
+                        type="text"
+                        className="jadwal-input"
+                        placeholder="periode magang"
+                        value={
+                            periodeFiltered ? `${dayjs(periodeFiltered.tanggal_mulai_magang).format("DD MMMM YYYY")} - ${dayjs(periodeFiltered.tanggal_selesai_magang).format("DD MMMM YYYY")}`: ""
+                        }
+                        disabled
+                        />
+                    </div>
+
                     {/* Tanggal Mulai */}
                     <div className="jadwal-detail-item">
-                    <b>Tanggal Mulai :</b>
+                    <b>Tanggal Mulai Magang :</b>
                     <input
                         type="date"
                         className="jadwal-input"
-                        value={formJadwal.tglMulai}
+                        value={formJadwal.tanggal_mulai}
                         onChange={(e) =>
-                        setFormJadwal({ ...formJadwal, tglMulai: e.target.value })
+                        setFormJadwal({ ...formJadwal, tanggal_mulai: e.target.value })
                         }
                     />
                     </div>
 
                     {/* Tanggal Selesai */}
                     <div className="jadwal-detail-item">
-                    <b>Tanggal Selesai :</b>
+                    <b>Tanggal Selesai Magang :</b>
                     <input
                         type="date"
                         className="jadwal-input"
-                        value={formJadwal.tglSelesai}
+                        value={formJadwal.tanggal_selesai}
                         onChange={(e) =>
-                        setFormJadwal({ ...formJadwal, tglSelesai: e.target.value })
+                        setFormJadwal({ ...formJadwal, tanggal_selesai  : e.target.value })
                         }
                     />
                     </div>
@@ -339,39 +476,7 @@ function Jadwal() {
                     <div className="jadwal-modal-actions">
                         <button
                         className="btn-save"
-                        onClick={() => {
-                            if (editingJadwal) {
-                            // UPDATE
-                            const updated = jadwalData.map((j) =>
-                                j.id === editingJadwal.id
-                                ? {
-                                    ...j,
-                                    nama: formJadwal.peserta,
-                                    instansi: formJadwal.instansi,
-                                    departemen: formJadwal.departemen,
-                                    tglMulai: formJadwal.tglMulai,
-                                    tglSelesai: formJadwal.tglSelesai,
-                                    }
-                                : j
-                            );
-                            setJadwalData(updated);
-                            } else {
-                            // CREATE
-                            const newJadwal = {
-                                id: jadwalData.length + 1,
-                                nama: formJadwal.peserta,
-                                instansi: formJadwal.instansi,
-                                departemen: formJadwal.departemen,
-                                tglMulai: formJadwal.tglMulai,
-                                tglSelesai: formJadwal.tglSelesai,
-                            };
-                            setJadwalData([...jadwalData, newJadwal]);
-                            }
-
-                            setShowModal(false);
-                            setEditingJadwal(null);
-                        }}
-                        >
+                        onClick={handleSave}>
                         {editingJadwal ? "Update" : "Simpan"}
                         </button>
                     </div>

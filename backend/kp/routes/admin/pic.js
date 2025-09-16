@@ -5,7 +5,7 @@ var Model_Admin = require('../../model/Model_Admin')
 const Model_User = require('../../model/Model_User');
 
 
-router.get('/', async(req, res)=>{
+router.get('/', verifyToken('admin'),async(req, res)=>{
     try{
         const data = await Model_Admin.getPIC()
         res.status(200).json({data})
@@ -14,21 +14,21 @@ router.get('/', async(req, res)=>{
     }
 })
 
-router.post('/store', async(req, res)=>{
+router.post('/store', verifyToken('admin'),async(req, res)=>{
     try{
         let {bidang, email, password} = req.body
         const user_level = 'pic';
         const existingUser = await Model_User.getEmail(email);
-                if (existingUser && existingUser.length > 0) {
-                    return res.status(400).json({ message: `Email ${email} sudah digunakan, ganti email lain` });
-                }
+        if (existingUser && existingUser.length > 0) {
+            return res.status(400).json({ message: `Email ${email} sudah digunakan, ganti email lain` });
+        }
         const validatePass = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
         if (!validatePass.test(password)) {
-            return res.status(400).json({
-                        status: false,
-                        message: 'Password harus mengandung minimal 1 huruf besar, 1 angka, dan panjang minimal 8 karakter'
-                    });
-                }
+        return res.status(400).json({
+                status: false,
+                message: 'Password harus mengandung minimal 1 huruf besar, 1 angka, dan panjang minimal 8 karakter'
+            });
+        }
         const akunPeserta = await Model_User.registerAkun(email, password, user_level);
         const idAkun = akunPeserta.insertId;
         const data = {
@@ -42,7 +42,7 @@ router.post('/store', async(req, res)=>{
     }
 })
 
-router.get('/(:id)', async(req, res)=>{
+router.get('/edit/(:id)', verifyToken('admin'),async(req, res)=>{
     try{
         let id = req.params.id
         let data = await Model_Admin.getIdUsersForPIC(id)
@@ -51,22 +51,21 @@ router.get('/(:id)', async(req, res)=>{
         res.status(500).json({ status: false, error: err.message });
     }
 })
-router.patch('/update/(:id)', async(req, res)=>{
+router.patch('/update/(:id)', verifyToken('admin'),async(req, res)=>{
     try{
         let id = req.params.id
         let {bidang, email, password} = req.body
-        const existingUser = await Model_User.getEmail(email);
-            if (existingUser && existingUser.length > 0) {
-                return res.status(400).json({ message: `Email ${email} sudah digunakan, ganti email lain` });
-            }
+        console.log(req.body)
+        if(!bidang || !email){
+             return res.status(400).json({ message: `pastikan field tidak ada yang kosong` });
+        }
         const validatePass = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
         if (!validatePass.test(password)) {
             return res.status(400).json({
-                        message: 'Password harus mengandung minimal 1 huruf besar, 1 angka, dan panjang minimal 8 karakter'
-                    });
-            }
+                    message: 'Password harus mengandung minimal 1 huruf besar, 1 angka, dan panjang minimal 8 karakter'
+                });
+        }
         let rows = await Model_Admin.getIdUsersForPIC(id)
-        console.log(rows)
         await Model_User.updateAkunPIC(rows[0].id_users, email, password);
         let data = {
             bidang
@@ -78,7 +77,7 @@ router.patch('/update/(:id)', async(req, res)=>{
     }
 })
 //bagian delete belum fix, dikarenakan di database harus dilakukan delete cascade
-router.delete('/delete/(:id)', async(req, res)=>{
+router.delete('/delete/(:id)', verifyToken('admin'),async(req, res)=>{
     try{
         let id = req.params.id
         await Model_Admin.deletePIC(id)

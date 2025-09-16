@@ -7,6 +7,10 @@ import { LuAlignJustify } from "react-icons/lu";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
+import axios from 'axios'
+import dayjs from 'dayjs';
+import 'dayjs/locale/id';
+dayjs.locale('id');
 
 import "../../styles/dashboard.css";
 
@@ -18,87 +22,32 @@ function Dashboard() {
         document.title = "Admin Dashboard";
     }, []);
 
-    const pesertaDummy = [
-        {
-            id: 1,
-            nama: "Budi Santoso",
-            nim: "1234567890",
-            instansi: "Politeknik Elektronika Negeri Surabaya",
-            tglMulai: "01-09-2025",
-            tglSelesai: "30-11-2025",
-            kategori: "Individu",
-            email: "budi.santoso@gmail.com",
-            password: "budi123",
-            profil: profil1,
-            dokumen: ["Surat_Pengantar.pdf", "Proposal.pdf", "Proposal.pdf", "Proposal.pdf", "Proposal.pdf"]
-        },
-        {
-            id: 2,
-            nama: "Danang Cosmos",
-            nim: "67854645667",
-            instansi: "Politeknik Elektronika Negeri Surabaya",
-            tglMulai: "01-09-2025",
-            tglSelesai: "30-11-2025",
-            kategori: "Individu",
-            email: "budi.santoso@gmail.com",
-            password: "budi123",
-            profil: profil1,
-            dokumen: ["Surat_Pengantar.pdf", "Proposal.pdf"]
-        },
-        {
-            id: 3,
-            nama: "Siti Aisyah",
-            nim: "9876543210",
-            instansi: "Politeknik Elektronika Negeri Surabaya",
-            tglMulai: "01-09-2025",
-            tglSelesai: "30-11-2025",
-            kategori: "Kelompok",
-            email: "siti.aisyah@gmail.com",
-            password: "siti123",
-            profil: profil2,
-            dokumen: ["Surat_Pengantar.pdf", "Proposal.pdf"]
-        },
-        {
-            id: 4,
-            nama: "Ahmad Ifcel",
-            nim: "1122334455",
-            instansi: "Universitas Airlangga",
-            tglMulai: "05-09-2025",
-            tglSelesai: "05-12-2025",
-            kategori: "Individu",
-            email: "ahmad.fauzi@gmail.com",
-            password: "ahmad123",
-            profil: profil1,
-            dokumen: ["Surat_Pengantar.pdf"]
-        },
-        {
-            id: 5,
-            nama: "Ahmad Haidar",
-            nim: "1122334455",
-            instansi: "Universitas Negeri Surabaya",
-            tglMulai: "05-09-2025",
-            tglSelesai: "05-12-2025",
-            kategori: "Kelompok",
-            email: "ahmad.fauzi@gmail.com",
-            password: "ahmad123",
-            profil: profil1,
-            dokumen: ["Surat_Pengantar.pdf"]
-        },
-        {
-            id: 6,
-            nama: "Ahmad Lexy",
-            nim: "1122334455",
-            instansi: "Universitas Airlangga",
-            tglMulai: "05-09-2025",
-            tglSelesai: "05-12-2025",
-            kategori: "Kelompok",
-            email: "ahmad.fauzi@gmail.com",
-            password: "ahmad123",
-            profil: profil1,
-            dokumen: ["Surat_Pengantar.pdf"]
-        },
-    ];
+    const [calonPeserta, setCalonPeserta] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null);
+    
+    useEffect(()=>{
+        fetchPeserta()
+    }, [])   
 
+
+    const fetchPeserta = async() =>{
+            const token = localStorage.getItem("token");
+            try{
+                const res = await axios.get("http://localhost:3000/admin/dasbor",{
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                console.log(res.data.data)
+                setCalonPeserta(res.data.data)
+            }catch(error){
+                setError("gagal mengambil data")
+                
+            }finally{
+                setLoading(false)
+            }
+    }
     const [showModal, setShowModal] = useState(false);
     const [selectedPeserta, setSelectedPeserta] = useState(null);
     const [filterInstansi, setFilterInstansi] = useState("");
@@ -111,12 +60,12 @@ function Dashboard() {
 
     // Filter peserta jika dropdown dipilih
     const pesertaFiltered = filterInstansi
-        ? pesertaDummy.filter((p) => p.instansi === filterInstansi)
-        : pesertaDummy;
+        ? calonPeserta.filter((p) => p.instansi === filterInstansi)
+        : calonPeserta;
 
     // ambil daftar instansi unik
     const instansiList = [
-    ...new Set(pesertaDummy.map((p) => p.instansi))
+    ...new Set(calonPeserta.map((p) => p.instansi))
     ];
 
     // Kelompokkan peserta berdasarkan instansi
@@ -168,8 +117,8 @@ function Dashboard() {
                     {/* Loop setiap instansi */}
                     {Object.keys(pesertaPerInstansi).map((instansi) => {
                         const pesertaInstansi = pesertaPerInstansi[instansi];
-                        const individu = pesertaInstansi.filter((p) => p.kategori === "Individu");
-                        const kelompok = pesertaInstansi.filter((p) => p.kategori === "Kelompok");
+                        const individu = pesertaInstansi.filter((p) => p.kategori === "individu");
+                        const kelompok = pesertaInstansi.filter((p) => p.kategori === "kelompok");
 
                         return (
                             <div className="container-instansi" key={instansi}>
@@ -194,58 +143,90 @@ function Dashboard() {
                                     <div className="contain-table">
                                         {/* TABEL INDIVIDU */}
                                         {individu.length > 0 && (
-                                            <>
-                                            <h4>Individu</h4>
-                                            <div className="table-wrapper">
-                                                <table>
-                                                <thead>
-                                                    <tr>
-                                                    <th>No</th>
-                                                    <th>Nama</th>
-                                                    <th>Instansi</th>
-                                                    <th>Tanggal Mulai Magang</th>
-                                                    <th>Tanggal Selesai Magang</th>
-                                                    <th>Kategori</th>
-                                                    <th>Aksi</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {individu.map((peserta, idx) => (
-                                                    <tr key={peserta.id}>
-                                                        <td>{idx + 1}</td>
-                                                        <td className="nama-cell">
-                                                        <img src={peserta.profil} alt="Foto Profil" />
-                                                        <span>{peserta.nama}</span>
-                                                        </td>
-                                                        <td>{peserta.instansi}</td>
-                                                        <td>{peserta.tglMulai}</td>
-                                                        <td>{peserta.tglSelesai}</td>
-                                                        <td>{peserta.kategori}</td>
-                                                        <td className="aksi-cell">
-                                                            <div className="aksi-wrapper">
-                                                                <span 
-                                                                    style={{ color: "green", cursor: "pointer" }} 
-                                                                    title="Setujui"
-                                                                >
-                                                                    <FaCheck />
-                                                                </span>
-                                                                <span 
-                                                                    style={{ color: "red", cursor: "pointer" }} 
-                                                                    title="Tolak"
-                                                                >
-                                                                    <FaTimes />
-                                                                </span>
-                                                                <FaEllipsisVertical
-                                                                    style={{ cursor: "pointer" }}
-                                                                    title="Detail Profil"
-                                                                    onClick={() => handleOpenModal(peserta)}
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    ))}
-                                                </tbody>
-                                                </table>
+                                        <>
+                                        <h4>Individu</h4>
+                                        <div className="table-wrapper">
+                                            <table>
+                                            <thead>
+                                                <tr>
+                                                <th>No</th>
+                                                <th>Nama</th>
+                                                <th>Instansi</th>
+                                                <th>Tanggal Mulai Magang</th>
+                                                <th>Tanggal Selesai Magang</th>
+                                                <th>Kategori</th>
+                                                <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {individu.map((peserta, idx) => (
+                                                <tr key={peserta.id_peserta_magang}>
+                                                    <td>{idx + 1}</td>
+                                                    <td className="nama-cell">
+                                                    <img src={`http://localhost:3000/static/images/${peserta.foto_diri}`}
+                                                    alt="Foto Profil" />
+                                                    <span>{peserta.nama}</span>
+                                                    </td>
+                                                    <td>{peserta.instansi}</td>
+                                                    <td>{dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")}</td>
+                                                    <td>{dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}</td>
+                                                    <td>{peserta.kategori}</td>
+                                                    <td className="aksi-cell">
+                                                        <div className="aksi-wrapper">
+                                                            <button
+                                                                style={{ color: "green", cursor: "pointer" }} 
+                                                                title="Setujui"
+                                                                onClick={async()=>{
+                                                                    console.log("ID peserta:", peserta.id_peserta_magang);
+                                                                    const token = localStorage.getItem("token");
+                                                                    try{
+                                                                        await axios.patch( `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
+                                                                        {status_penerimaan: "diterima"},
+                                                                        { headers: { Authorization: `Bearer ${token}` } }
+
+                                                                        )
+                                                                        alert("lamaran disetujui")
+                                                                        fetchPeserta()
+                                                                    }catch(err){
+                                                                        console.error(err)
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <FaCheck />
+                                                            </button>
+                                                            <button 
+                                                                style={{ color: "red", cursor: "pointer" }} 
+                                                                title="Tolak"
+                                                                    onClick={async()=>{
+                                                                    console.log("ID peserta:", peserta.id_peserta_magang);
+                                                                    const token = localStorage.getItem("token");
+                                                                    try{
+                                                                        await axios.patch( `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
+                                                                        {status_penerimaan: "ditolak"},
+                                                                        { headers: { Authorization: `Bearer ${token}` } }
+
+                                                                        )
+                                                                        alert("lamaran ditolak")
+                                                                        fetchPeserta()
+                                                                    }catch(err){
+                                                                        console.error(err)
+                                                                    }
+                                                                }}
+                                                                
+                                                            >
+                                                                <FaTimes />
+                                                            </button>
+                                                            <FaEllipsisVertical
+                                                                style={{ cursor: "pointer" }}
+                                                                title="Detail Profil"
+                                                                onClick={() => handleOpenModal(peserta)}
+                                                            />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
                                             </div>
                                             </>
                                         )}
@@ -269,30 +250,62 @@ function Dashboard() {
                                                 </thead>
                                                 <tbody>
                                                     {kelompok.map((peserta, idx) => (
-                                                    <tr key={peserta.id}>
+                                                    <tr key={peserta.id_peserta_magang}>
                                                         <td>{idx + 1}</td>
                                                         <td className="nama-cell">
-                                                        <img src={peserta.profil} alt="Foto Profil" />
+                                                        <img src={`http://localhost:3000/static/images/${peserta.foto_diri}`}
+                                                        alt="Foto Profil" />
                                                         <span>{peserta.nama}</span>
                                                         </td>
                                                         <td>{peserta.instansi}</td>
-                                                        <td>{peserta.tglMulai}</td>
-                                                        <td>{peserta.tglSelesai}</td>
+                                                        <td>{dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")}</td>
+                                                        <td>{dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}</td>
                                                         <td>{peserta.kategori}</td>
                                                         <td className="aksi-cell">
                                                             <div className="aksi-wrapper">
-                                                                <span 
+                                                                <button
                                                                     style={{ color: "green", cursor: "pointer" }} 
                                                                     title="Setujui"
+                                                                    onClick={async()=>{
+                                                                        console.log("ID peserta:", peserta.id_peserta_magang);
+                                                                        const token = localStorage.getItem("token");
+                                                                        try{
+                                                                            await axios.patch( `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
+                                                                            {status_penerimaan: "diterima"},
+                                                                            { headers: { Authorization: `Bearer ${token}` } }
+
+                                                                            )
+                                                                            alert("lamaran disetujui")
+                                                                            fetchPeserta()
+                                                                        }catch(err){
+                                                                            console.error(err)
+                                                                        }
+                                                                    }}
                                                                 >
                                                                     <FaCheck />
-                                                                </span>
-                                                                <span 
+                                                                </button>
+                                                                <button 
                                                                     style={{ color: "red", cursor: "pointer" }} 
                                                                     title="Tolak"
+                                                                     onClick={async()=>{
+                                                                        console.log("ID peserta:", peserta.id_peserta_magang);
+                                                                        const token = localStorage.getItem("token");
+                                                                        try{
+                                                                            await axios.patch( `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
+                                                                            {status_penerimaan: "ditolak"},
+                                                                            { headers: { Authorization: `Bearer ${token}` } }
+
+                                                                            )
+                                                                            alert("lamaran ditolak")
+                                                                            fetchPeserta()
+                                                                        }catch(err){
+                                                                            console.error(err)
+                                                                        }
+                                                                    }}
+                                                                    
                                                                 >
                                                                     <FaTimes />
-                                                                </span>
+                                                                </button>
                                                                 <FaEllipsisVertical
                                                                     style={{ cursor: "pointer" }}
                                                                     title="Detail Profil"
@@ -327,7 +340,7 @@ function Dashboard() {
                             <div className="modal-body">
                                 <div className="profile-pic">
                                     <img
-                                        src={selectedPeserta.profil}
+                                        src={`http://localhost:3000/static/images/${selectedPeserta.foto_diri}`}
                                         alt="Profil"
                                         style={{ width: "90px", height: "90px", borderRadius: "10px" }}
                                     />
@@ -338,7 +351,7 @@ function Dashboard() {
                                 </div>
                                 <div className="detail-item">
                                     <b>NIM/NIP :</b>
-                                    <p>{selectedPeserta.nim}</p>
+                                    <p>{selectedPeserta.nomor_identitas}</p>
                                 </div>
                                 <div className="detail-item">
                                     <b>Instansi :</b>
@@ -347,7 +360,7 @@ function Dashboard() {
                                 <div className="detail-item">
                                     <b>Tanggal Mulai - Tanggal Selesai :</b>
                                     <p>
-                                        {selectedPeserta.tglMulai} hingga {selectedPeserta.tglSelesai}
+                                        {dayjs(selectedPeserta.tanggal_mulai_magang).format("DD MMMM YYYY")} hingga {dayjs(selectedPeserta.tanggal_selesai_magang).format("DD MMMM YYYY")}
                                     </p>
                                 </div>
                                 <div className="detail-item">
@@ -366,12 +379,14 @@ function Dashboard() {
                                 <div className="detail-item">
                                     <b>Dokumen :</b>
                                     <div className="dokumen-list">
-                                        {selectedPeserta.dokumen.map((doc, index) => (
-                                            <div className="dokumen-item" key={index}>
+                                       {selectedPeserta.dokumen_pendukung &&
+                                        JSON.parse(selectedPeserta.dokumen_pendukung).map((doc, index)=> (
+                                            <div className="dokumen-item" key={doc}>
                                                 <span>{doc}</span>
                                                 <div className="dokumen-actions">
-                                                    <button className="btn-view">View</button>
-                                                    <button className="btn-download">Download</button>
+                                                    <button className="btn-download" onClick={()=>{
+                                                        window.open(`http://localhost:3000/static/document/${doc}`,"_blank", "noopener,noreferrer")
+                                                    }}>Download</button>
                                                 </div>
                                             </div>
                                         ))}

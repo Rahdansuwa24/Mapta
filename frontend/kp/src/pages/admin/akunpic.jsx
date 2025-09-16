@@ -6,6 +6,7 @@ import NavbarAdmTm from "../../components/navbar-adm";
 import { FaTimes } from "react-icons/fa";
 import { TbEdit } from "react-icons/tb";
 import { MdDeleteOutline } from "react-icons/md";
+import axios from 'axios'
 
 import "../../styles/dashboard.css";
 
@@ -19,51 +20,117 @@ function AkunPIC() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [editingIndex, setEditingIndex] = useState(null);
+    const [akunList, setAkunList] = useState([]);
 
-    // Data dummy awal
-    const [akunList, setAkunList] = useState([
-        { departemen: "Pengembangan Sumber Daya", email: "perpus@domain.com", password: "123456" },
-        { departemen: "Kesekretariatan", email: "arsip@domain.com", password: "abcdef" },
-        { departemen: "Penyelamatan dan Pendayagunaan Kearsipan", email: "ppk@domain.com", password: "password1" },
-    ]);
+    useEffect(()=>{
+        fetchDataAkun()
+    }, [])
 
+
+    const fetchDataAkun = async()=>{
+            const token = localStorage.getItem("token")
+            try{
+                const res = await axios.get("http://localhost:3000/admin/pic", {
+                    headers:{
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                const dataAkun = res.data.data
+                console.log(dataAkun)
+                setAkunList(dataAkun)
+            }catch(error){
+                alert("gagal mengambil data")
+                console.error(error)
+            }
+    }
     // Tambah / Update akun PIC
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!departemen || !email || !password) {
-        alert("Harap lengkapi semua field!");
-        return;
+        const token = localStorage.getItem("token");
+        if (!departemen || !email) {
+            alert("Harap lengkapi field departemen dan index!");
+            return;
         }
 
-        if (editingIndex !== null) {
-        // mode edit
-        const updated = [...akunList];
-        updated[editingIndex] = { departemen, email, password };
-        setAkunList(updated);
-        } else {
-        // mode tambah
-        setAkunList([...akunList, { departemen, email, password }]);
+        if (editingIndex === null && !password) {
+            alert("Harap lengkapi field password!");
+            return;
         }
 
-        setShowModal(false);
-        setDepartemen("");
-        setEmail("");
-        setPassword("");
-        setEditingIndex(null);
+        const data = {
+            bidang: departemen,
+            email,
+            password
+        };
+
+        try{
+            if (editingIndex !== null) {
+            // mode edit
+            const akunId = akunList[editingIndex].id_pic;
+            await axios.patch(`http://localhost:3000/admin/pic/update/${akunId}`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json" 
+                },
+            })
+                alert("data akun berhasil diperbarui")
+            } else {
+            // mode tambah
+            await axios.post(`http://localhost:3000/admin/pic/store`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json" 
+                },
+            })
+                alert("data akun berhasil dibuat")
+            }
+            setShowModal(false);
+            setDepartemen("");
+            setEmail("");
+            setPassword("");
+            setEditingIndex(null)
+
+            try {
+                fetchDataAkun();
+            } catch (err) {
+                console.error("Gagal refresh data:", err);
+            }
+
+        }catch(error){
+            console.error("Terjadi kesalahan:", error.response?.data);
+            alert(error.response?.data?.message || "Gagal menyimpan data. Silakan coba lagi.");
+
+        }
+
     };
 
     // Hapus akun
-    const handleDelete = (index) => {
-        const filtered = akunList.filter((_, i) => i !== index);
-        setAkunList(filtered);
+    const handleDelete = async (index) => {
+        const akun = akunList[index]
+        const akunId = akun.id_users
+        const confirmDelete = window.confirm(`Apakah kamu yakin ingin menghapus akun dengan email: ${akun.email}?`)
+        if (!confirmDelete) return;
+        try{
+            const token = localStorage.getItem("token")
+            await axios.delete(`http://localhost:3000/admin/pic/delete/${akunId}`,{
+                    headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            alert("Data berhasil dihapus");
+            fetchDataAkun(); 
+        }catch(error){
+            console.error("Terjadi kesalahan:", error.response?.data);
+            alert(error.response?.data?.message || "Gagal menghapus data.");
+        }
     };
 
     // Edit akun
     const handleEdit = (index) => {
         const akun = akunList[index];
-        setDepartemen(akun.departemen);
+        setDepartemen(akun.bidang);
         setEmail(akun.email);
-        setPassword(akun.password);
+        setPassword("");
         setEditingIndex(index);
         setShowModal(true);
     };
@@ -104,7 +171,7 @@ function AkunPIC() {
                         <th>No</th>
                         <th>Nama Departemen</th>
                         <th>Email</th>
-                        <th>Password</th>
+                        {/* <th>Password</th> */}
                         <th>Aksi</th>
                     </tr>
                     </thead>
@@ -112,9 +179,9 @@ function AkunPIC() {
                     {akunList.map((akun, idx) => (
                         <tr key={idx}>
                         <td>{idx + 1}</td>
-                        <td>{akun.departemen}</td>
+                        <td>{akun.bidang}</td>
                         <td>{akun.email}</td>
-                        <td>{akun.password}</td>
+                        {/* <td>{akun.password}</td> */}
                         <td className="aksi-cell">
                             <div className="aksi-wrapper">
                             <TbEdit

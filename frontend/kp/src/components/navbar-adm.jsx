@@ -3,15 +3,13 @@ import { IoSearch } from "react-icons/io5";
 import { FaBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // untuk navigasi
 import "../styles/navbar-adm.css";
+import {jwtDecode} from "jwt-decode";
 
 export default function NavbarAdm() {
     const navigate = useNavigate();
 
-    // dummy data user
-    const user = {
-        name: "Danang Susetyo Pranawa Susilo Himel",
-        position: "Admin",
-    };
+    const [users, setUsers] = useState({email: "", user_level: ""})
+    const [loading, setLoading] = useState(true)
 
     const daftarPeserta = ["Budi Santoso", "Siti Aisyah", "Ahmad Ifcel"];
 
@@ -20,6 +18,34 @@ export default function NavbarAdm() {
     const [showNotif, setShowNotif] = useState(false);
     const [notifRead, setNotifRead] = useState(false);
 
+    useEffect(()=>{
+        const fetchUser = async()=>{
+            const token = localStorage.getItem("token")
+            if(!token){
+                console.warn("token tidak ada atau sudah kadaluarsa")
+                setLoading(false)
+                return;
+            }
+            try{
+                const decoded = jwtDecode(token)
+                setUsers({
+                    email: decoded.email,
+                    user_level: decoded.user_level
+                })
+
+            }catch(error){
+                console.error("gagal decode token: ", error.message)
+            }finally{
+                setLoading(false)
+            }
+        }
+        fetchUser()
+    },[])
+    //handle logout
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/login");
+    };
     // hilangkan popup otomatis setelah 5 detik
     useEffect(() => {
         if (showNotif) {
@@ -30,7 +56,7 @@ export default function NavbarAdm() {
 
     return (
         <div className="navbar">
-        <button className="logout-btn">Logout</button>
+        <button className="logout-btn"onClick={handleLogout}>Logout</button>
         <div style={{ display: "flex", alignItems: "center", position: "relative" }}>
             
             {/* Bell Icon dengan badge */}
@@ -73,8 +99,13 @@ export default function NavbarAdm() {
 
             {/* Profile Dummy */}
             <div className="profile">
-            <span className="name">{user.name}</span>
-            <span className="position">{user.position}</span>
+                {loading ? (<span>Loading....</span>):users ?(
+                    <>
+                    <span className="name">{users.email}</span>
+                    <span className="position">{users.user_level}</span>
+                    </>
+                ): ( <span>User tidak ditemukan</span>)}
+    
             </div>
         </div>
         </div>

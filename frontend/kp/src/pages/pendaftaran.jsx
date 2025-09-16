@@ -151,7 +151,7 @@ export default function PendaftaranMagang() {
         }
         for (let i = 0; i < formData.length; i++) {
             if (formData[i].password !== formData[i].confirmPassword) {
-            alert(`Password dan konfirmasi password tidak sama untuk anggota ${i + 1}`);
+            alert(`Password dan konfirmasi password tidak sama untuk peserta ${i + 1}`);
             return;
             }
         }

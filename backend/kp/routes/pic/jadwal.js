@@ -13,6 +13,14 @@ router.get('/', async(req, res)=>{
         res.status(500).json({ status: false, error: err.message });
     }
 })
+router.get('/periode-kosong', async(req, res)=>{
+    try{
+        const data = await Model_Admin.getPeriode()
+        res.status(200).json({data})
+    }catch(err){
+        res.status(500).json({ status: false, error: err.message });
+    }
+})
 
 router.post('/store', async(req, res)=>{
     try{
