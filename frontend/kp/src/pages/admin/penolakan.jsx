@@ -283,7 +283,7 @@ function Ditolak() {
                                                     <td>{dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}</td>
                                                     <td>{peserta.kategori}</td>
                                                     <td>
-                                                        <span className="status-label diterima">{peserta.status_penerimaan}</span>
+                                                        <span className="status-label ditolak">{peserta.status_penerimaan}</span>
                                                     </td>
                                                     <td>
                                                         <div className="upload-container">

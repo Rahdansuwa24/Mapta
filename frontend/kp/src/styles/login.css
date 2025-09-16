@@ -62,7 +62,7 @@
         border-radius: 25px;
         font-size: 16px;
         font-weight: bold;
-        margin-top: 10px;
+        margin-top: 25px;
         cursor: pointer;
         transition: all 0.2s ease;
         box-shadow: 0 4px 6px rgba(0,0,0,0.2); 
@@ -101,6 +101,39 @@
         z-index: 0;
         pointer-events: none;
     }
+
+/* hapus border, background di .password-input */
+.password-input {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+/* samakan dengan input email */
+.password-input input {
+  width: 100%;
+  padding: 12px 20px;
+  margin-bottom: 0;
+  border-radius: 25px;
+  border: 1px solid #95AFC6;
+  background-color: #E9F2F9;
+  font-size: 14px;
+  outline: none;
+}
+
+/* icon */
+.password-input .toggle-eye {
+  position: absolute;
+  right: 15px;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 20px;
+  color: #555;
+}
 
     @media (max-width: 768px) {
         .container {

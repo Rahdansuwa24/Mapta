@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BsArrowUpCircle } from "react-icons/bs";
+import { ImEye, ImEyeBlocked } from "react-icons/im";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 
@@ -14,6 +15,8 @@ export default function PendaftaranMagang() {
 
     const [sections, setSections] = useState([0]);
     const [dokumenLabels, setDokumenLabels] = useState(["Dokumen:"]);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [kategoriPertama, setKategoriPertama] = useState("");
     const [showScrollTop, setShowScrollTop] = useState(false);
     const [formData, setFormData] = useState([
@@ -334,8 +337,44 @@ export default function PendaftaranMagang() {
                         </div>
                     </div>
                     <input type="email" placeholder="Email Aktif" value={formData[index].email} onChange={(e)=>handleChange(index, "email", e.target.value)} />
-                    <input type="password" placeholder="Buat Password" value={formData[index].password} onChange={(e)=>handleChange(index, "password", e.target.value)}/>
-                    <input type="password" placeholder="Ketik Ulang Password" value={formData[index].confirmPassword} onChange={(e)=>handleChange(index, "confirmPassword", e.target.value)}/>
+                    {/* password */}
+                    <div className="password-input">
+                    <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Buat Password"
+                        value={formData[index].password}
+                        onChange={(e) =>
+                        handleChange(index, "password", e.target.value)
+                        }
+                    />
+                    <span
+                        className="toggle-eye"
+                        onClick={() => setShowPassword(!showPassword)}
+                    >
+                        {showPassword ? <ImEyeBlocked /> : <ImEye />}
+                    </span>
+                    </div>
+
+                    {/* konfirmasi password */}
+                    <div className="password-input">
+                    <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Ketik Ulang Password"
+                        value={formData[index].confirmPassword}
+                        onChange={(e) =>
+                        handleChange(index, "confirmPassword", e.target.value)
+                        }
+                    />
+                    <span
+                        className="toggle-eye"
+                        onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                        }
+                    >
+                        {showConfirmPassword ? <ImEyeBlocked /> : <ImEye />}
+                    </span>
+                    </div>
+
                 </div>
 
                 {/* KOLOM KANAN */}
@@ -366,28 +405,38 @@ export default function PendaftaranMagang() {
                             onChange={(e)=>handleChange(index, "tanggal_selesai_magang", e.target.value)}
                         />
                     </div>
-                {/* Label dan Input */}
-                <label className="input-file-wrap">
-                    <div className="placeholder-text">
-                        Upload Dokumen Pendukung
-                    </div>
-                    <input type="file" multiple onChange={(e) => handleDokumenChange(index, e)}/>
-                </label>
+                    {/* Label dan Input */}
+                    <label className="input-file-wrap">
+                        <div className="placeholder-text">
+                            Upload Dokumen Pendukung
+                        </div>
+                        <input
+                            type="file"
+                            multiple
+                            onChange={(e) => handleDokumenChange(index, e)}
+                            className="custom-input-file"
+                        />
+                    </label>
+                </div>
 
-                {/* Preview file di luar field */}
-                {formData[index].dokumen.length > 0 && (
-                    <div className="file-list mt-2">
+                    {/* Preview file */}
+                    {formData[index].dokumen.length > 0 && (
+                    <div className="custom-file-list">
                         {formData[index].dokumen.map((f, i) => (
-                        <div key={i} className="file-item flex items-center gap-2">
-                            <span>{f.name}</span>
+                        <div key={i} className="custom-file-item">
+                            <span className="custom-file-name">{f.name}</span>
                             <button
-                            type="button" onClick={() => handleRemoveFile(index, i)} className="text-red-500 font-bold hover:text-red-700"
-                            >X</button>
+                            type="button"
+                            onClick={() => handleRemoveFile(index, i)}
+                            className="custom-remove-btn"
+                            >
+                            ×
+                            </button>
                         </div>
                         ))}
                     </div>
-                )}
-                </div>
+                    )}
+
                 <p>
                     Note: Tulis nama instansi lengkap, misal{" "}
                     <b>SMK Negeri 1 Surabaya</b> (bukan SMKN 1 SBY) atau{" "}

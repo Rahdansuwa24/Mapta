@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion"; 
+import { ImEye, ImEyeBlocked } from "react-icons/im";
 import "../styles/login.css";
 import { useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
@@ -16,7 +17,7 @@ export default function LoginPage() {
     }, []);
 
     const navigate = useNavigate();
-
+    const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
             email: "",
             password: ""
@@ -78,8 +79,9 @@ export default function LoginPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.3 }}
                     />
+                    <div className="password-input">
                     <motion.input
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         placeholder="Password"
                         name="password"
                         value={formData.password}
@@ -88,16 +90,16 @@ export default function LoginPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.5 }}
                     />
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={handleLogin}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.7 }}
+                    <span
+                        className="toggle-eye"
+                        onClick={() => setShowPassword(!showPassword)}
                     >
+                        {showPassword ? <ImEyeBlocked /> : <ImEye />}
+                    </span>
+                    </div>
+                    <button onClick={handleLogin}>
                         Masuk
-                    </motion.button>
+                    </button>
                 </motion.div>
 
                 {/* RIGHT: DESKRIPSI */}

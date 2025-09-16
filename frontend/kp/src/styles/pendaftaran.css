@@ -237,6 +237,28 @@ select {
     flex: 1;
 }
 
+/* ICON MATA PASSWORD */
+
+.password-input {
+  position: relative;
+  width: 100%;
+}
+.password-input input {
+  width: 100%;
+  padding-right: 40px; /* beri ruang icon */
+}
+.password-input .toggle-eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #555;
+  font-size: 18px;
+}
+
+
+
 /* INPUT FILE */
 .input-file-wrap {
     position: relative;
@@ -262,6 +284,79 @@ select {
     border-color: #2D5A9C;
     box-shadow: 0 0 5px rgba(45, 90, 156, 0.4);
 }
+
+
+/* PREVIEW FILE */
+.custom-input-file {
+  display: none; /* sembunyikan input aslinya */
+}
+
+/* Placeholder text */
+.custom-placeholder-text {
+  color: #555;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Daftar file */
+.custom-file-list {
+  display: flex;
+  flex-wrap: wrap;            /* supaya turun ke baris baru */
+  justify-content: flex-start; /* sejajar mulai dari kiri */
+  gap: 15px;                   /* jarak antar kotak */
+  width: 100%;                 /* penuh */
+}
+
+/* Tiap item file */
+.custom-file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+
+  /* ukuran kotak konsisten */
+  width: 140px;               /* semua kotak sama lebar */
+  background-color: #FEFFFE;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  padding: 6px 10px;
+  font-size: 14px;
+  transition: background 0.3s;
+  box-sizing: border-box;
+}
+
+.custom-file-item:hover {
+  background-color: #f5f5f5;
+}
+
+.custom-file-name {
+  flex: 1;                    /* biar nama file memenuhi sisa ruang */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Tombol hapus */
+.custom-remove-btn {
+  background: transparent;
+  border: none;
+  color: #d32f2f;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  flex-shrink: 0; /* biar tombol tidak mengecil */
+}
+
+.custom-remove-btn:hover {
+  color: #b71c1c;
+}
+
+
+
+
+
+
+
 
 /* SUBMIT BUTTON */
 .submit-btn {
