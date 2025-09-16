@@ -383,10 +383,10 @@ function Ditolak() {
                                         <input className="peserta-input" type="text" value={selectedPeserta.email} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, email: e.target.value})} />
                                     </div>
 
-                                    <div className="peserta-detail-item">
+                                    {/* <div className="peserta-detail-item">
                                         <b>Password :</b>
                                         <input className="peserta-input" type="text" value={selectedPeserta.password} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, password: e.target.value})} />
-                                    </div>
+                                    </div> */}
 
                                     <div className="peserta-detail-item">
                                         <b>Tanggal Mulai - Selesai :</b>

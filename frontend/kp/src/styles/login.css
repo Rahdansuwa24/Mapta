@@ -37,6 +37,17 @@
         text-align: center;
     }
 
+    .left input,
+    .left button {
+    width: 100%;
+    max-width: 500px; /* batas lebar biar tidak terlalu lebar */
+    }
+
+    .login-password-input {
+    max-width: 500px; /* samakan dengan input email */
+    width: 100%;
+    }
+
     .left input {
         width: 100%;
         padding: 12px 20px;
@@ -102,49 +113,72 @@
         pointer-events: none;
     }
 
-/* hapus border, background di .password-input */
-.password-input {
-  display: flex;
-  align-items: center;
-  position: relative;
-  width: 100%;
-}
+    /* hapus border, background di .password-input */
+    .login-password-input {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    }
 
-/* samakan dengan input email */
-.password-input input {
-  width: 100%;
-  padding: 12px 20px;
-  margin-bottom: 0;
-  border-radius: 25px;
-  border: 1px solid #95AFC6;
-  background-color: #E9F2F9;
-  font-size: 14px;
-  outline: none;
-}
+    /* samakan dengan input email */
+    .login-password-input input {
+    width: 100%;
+    padding: 12px 20px;
+    margin-bottom: 0;
+    border-radius: 25px;
+    border: 1px solid #95AFC6;
+    background-color: #E9F2F9;
+    font-size: 14px;
+    outline: none;
+    }
 
-/* icon */
-.password-input .toggle-eye {
-  position: absolute;
-  right: 15px;
-  top: 0;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: 20px;
-  color: #555;
-}
+    /* icon */
+    .login-password-input .login-toggle-eye {
+    position: absolute;
+    right: 15px;
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 20px;
+    color: #6E8CA9;
+    }
 
+    /* media query mobile */
     @media (max-width: 768px) {
-        .container {
-            flex-direction: column;
-            text-align: center;
-            margin-bottom: 0;
-        }
+    .login-section {
+        padding: 30px; /* supaya benar-benar full */
+    }
 
-        .right {
-            padding-top: 0;
-            padding-left: 0;  
-            padding-right: 0; 
-        }
+    .container {
+        flex-direction: column;
+        text-align: center;
+        margin-bottom: 0;
+        gap: 20px;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 10px; /* optional padding kiri kanan */
+    }
+
+    .left {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .left input,
+    .left button,
+    .login-password-input {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .left .judul {
+        font-size: 28px; /* kecilkan judul agar proporsional */
+    }
+
+    .right {
+        padding: 0 10px; /* rapikan padding kanan kiri */
+    }
     }

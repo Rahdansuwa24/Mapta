@@ -371,10 +371,10 @@ function Dashboard() {
                                     <b>Email :</b>
                                     <p>{selectedPeserta.email}</p>
                                 </div>
-                                <div className="detail-item">
+                                {/* <div className="detail-item">
                                     <b>Password :</b>
                                     <p>{selectedPeserta.password}</p>
-                                </div>
+                                </div> */}
 
                                 <div className="detail-item">
                                     <b>Dokumen :</b>

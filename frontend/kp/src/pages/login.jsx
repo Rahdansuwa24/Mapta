@@ -90,7 +90,7 @@ export default function LoginPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.3 }}
                     />
-                    <div className="password-input">
+                    <div className="login-password-input">
                     <motion.input
                         type={showPassword ? "text" : "password"}
                         placeholder="Password"
@@ -102,7 +102,7 @@ export default function LoginPage() {
                         transition={{ duration: 0.6, delay: 0.5 }}
                     />
                     <span
-                        className="toggle-eye"
+                        className="login-toggle-eye"
                         onClick={() => setShowPassword(!showPassword)}
                     >
                         {showPassword ? <ImEyeBlocked /> : <ImEye />}

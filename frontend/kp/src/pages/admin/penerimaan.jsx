@@ -60,6 +60,8 @@ function Diterima() {
     const [openInstansi, setOpenInstansi] = useState({});
     const [fileUploads, setFileUploads] = useState({});
 
+    // const [uploadedFiles, setUploadedFiles] = useState({});
+
     const handleOpenModal = (peserta) => {
         setSelectedPeserta(peserta);
         setShowModal(true);
@@ -78,6 +80,18 @@ function Diterima() {
         alert("Pilih file terlebih dahulu!");
         return;
     }
+
+    // const handleUpload = (pesertaId) => {
+    // if (fileUploads[pesertaId]) {
+    //     const fileName = fileUploads[pesertaId].name;
+    //     alert(`File "${fileName}" berhasil diupload untuk peserta ID ${pesertaId}`);
+    //     setUploadedStatus({ ...uploadedStatus, [pesertaId]: true });
+    //     setUploadedFiles({ ...uploadedFiles, [pesertaId]: fileName }); // simpan nama file
+    //     setFileUploads({ ...fileUploads, [pesertaId]: null });
+    // } else {
+    //     alert("Pilih file terlebih dahulu!");
+    // }
+    // };
 
     const token = localStorage.getItem("token");
     const formData = new FormData();
@@ -381,10 +395,10 @@ function Diterima() {
                                         <input className="peserta-input" type="text" value={selectedPeserta.email} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, email: e.target.value})} />
                                     </div>
 
-                                    <div className="peserta-detail-item">
+                                    {/* <div className="peserta-detail-item">
                                         <b>Password :</b>
                                         <input className="peserta-input" type="text" value={selectedPeserta.password} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, password: e.target.value})} />
-                                    </div>
+                                    </div> */}
 
                                     <div className="peserta-detail-item">
                                         <b>Tanggal Mulai - Selesai :</b>
@@ -410,6 +424,20 @@ function Diterima() {
                                         )}
                                     </div>
                                 </div>
+
+    {/* <div className="peserta-detail-item">
+    <b>Status Upload Surat Penerimaan:</b>{" "}
+    {uploadedStatus[selectedPeserta.id] ? (
+        <>
+        <span className="status-label sukses">Sudah Upload</span>
+        {uploadedFiles[selectedPeserta.id] && (
+            <span className="file-name"> &nbsp;({uploadedFiles[selectedPeserta.id]})</span>
+        )}
+        </>
+    ) : (
+        <span className="status-label gagal">Belum Upload</span>
+    )}
+    </div> */}
 
                                 {/* Dokumen tetap */}
                                 <div className="peserta-detail-item">
