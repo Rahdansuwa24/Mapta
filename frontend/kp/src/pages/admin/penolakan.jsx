@@ -6,6 +6,10 @@ import NavbarAdmTl from "../../components/navbar-adm";
 import { LuAlignJustify } from "react-icons/lu";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
+import axios from 'axios'
+import dayjs from 'dayjs';
+import 'dayjs/locale/id';
+dayjs.locale('id');
 
 import "../../styles/dashboard.css";
 
@@ -17,64 +21,38 @@ function Ditolak() {
         document.title = "Admin Penolakan";
     }, []);
 
-    const pesertaDummy = [
-        {
-            id: 1,
-            nama: "Budi Santoso",
-            nim: "1234567890",
-            instansi: "Politeknik Elektronika Negeri Surabaya",
-            tglMulai: "01-09-2025",
-            tglSelesai: "30-11-2025",
-            kategori: "Individu",
-            status: "Ditolak",
-            email: "budi.santoso@gmail.com",
-            password: "budi123",
-            profil: profil1,
-            dokumen: ["Surat_Pengantar.pdf", "Proposal.pdf"]
-        },
-        {
-            id: 2,
-            nama: "Danang Cosmos",
-            nim: "67854645667",
-            instansi: "Politeknik Elektronika Negeri Surabaya",
-            tglMulai: "01-09-2025",
-            tglSelesai: "30-11-2025",
-            kategori: "Individu",
-            status: "Ditolak",
-            email: "danang.cosmos@gmail.com",
-            password: "danang123",
-            profil: profil1,
-            dokumen: ["Surat_Pengantar.pdf", "Proposal.pdf"]
-        },
-        {
-            id: 3,
-            nama: "Siti Aisyah",
-            nim: "9876543210",
-            instansi: "Politeknik Elektronika Negeri Surabaya",
-            tglMulai: "01-09-2025",
-            tglSelesai: "30-11-2025",
-            kategori: "Kelompok",
-            status: "Ditolak",
-            email: "siti.aisyah@gmail.com",
-            password: "siti123",
-            profil: profil2,
-            dokumen: ["Surat_Pengantar.pdf", "Proposal.pdf"]
-        },
-        {
-            id: 4,
-            nama: "Ahmad Ifcel",
-            nim: "1122334455",
-            instansi: "Universitas Airlangga",
-            tglMulai: "05-09-2025",
-            tglSelesai: "05-12-2025",
-            kategori: "Individu",
-            status: "Ditolak",
-            email: "ahmad.fauzi@gmail.com",
-            password: "ahmad123",
-            profil: profil1,
-            dokumen: ["Surat_Pengantar.pdf"]
-        },
-    ];
+    const [PesertaDitolak, setPesertaDitolak] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+    
+     useEffect(()=>{
+            fetchPesertaDitolak()
+        }, [])
+    
+
+    const fetchPesertaDitolak = async()=>{
+        const token = localStorage.getItem("token")
+        try{
+            const res = await axios.get("http://localhost:3000/admin/dasbor/penolakan", {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            const dataPeserta = res.data.data
+            console.log(res.data.data)
+            setPesertaDitolak(dataPeserta)
+
+            const statusMap = {}
+                dataPeserta.forEach(p => {
+                statusMap[p.id_peserta_magang] = !!p.surat_balasan;
+            });
+            setUploadedStatus(statusMap);
+        }catch(error){
+           setError("gagal mengambil data")
+        }finally{
+            setLoading(false)
+        }
+    }
 
     const [showModal, setShowModal] = useState(false);
     const [uploadedStatus, setUploadedStatus] = useState({});
@@ -95,24 +73,45 @@ function Ditolak() {
         });
     };
 
-    const handleUpload = (pesertaId) => {
-        if (fileUploads[pesertaId]) {
-        alert(
-            `File "${fileUploads[pesertaId].name}" berhasil diupload untuk peserta ID ${pesertaId}`
-        );
-        setUploadedStatus({ ...uploadedStatus, [pesertaId]: true });
-        setFileUploads({ ...fileUploads, [pesertaId]: null });
-        } else {
+     const handleUpload = async (pesertaId) => {
+    const file = fileUploads[pesertaId];
+    if (!file) {
         alert("Pilih file terlebih dahulu!");
+        return;
+    }
+
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("surat_balasan", file);
+
+    try {
+        await axios.patch(
+        `http://localhost:3000/admin/dasbor/update-surat-balasan/${pesertaId}`,
+        formData,
+        {
+            headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+            },
+        }
+        );
+
+        setUploadedStatus(prev=>({ ...prev, [pesertaId]: true }));
+        setFileUploads(prev=>({ ...prev, [pesertaId]: null }));
+        alert(`File "${file.name}" berhasil diupload untuk peserta ID ${pesertaId}`);
+    }catch (error) {
+            console.error(error);
+            alert("Upload gagal!");
         }
     };
 
+
     const pesertaFiltered = filterInstansi
-        ? pesertaDummy.filter((p) => p.instansi === filterInstansi)
-        : pesertaDummy;
+        ? PesertaDitolak.filter((p) => p.instansi === filterInstansi)
+        : PesertaDitolak;
 
     const instansiList = [
-        ...new Set(pesertaDummy.map((p) => p.instansi))
+        ...new Set(PesertaDitolak.map((p) => p.instansi))
     ];
 
     const pesertaPerInstansi = pesertaFiltered.reduce((acc, peserta) => {
@@ -161,9 +160,14 @@ function Ditolak() {
 
                     {Object.keys(pesertaPerInstansi).map((instansi) => {
                         const pesertaInstansi = pesertaPerInstansi[instansi];
-                        const individu = pesertaInstansi.filter((p) => p.kategori === "Individu");
-                        const kelompok = pesertaInstansi.filter((p) => p.kategori === "Kelompok");
-
+                        const individu = pesertaInstansi.filter((p) => p.kategori === "individu");
+                        const kelompok = pesertaInstansi.filter((p) => p.kategori === "kelompok");
+                         const kelompokByInstansi = kelompok.reduce((acc, p) => {
+                            const key = `${p.instansi}-${p.id_kelompok}`;
+                            if (!acc[key]) acc[key] = [];
+                            acc[key].push(p);
+                            return acc;
+                        }, {});
                         return (
                             <div className="container-instansi" key={instansi}>
                                 <div className="instansi-header">
@@ -205,30 +209,30 @@ function Ditolak() {
                                                 </thead>
                                                 <tbody>
                                                     {individu.map((peserta, idx) => (
-                                                    <tr key={peserta.id}>
+                                                    <tr key={peserta.id_peserta_magang}>
                                                         <td>{idx + 1}</td>
                                                         <td className="nama-cell">
-                                                        <img src={peserta.profil} alt="Foto Profil" />
+                                                        <img src={`http://localhost:3000/static/images/${peserta.foto_diri}`} alt="Foto Profil" />
                                                         <span>{peserta.nama}</span>
                                                         </td>
                                                         <td>{peserta.instansi}</td>
-                                                        <td>{peserta.tglMulai}</td>
-                                                        <td>{peserta.tglSelesai}</td>
+                                                        <td>{dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")}</td>
+                                                        <td>{dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}</td>
                                                         <td>{peserta.kategori}</td>
                                                         <td>
-                                                            <span className="status-label ditolak">{peserta.status}</span>
+                                                            <span className="status-label ditolak">{peserta.status_penerimaan}</span>
                                                         </td>
                                                         <td>
                                                             <div className="upload-container">
                                                                 <input 
                                                                     type="file" 
-                                                                    id={`file-${peserta.id}`} 
-                                                                    onChange={(e) => handleFileChange(peserta.id, e)} 
+                                                                    id={`file-${peserta.id_peserta_magang}`} 
+                                                                    onChange={(e) => handleFileChange(peserta.id_peserta_magang, e)} 
                                                                 />
-                                                                <label htmlFor={`file-${peserta.id}`}>
-                                                                    {fileUploads[peserta.id] ? fileUploads[peserta.id].name : "Upload File"}
+                                                                <label htmlFor={`file-${peserta.id_peserta_magang}`}>
+                                                                    {fileUploads[peserta.id_peserta_magang] ? fileUploads[peserta.id_peserta_magang].name : "Upload File"}
                                                                 </label>
-                                                                <button onClick={() => handleUpload(peserta.id)}>Upload</button>
+                                                                <button onClick={() => handleUpload(peserta.id_peserta_magang)}>Upload</button>
                                                             </div>
                                                         </td>
                                                         <td className="aksi-cell">
@@ -245,13 +249,13 @@ function Ditolak() {
                                         )}
 
                                         {/* TABEL KELOMPOK */}
-                                        {kelompok.length > 0 && (
-                                            <>
-                                            <h4>Kelompok</h4>
+                                        {Object.keys(kelompokByInstansi).map((kelKey, idx) => (
+                                        <div key={kelKey}>
+                                            <h4>Kelompok {idx + 1} ({kelompokByInstansi[kelKey][0].instansi})</h4>
                                             <div className="table-wrapper">
-                                                <table>
+                                            <table>
                                                 <thead>
-                                                    <tr>
+                                                <tr>
                                                     <th>No</th>
                                                     <th>Nama</th>
                                                     <th>Instansi</th>
@@ -259,50 +263,59 @@ function Ditolak() {
                                                     <th>Tanggal Selesai Magang</th>
                                                     <th>Kategori</th>
                                                     <th>Status</th>
-                                                    <th>Upload Surat Penolakan</th>
+                                                    <th>Upload Surat Penerimaan</th>
                                                     <th>Aksi</th>
-                                                    </tr>
+                                                </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {kelompok.map((peserta, idx) => (
-                                                    <tr key={peserta.id}>
-                                                        <td>{idx + 1}</td>
-                                                        <td className="nama-cell">
-                                                        <img src={peserta.profil} alt="Foto Profil" />
+                                                {kelompokByInstansi[kelKey].map((peserta, i) => (
+                                                    <tr key={peserta.id_peserta_magang}>
+                                                    <td>{i + 1}</td>
+                                                    <td className="nama-cell">
+                                                        <img
+                                                        src={`http://localhost:3000/static/images/${peserta.foto_diri}`}
+                                                        alt="Foto Profil"
+                                                        />
                                                         <span>{peserta.nama}</span>
-                                                        </td>
-                                                        <td>{peserta.instansi}</td>
-                                                        <td>{peserta.tglMulai}</td>
-                                                        <td>{peserta.tglSelesai}</td>
-                                                        <td>{peserta.kategori}</td>
-                                                        <td>
-                                                            <span className="status-label ditolak">{peserta.status}</span>
-                                                        </td>
-                                                        <td>
-                                                            <div className="upload-container">
-                                                                <input 
-                                                                    type="file" 
-                                                                    id={`file-${peserta.id}`} 
-                                                                    onChange={(e) => handleFileChange(peserta.id, e)} 
-                                                                />
-                                                                <label htmlFor={`file-${peserta.id}`}>
-                                                                    {fileUploads[peserta.id] ? fileUploads[peserta.id].name : "Upload File"}
-                                                                </label>
-                                                                <button onClick={() => handleUpload(peserta.id)}>Upload</button>
-                                                            </div>
-                                                        </td>
-                                                        <td className="aksi-cell">
-                                                            <div className="aksi-wrapper">
-                                                            <FaEllipsisVertical style={{ cursor: "pointer" }} title="Detail Profil" onClick={() => handleOpenModal(peserta)} />
-                                                            </div>
-                                                        </td>
+                                                    </td>
+                                                    <td>{peserta.instansi}</td>
+                                                    <td>{dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")}</td>
+                                                    <td>{dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}</td>
+                                                    <td>{peserta.kategori}</td>
+                                                    <td>
+                                                        <span className="status-label diterima">{peserta.status_penerimaan}</span>
+                                                    </td>
+                                                    <td>
+                                                        <div className="upload-container">
+                                                        <input
+                                                            type="file"
+                                                            id={`file-${peserta.id_peserta_magang}`}
+                                                            onChange={(e) => handleFileChange(peserta.id_peserta_magang, e)}
+                                                        />
+                                                        <label htmlFor={`file-${peserta.id_peserta_magang}`}>
+                                                            {fileUploads[peserta.id_peserta_magang]
+                                                            ? fileUploads[peserta.id_peserta_magang].name
+                                                            : "Upload File"}
+                                                        </label>
+                                                        <button onClick={() => handleUpload(peserta.id_peserta_magang)}>Upload</button>
+                                                        </div>
+                                                    </td>
+                                                    <td className="aksi-cell">
+                                                        <div className="aksi-wrapper">
+                                                        <FaEllipsisVertical
+                                                            style={{ cursor: "pointer" }}
+                                                            title="Detail Profil"
+                                                            onClick={() => handleOpenModal(peserta)}
+                                                        />
+                                                        </div>
+                                                    </td>
                                                     </tr>
-                                                    ))}
+                                                ))}
                                                 </tbody>
-                                                </table>
+                                            </table>
                                             </div>
-                                            </>
-                                        )}
+                                        </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -330,7 +343,7 @@ function Ditolak() {
                                 <div className="peserta-top-section">
                                     <div className="peserta-profile-pic">
                                         <img
-                                            src={selectedPeserta.profil}
+                                            src={`http://localhost:3000/static/images/${selectedPeserta.foto_diri}`}
                                             alt="Profil"
                                             style={{ width: "90px", height: "90px", borderRadius: "10px" }}
                                         />
@@ -357,7 +370,7 @@ function Ditolak() {
 
                                     <div className="peserta-detail-item">
                                         <b>NIM/NIP :</b>
-                                        <input className="peserta-input" type="text" value={selectedPeserta.nim} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, nim: e.target.value})} />
+                                        <input className="peserta-input" type="text" value={selectedPeserta.nomor_identitas} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, nim: e.target.value})} />
                                     </div>
 
                                     <div className="peserta-detail-item">
@@ -377,7 +390,7 @@ function Ditolak() {
 
                                     <div className="peserta-detail-item">
                                         <b>Tanggal Mulai - Selesai :</b>
-                                        <input className="peserta-input" type="text" value={`${selectedPeserta.tglMulai} hingga ${selectedPeserta.tglSelesai}`} disabled />
+                                        <input className="peserta-input" type="text" value={`${dayjs(selectedPeserta.tanggal_mulai_magang).format("DD MMMM YYYY")} hingga ${dayjs(selectedPeserta.tanggal_selesai_magang).format("DD MMMM YYYY")}`} disabled />
                                     </div>
 
                                     <div className="peserta-detail-item">
@@ -387,12 +400,12 @@ function Ditolak() {
 
                                     <div className="peserta-detail-item">
                                         <b>Status :</b>
-                                        <input className="peserta-input" type="text" value={selectedPeserta.status || "Belum ada"} disabled />
+                                        <input className="peserta-input" type="text" value={selectedPeserta.status_penerimaan || "Belum ada"} disabled />
                                     </div>
 
                                     <div className="peserta-detail-item">
-                                        <b>Status Upload Sertifikat:</b>{" "}
-                                        {uploadedStatus[selectedPeserta.id] ? (
+                                        <b>Status Upload Surat Balasan:</b>{" "}
+                                        {uploadedStatus[selectedPeserta.id_peserta_magang] ? (
                                         <span className="status-label sukses">Sudah Upload</span>
                                         ) : (
                                         <span className="status-label gagal">Belum Upload</span>
@@ -401,15 +414,17 @@ function Ditolak() {
                                 </div>
 
                                 {/* Dokumen tetap */}
-                                <div className="peserta-detail-item">
+                                 <div className="peserta-detail-item">
                                     <b>Dokumen :</b>
-                                    <div className="dokumen-list">
-                                        {selectedPeserta.dokumen.map((doc, index) => (
-                                            <div className="dokumen-item" key={index}>
+                                     <div className="dokumen-list">
+                                       {selectedPeserta.dokumen_pendukung &&
+                                        JSON.parse(selectedPeserta.dokumen_pendukung).map((doc, index)=> (
+                                            <div className="dokumen-item" key={doc}>
                                                 <span>{doc}</span>
                                                 <div className="dokumen-actions">
-                                                    <button className="btn-view">View</button>
-                                                    <button className="btn-download">Download</button>
+                                                    <button className="btn-download" onClick={()=>{
+                                                        window.open(`http://localhost:3000/static/document/${doc}`,"_blank", "noopener,noreferrer")
+                                                    }}>Download</button>
                                                 </div>
                                             </div>
                                         ))}

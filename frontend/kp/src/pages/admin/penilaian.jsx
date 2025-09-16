@@ -5,6 +5,7 @@ import SidebarAdmTm from "../../components/sidebar-adm";
 import NavbarAdmTm from "../../components/navbar-adm";
 import { FaTimes, FaTrash } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import axios from 'axios'
 
 import "../../styles/dashboard.css";
 
@@ -35,6 +36,25 @@ function Penilaian() {
         { nama: "Sikap/Etika", kategori: "Aspek Non Teknis", departemen: "GLOBAL" },
     ]);
 
+    useEffect(()=>{
+        fetchAspek()
+    }, [])
+
+    const fetchAspek = async()=>{
+        const token = localStorage.getItem("token")
+        try{
+            const rest = await axios.get("http://localhost:3000/admin/aspek", {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            const dataAspek = rest.data.data
+            setAspekList(dataAspek)
+        }catch(error){
+            console.error(error)
+            alert("gagal mengambil data")
+        }
+    }
     // Tambah aspek
     const handleSubmit = (e) => {
         e.preventDefault();

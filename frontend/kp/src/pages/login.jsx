@@ -1,9 +1,12 @@
 // PAGE LOGIN
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion"; 
 import "../styles/login.css";
+import { useNavigate } from "react-router-dom";
+import {jwtDecode} from "jwt-decode";
+import axios from 'axios'
 
 import vectorBg from "../assets/images/vector_1.png";
 
@@ -12,6 +15,46 @@ export default function LoginPage() {
         document.title = "Login Page";
     }, []);
 
+    const navigate = useNavigate();
+
+    const [formData, setFormData] = useState({
+            email: "",
+            password: ""
+    })
+
+    const handleChange = (e)=>{
+        setFormData({
+            ...formData, [e.target.name]: e.target.value
+        })
+    }
+
+    const handleLogin = async ()=>{
+        try{
+            const response = await axios.post("http://localhost:3000/login", formData)
+            if(response.data.status){
+                localStorage.setItem("token", response.data.token)
+                const decoded = jwtDecode(response.data.token)
+                console.log(decoded)
+                const userLevel = decoded.user_level
+                console.log(userLevel)
+                if(userLevel === 'admin'){
+                    navigate("/admin-dashboard")
+                }
+                else if(userLevel === 'siswa'){
+                    navigate("/peserta-jadwal")
+                }
+                else if(userLevel === 'pic'){
+                    navigate("/pic-jadwal")
+                }else{
+                    alert("Login gagal, periksa email dan password");
+                }
+                
+            }
+        }catch(error){
+            console.error("Login error:", error);
+            alert("Terjadi kesalahan server");
+        }
+    }
     return (
         <section className="login-section">
             <div className="container">
@@ -28,6 +71,9 @@ export default function LoginPage() {
                     <motion.input
                         type="email"
                         placeholder="Email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.3 }}
@@ -35,6 +81,9 @@ export default function LoginPage() {
                     <motion.input
                         type="password"
                         placeholder="Password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.5 }}
@@ -42,6 +91,7 @@ export default function LoginPage() {
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        onClick={handleLogin}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.7 }}

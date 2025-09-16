@@ -3,25 +3,57 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const cors = require('cors')
+const multer = require('multer')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var logUser = require('./routes/auth/login')
+var regisPeserta = require('./routes/peserta/register')
+var dashboardAdmin = require('./routes/admin/dashboard')
+var jadwalAdmin =  require('./routes/admin/jadwal')
+var picAdmin =  require('./routes/admin/pic')
+var aspekAdmin =  require('./routes/admin/aspek')
+var sertifAdmin =  require('./routes/admin/sertifikat')
+var jadwalPic =  require('./routes/pic/jadwal')
+const {backendDomain} = require('./config/middleware/cors')
 
 var app = express();
+var dotenv = require('dotenv')
+dotenv.config()
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use('/static', express.static(path.join(__dirname, '/public')))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+// app.use(axios)
+app.use(cors(backendDomain))
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/login', logUser)
+app.use('/peserta', regisPeserta)
+app.use('/admin/dasbor', dashboardAdmin)
+app.use('/admin/jadwal', jadwalAdmin)
+app.use('/admin/pic', picAdmin)
+app.use('/admin/aspek', aspekAdmin)
+app.use('/admin/sertifikat', sertifAdmin)
+app.use('/pic/sertifikat', jadwalPic)
 
+app.use((err, req, res, next) => {
+    if (err instanceof multer.MulterError) {
+        return res.status(400).json({ status: false, message: err.message });
+    } else if (err) {
+        return res.status(400).json({ status: false, message: err.message });
+    }
+    next();
+});
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
