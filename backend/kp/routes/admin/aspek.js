@@ -16,10 +16,11 @@ router.get('/', verifyToken('admin'),async(req, res)=>{
 
 router.post('/store', verifyToken('admin'),async(req, res)=>{
     try{
-        let {aspek, subjek} = req.body
+        let {aspek, subjek, bidang} = req.body
         const data = {
             aspek,
-            subjek
+            subjek,
+            bidang
         }
         await Model_Admin.storeAspek(data)
         res.status(200).json({message: 'penambahhan subjek berhasil'})
@@ -44,9 +45,10 @@ router.patch('/update/(:id)', verifyToken('admin'),async(req, res)=>{
 
 router.delete('/delete', verifyToken('admin'),async(req, res)=>{
     try{
-        const {id} = req.body
-        if(!id || id.length === 0) return res.status(400).json({message: 'tidak ada data yang dipilih'})
-        const result = await Model_Admin.deleteAspek(id)
+        console.log("BODY DELETE:", req.body)
+        const {id_aspek} = req.body
+        if(!id_aspek || id_aspek.length === 0) return res.status(400).json({message: 'tidak ada data yang dipilih'})
+        const result = await Model_Admin.deleteAspek(id_aspek)
         res.status(200).json({ message: `${result.affectedRows} Aspek berhasil dihapus` })
     }catch(err){
         res.status(500).json({ status: false, error: err.message });

@@ -79,5 +79,20 @@ router.get('/penolakan', verifyToken('admin'), async(req, res)=>{
         res.status(500).json({ status: false, error: err.message });
     }
 })
+router.patch('/update/profile/(:id)', verifyToken('admin'), async(req, res)=>{
+    try{
+        let id = req.params.id
+        let {nama, nomor_identitas, instansi} = req.body
+        let data = {
+            nama,
+            nomor_identitas,
+            instansi
+        }
+        await Model_Admin.updateStatus(id, data)
+        res.status(200).json({message: "data berhasil diperbarui"})
+    }catch(err){
+        res.status(500).json({ status: false, error: err.message });
+    }
+})
 
 module.exports = router

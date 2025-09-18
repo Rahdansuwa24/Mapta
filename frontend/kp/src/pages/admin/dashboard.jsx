@@ -89,7 +89,7 @@ function Dashboard() {
             initialState[instansi] = true;
         });
         setOpenInstansi(initialState);
-    }, [filterInstansi]);
+    }, [calonPeserta, filterInstansi]);
 
     return (
         <div className="app-layout">
@@ -114,217 +114,269 @@ function Dashboard() {
                         </select>
                     </div>
 
-                    {/* Loop setiap instansi */}
-                    {Object.keys(pesertaPerInstansi).map((instansi) => {
-                        const pesertaInstansi = pesertaPerInstansi[instansi];
-                        const individu = pesertaInstansi.filter((p) => p.kategori === "individu");
-                        const kelompok = pesertaInstansi.filter((p) => p.kategori === "kelompok");
 
-                        return (
-                            <div className="container-instansi" key={instansi}>
-                                <div className="instansi-header">
-                                    <LuAlignJustify
-                                        size={25}
-                                        style={{ cursor: "pointer" }}
-                                        onClick={() => toggleInstansi(instansi)}
-                                    />
-                                    <div className="teks-instansi">
-                                        <p>Instansi</p>
-                                        <p>{instansi}</p>
-                                    </div>
-                                </div>
+                    {pesertaFiltered.length === 0 ? (
+                <div className="no-data">
+                    <p>Belum ada peserta magang yang mendaftar</p>
+                </div>
+                ) : (
+                Object.keys(pesertaPerInstansi).map((instansi) => {
+                    const pesertaInstansi = pesertaPerInstansi[instansi];
+                    const individu = pesertaInstansi.filter((p) => p.kategori === "individu");
+                    const kelompok = pesertaInstansi.filter((p) => p.kategori === "kelompok");
 
-                                {/* contain-table muncul kalau openInstansi[instansi] true */}
-                                <div
-                                className={`contain-table-wrapper ${
-                                    openInstansi[instansi] ? "open" : "closed"
-                                } ${!openInstansi[instansi] ? "with-gap" : ""}`}
-                                >
-                                    <div className="contain-table">
-                                        {/* TABEL INDIVIDU */}
-                                        {individu.length > 0 && (
-                                        <>
-                                        <h4>Individu</h4>
-                                        <div className="table-wrapper">
-                                            <table>
-                                            <thead>
-                                                <tr>
-                                                <th>No</th>
-                                                <th>Nama</th>
-                                                <th>Instansi</th>
-                                                <th>Tanggal Mulai Magang</th>
-                                                <th>Tanggal Selesai Magang</th>
-                                                <th>Kategori</th>
-                                                <th>Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {individu.map((peserta, idx) => (
-                                                <tr key={peserta.id_peserta_magang}>
-                                                    <td>{idx + 1}</td>
-                                                    <td className="nama-cell">
-                                                    <img src={`http://localhost:3000/static/images/${peserta.foto_diri}`}
-                                                    alt="Foto Profil" />
-                                                    <span>{peserta.nama}</span>
-                                                    </td>
-                                                    <td>{peserta.instansi}</td>
-                                                    <td>{dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")}</td>
-                                                    <td>{dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}</td>
-                                                    <td>{peserta.kategori}</td>
-                                                    <td className="aksi-cell">
-                                                        <div className="aksi-wrapper">
-                                                            <button
-                                                                style={{ color: "green", cursor: "pointer" }} 
-                                                                title="Setujui"
-                                                                onClick={async()=>{
-                                                                    console.log("ID peserta:", peserta.id_peserta_magang);
-                                                                    const token = localStorage.getItem("token");
-                                                                    try{
-                                                                        await axios.patch( `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
-                                                                        {status_penerimaan: "diterima"},
-                                                                        { headers: { Authorization: `Bearer ${token}` } }
+                    return (
+                    <div className="container-instansi" key={instansi}>
+                        <div className="instansi-header">
+                        <LuAlignJustify
+                            size={25}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => toggleInstansi(instansi)}
+                        />
+                        <div className="teks-instansi">
+                            <p>Instansi</p>
+                            <p>{instansi}</p>
+                        </div>
+                        </div>
 
-                                                                        )
-                                                                        alert("lamaran disetujui")
-                                                                        fetchPeserta()
-                                                                    }catch(err){
-                                                                        console.error(err)
-                                                                    }
-                                                                }}
-                                                            >
-                                                                <FaCheck />
-                                                            </button>
-                                                            <button 
-                                                                style={{ color: "red", cursor: "pointer" }} 
-                                                                title="Tolak"
-                                                                    onClick={async()=>{
-                                                                    console.log("ID peserta:", peserta.id_peserta_magang);
-                                                                    const token = localStorage.getItem("token");
-                                                                    try{
-                                                                        await axios.patch( `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
-                                                                        {status_penerimaan: "ditolak"},
-                                                                        { headers: { Authorization: `Bearer ${token}` } }
-
-                                                                        )
-                                                                        alert("lamaran ditolak")
-                                                                        fetchPeserta()
-                                                                    }catch(err){
-                                                                        console.error(err)
-                                                                    }
-                                                                }}
-                                                                
-                                                            >
-                                                                <FaTimes />
-                                                            </button>
-                                                            <FaEllipsisVertical
-                                                                style={{ cursor: "pointer" }}
-                                                                title="Detail Profil"
-                                                                onClick={() => handleOpenModal(peserta)}
-                                                            />
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+                        {/* contain-table muncul kalau openInstansi[instansi] true */}
+                        <div
+                        className={`contain-table-wrapper ${
+                            openInstansi[instansi] ? "open" : "closed"
+                        } ${!openInstansi[instansi] ? "with-gap" : ""}`}
+                        >
+                        <div className="contain-table">
+                            {/* TABEL INDIVIDU */}
+                            {individu.length > 0 && (
+                            <>
+                                <h4>Individu</h4>
+                                <div className="table-wrapper">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama</th>
+                                        <th>Instansi</th>
+                                        <th>Tanggal Mulai Magang</th>
+                                        <th>Tanggal Selesai Magang</th>
+                                        <th>Kategori</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {individu.map((peserta, idx) => (
+                                        <tr key={peserta.id_peserta_magang}>
+                                        <td>{idx + 1}</td>
+                                        <td className="nama-cell">
+                                            <img
+                                            src={`http://localhost:3000/static/images/${peserta.foto_diri}`}
+                                            alt="Foto Profil"
+                                            />
+                                            <span>{peserta.nama}</span>
+                                        </td>
+                                        <td>{peserta.instansi}</td>
+                                        <td>
+                                            {dayjs(peserta.tanggal_mulai_magang).format(
+                                            "DD MMMM YYYY"
+                                            )}
+                                        </td>
+                                        <td>
+                                            {dayjs(peserta.tanggal_selesai_magang).format(
+                                            "DD MMMM YYYY"
+                                            )}
+                                        </td>
+                                        <td>{peserta.kategori}</td>
+                                        <td className="aksi-cell">
+                                            <div className="aksi-wrapper">
+                                            <button
+                                                style={{ color: "green", cursor: "pointer" }}
+                                                title="Setujui"
+                                                onClick={async () => {
+                                                console.log(
+                                                    "ID peserta:",
+                                                    peserta.id_peserta_magang
+                                                );
+                                                const token = localStorage.getItem("token");
+                                                try {
+                                                    await axios.patch(
+                                                    `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
+                                                    { status_penerimaan: "diterima" },
+                                                    {
+                                                        headers: {
+                                                        Authorization: `Bearer ${token}`,
+                                                        },
+                                                    }
+                                                    );
+                                                    alert("Lamaran disetujui");
+                                                    fetchPeserta();
+                                                } catch (err) {
+                                                    console.error(err);
+                                                }
+                                                }}
+                                            >
+                                                <FaCheck />
+                                            </button>
+                                            <button
+                                                style={{ color: "red", cursor: "pointer" }}
+                                                title="Tolak"
+                                                onClick={async () => {
+                                                console.log(
+                                                    "ID peserta:",
+                                                    peserta.id_peserta_magang
+                                                );
+                                                const token = localStorage.getItem("token");
+                                                try {
+                                                    await axios.patch(
+                                                    `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
+                                                    { status_penerimaan: "ditolak" },
+                                                    {
+                                                        headers: {
+                                                            Authorization: `Bearer ${token}`,
+                                                        },
+                                                    }
+                                                    );
+                                                    alert("Lamaran ditolak");
+                                                    fetchPeserta();
+                                                } catch (err) {
+                                                    console.error(err);
+                                                }
+                                                }}
+                                            >
+                                                <FaTimes />
+                                            </button>
+                                            <FaEllipsisVertical
+                                                style={{ cursor: "pointer" }}
+                                                title="Detail Profil"
+                                                onClick={() => handleOpenModal(peserta)}
+                                            />
                                             </div>
-                                            </>
-                                        )}
-
-                                        {/* TABEL KELOMPOK */}
-                                        {kelompok.length > 0 && (
-                                            <>
-                                            <h4>Kelompok</h4>
-                                            <div className="table-wrapper">
-                                                <table>
-                                                <thead>
-                                                    <tr>
-                                                    <th>No</th>
-                                                    <th>Nama</th>
-                                                    <th>Instansi</th>
-                                                    <th>Tanggal Mulai Magang</th>
-                                                    <th>Tanggal Selesai Magang</th>
-                                                    <th>Kategori</th>
-                                                    <th>Aksi</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {kelompok.map((peserta, idx) => (
-                                                    <tr key={peserta.id_peserta_magang}>
-                                                        <td>{idx + 1}</td>
-                                                        <td className="nama-cell">
-                                                        <img src={`http://localhost:3000/static/images/${peserta.foto_diri}`}
-                                                        alt="Foto Profil" />
-                                                        <span>{peserta.nama}</span>
-                                                        </td>
-                                                        <td>{peserta.instansi}</td>
-                                                        <td>{dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")}</td>
-                                                        <td>{dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}</td>
-                                                        <td>{peserta.kategori}</td>
-                                                        <td className="aksi-cell">
-                                                            <div className="aksi-wrapper">
-                                                                <button
-                                                                    style={{ color: "green", cursor: "pointer" }} 
-                                                                    title="Setujui"
-                                                                    onClick={async()=>{
-                                                                        console.log("ID peserta:", peserta.id_peserta_magang);
-                                                                        const token = localStorage.getItem("token");
-                                                                        try{
-                                                                            await axios.patch( `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
-                                                                            {status_penerimaan: "diterima"},
-                                                                            { headers: { Authorization: `Bearer ${token}` } }
-
-                                                                            )
-                                                                            alert("lamaran disetujui")
-                                                                            fetchPeserta()
-                                                                        }catch(err){
-                                                                            console.error(err)
-                                                                        }
-                                                                    }}
-                                                                >
-                                                                    <FaCheck />
-                                                                </button>
-                                                                <button 
-                                                                    style={{ color: "red", cursor: "pointer" }} 
-                                                                    title="Tolak"
-                                                                     onClick={async()=>{
-                                                                        console.log("ID peserta:", peserta.id_peserta_magang);
-                                                                        const token = localStorage.getItem("token");
-                                                                        try{
-                                                                            await axios.patch( `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
-                                                                            {status_penerimaan: "ditolak"},
-                                                                            { headers: { Authorization: `Bearer ${token}` } }
-
-                                                                            )
-                                                                            alert("lamaran ditolak")
-                                                                            fetchPeserta()
-                                                                        }catch(err){
-                                                                            console.error(err)
-                                                                        }
-                                                                    }}
-                                                                    
-                                                                >
-                                                                    <FaTimes />
-                                                                </button>
-                                                                <FaEllipsisVertical
-                                                                    style={{ cursor: "pointer" }}
-                                                                    title="Detail Profil"
-                                                                    onClick={() => handleOpenModal(peserta)}
-                                                                />
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    ))}
-                                                </tbody>
-                                                </table>
-                                            </div>
-                                            </>
-                                        )}
-                                        </div>
+                                        </td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
                                 </div>
-                            </div>
-                        );
-                    })}
+                            </>
+                            )}
+
+                            {/* TABEL KELOMPOK */}
+                            {kelompok.length > 0 && (
+                            <>
+                                <h4>Kelompok</h4>
+                                <div className="table-wrapper">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama</th>
+                                        <th>Instansi</th>
+                                        <th>Tanggal Mulai Magang</th>
+                                        <th>Tanggal Selesai Magang</th>
+                                        <th>Kategori</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {kelompok.map((peserta, idx) => (
+                                        <tr key={peserta.id_peserta_magang}>
+                                        <td>{idx + 1}</td>
+                                        <td className="nama-cell">
+                                            <img
+                                            src={`http://localhost:3000/static/images/${peserta.foto_diri}`}
+                                            alt="Foto Profil"
+                                            />
+                                            <span>{peserta.nama}</span>
+                                        </td>
+                                        <td>{peserta.instansi}</td>
+                                        <td>
+                                            {dayjs(peserta.tanggal_mulai_magang).format(
+                                            "DD MMMM YYYY"
+                                            )}
+                                        </td>
+                                        <td>
+                                            {dayjs(peserta.tanggal_selesai_magang).format(
+                                            "DD MMMM YYYY"
+                                            )}
+                                        </td>
+                                        <td>{peserta.kategori}</td>
+                                        <td className="aksi-cell">
+                                            <div className="aksi-wrapper">
+                                            <button
+                                                style={{ color: "green", cursor: "pointer" }}
+                                                title="Setujui"
+                                                onClick={async () => {
+                                                console.log(
+                                                    "ID peserta:",
+                                                    peserta.id_peserta_magang
+                                                );
+                                                const token = localStorage.getItem("token");
+                                                try {
+                                                    await axios.patch(
+                                                    `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
+                                                    { status_penerimaan: "diterima" },
+                                                    {
+                                                        headers: {
+                                                            Authorization: `Bearer ${token}`,
+                                                        },
+                                                    }
+                                                    );
+                                                    alert("Lamaran disetujui");
+                                                    fetchPeserta();
+                                                } catch (err) {
+                                                    console.error(err);
+                                                }
+                                                }}
+                                            >
+                                                <FaCheck />
+                                            </button>
+                                            <button
+                                                style={{ color: "red", cursor: "pointer" }}
+                                                title="Tolak"
+                                                onClick={async () => {
+                                                console.log(
+                                                    "ID peserta:",
+                                                    peserta.id_peserta_magang
+                                                );
+                                                const token = localStorage.getItem("token");
+                                                try {
+                                                    await axios.patch(
+                                                    `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
+                                                    { status_penerimaan: "ditolak" },
+                                                    {
+                                                        headers: {
+                                                            Authorization: `Bearer ${token}`,
+                                                        },
+                                                    }
+                                                    );
+                                                    alert("Lamaran ditolak");
+                                                    fetchPeserta();
+                                                } catch (err) {
+                                                    console.error(err);
+                                                }
+                                                }}
+                                            >
+                                                <FaTimes />
+                                            </button>
+                                            <FaEllipsisVertical
+                                                style={{ cursor: "pointer" }}
+                                                title="Detail Profil"
+                                                onClick={() => handleOpenModal(peserta)}
+                                            />
+                                            </div>
+                                        </td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                                </div>
+                            </>
+                            )}
+                        </div>
+                        </div>
+                    </div>
+                    );
+                })
+                )}
                 </section>
 
                 {/* MODAL */}

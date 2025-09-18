@@ -208,6 +208,15 @@ tbody tr:nth-child(even) {
     }
 
     /* Modal */
+
+
+    .file-name {
+  display: inline-block; 
+  max-width: 100%; 
+  overflow-wrap: break-word; 
+  word-break: break-word; 
+  white-space: normal;        
+}
     .modal {
         width: 500px;
         max-height: 90vh;          /* maksimal tinggi 90% viewport */

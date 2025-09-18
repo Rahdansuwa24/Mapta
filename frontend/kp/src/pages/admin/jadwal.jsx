@@ -226,7 +226,7 @@ function Jadwal() {
         initialState[departemen] = true;
         });
         setOpenDepartemen(initialState);
-    }, [filterDepartemen]);
+    }, [jadwalData,filterDepartemen]);
 
     // Ambil peserta sesuai instansi dipilih
     const pesertaFiltered = formJadwal.instansi

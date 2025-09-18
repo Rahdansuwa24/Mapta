@@ -43,48 +43,77 @@ function Penilaian() {
         }
     }
     // Tambah aspek
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
+        const token = localStorage.getItem("token")
         if (!namaAspek || !kategoriAspek) {
             alert("Harap lengkapi semua field!");
             return;
         }
 
-        if (kategoriAspek === "Aspek Teknis" && !departemen) {
+        if (kategoriAspek === "teknis" && !departemen) {
             alert("Departemen wajib dipilih untuk aspek teknis!");
             return;
         }
 
-        if (kategoriAspek === "Aspek Non Teknis" && !departemen) {
+        if (kategoriAspek === "non-teknis" && !departemen) {
             alert("Pilih penerapan untuk aspek non teknis (GLOBAL / Departemen tertentu)!");
             return;
         }
 
-        setAspekList([
-            ...aspekList,
-            { nama: namaAspek, departemen, kategori: kategoriAspek },
-        ]);
-
-        setShowModal(false);
-        setNamaAspek("");
-        setDepartemen("");
-        setKategoriAspek("");
+        try{
+            const data = {
+                subjek: namaAspek,
+                bidang: departemen,
+                aspek: kategoriAspek
+            }
+            await axios.post("http://localhost:3000/admin/aspek/store", data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            alert("data aspek berhasil ditambahkan")
+            fetchAspek()
+            setShowModal(false);
+            setNamaAspek("");
+            setDepartemen("");
+            setKategoriAspek("");
+        }catch(error){
+        console.error(error);
+        alert("Gagal menyimpan aspek!");
+        }
     };
 
     // Checkbox toggle
-    const handleCheckboxChange = (aspek) => {
+    const handleCheckboxChange = (id) => {
         setChecked((prev) => ({
             ...prev,
-            [aspek]: !prev[aspek],
+            [id]: !prev[id],
         }));
     };
 
     // Hapus aspek yang dicentang
-    const handleDeleteChecked = () => {
-        const filtered = aspekList.filter((a) => !checked[a.subjek]);
-        setAspekList(filtered);
-        setChecked({});
+    const handleDeleteChecked = async () => {
+        const token = localStorage.getItem("token")
+        if(window.confirm("Yakin ingin menghapus aspek?")){
+            const idsToDelete = aspekList.filter((a)=> checked[a.id_aspek]).map((a)=> a.id_aspek)
+            if (idsToDelete.length === 0) {
+                alert("Pilih aspek yang ingin dihapus!");
+                return;
+            }
+            try{
+                await axios.delete("http://localhost:3000/admin/aspek/delete", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },data: { id_aspek: idsToDelete }
+                })
+                fetchAspek();
+                setChecked({});
+            }catch(err){
+                console.error(err);
+                alert("Gagal menghapus aspek!");
+            }
+        }
     };
 
     // Helper: kelompokkan data by departemen
@@ -170,7 +199,7 @@ function Penilaian() {
                                         <div style={{ marginBottom: "15px" }} className="aspek-list">
                                             {aspekArr.map((a, idx) => (
                                                 <motion.label
-                                                    key={idx}
+                                                    key={a.id_aspek}
                                                     className="aspek-item"
                                                     style={{ marginLeft: "15px" }}
                                                     initial={{ opacity: 0, x: -15 }}
@@ -179,8 +208,8 @@ function Penilaian() {
                                                 >
                                                     <input
                                                         type="checkbox"
-                                                        checked={checked[a.subjek] || false}
-                                                        onChange={() => handleCheckboxChange(a.nama)}
+                                                        checked={checked[a.id_aspek] || false}
+                                                        onChange={() => handleCheckboxChange(a.id_aspek)}
                                                     />
                                                     {a.subjek}
                                                 </motion.label>
@@ -211,7 +240,7 @@ function Penilaian() {
                                         <div className="aspek-list">
                                             {aspekNonTeknisGlobal.map((a, idx) => (
                                                 <motion.label
-                                                    key={idx}
+                                                    key={a.id_aspek}
                                                     className="aspek-item"
                                                     style={{ marginLeft: "15px" }}
                                                     initial={{ opacity: 0, x: -15 }}
@@ -220,10 +249,10 @@ function Penilaian() {
                                                 >
                                                     <input
                                                         type="checkbox"
-                                                        checked={checked[a.nama] || false}
-                                                        onChange={() => handleCheckboxChange(a.nama)}
+                                                        checked={checked[a.id_aspek] || false}
+                                                        onChange={() => handleCheckboxChange(a.id_aspek)}
                                                     />
-                                                    {a.nama}
+                                                    {a.subjek}
                                                 </motion.label>
                                             ))}
                                         </div>
@@ -248,10 +277,10 @@ function Penilaian() {
                                                 >
                                                     <input
                                                         type="checkbox"
-                                                        checked={checked[a.nama] || false}
-                                                        onChange={() => handleCheckboxChange(a.nama)}
+                                                        checked={checked[a.id_aspek] || false}
+                                                        onChange={() => handleCheckboxChange(a.id_aspek)}
                                                     />
-                                                    {a.nama}
+                                                    {a.subjek}
                                                 </motion.label>
                                             ))}
                                         </div>
@@ -301,8 +330,8 @@ function Penilaian() {
                                                 }}
                                             >
                                                 <option value="">-- Pilih Kategori --</option>
-                                                <option value="Aspek Teknis">Aspek Teknis</option>
-                                                <option value="Aspek Non Teknis">Aspek Non Teknis</option>
+                                                <option value="teknis">Aspek Teknis</option>
+                                                <option value="non-teknis">Aspek Non Teknis</option>
                                             </select>
                                         </div>
 
@@ -316,7 +345,7 @@ function Penilaian() {
                                             />
                                         </div>
 
-                                        {kategoriAspek === "Aspek Teknis" && (
+                                        {kategoriAspek === "teknis" && (
                                             <div className="form-group">
                                                 <label>Departemen</label>
                                                 <select
@@ -342,7 +371,7 @@ function Penilaian() {
                                             </div>
                                         )}
 
-                                        {kategoriAspek === "Aspek Non Teknis" && (
+                                        {kategoriAspek === "non-teknis" && (
                                             <div className="form-group">
                                                 <label>Penerapan</label>
                                                 <select

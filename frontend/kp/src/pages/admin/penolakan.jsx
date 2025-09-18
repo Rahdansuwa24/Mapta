@@ -43,10 +43,13 @@ function Ditolak() {
             setPesertaDitolak(dataPeserta)
 
             const statusMap = {}
-                dataPeserta.forEach(p => {
+            const filesMap = {}
+            dataPeserta.forEach(p => {
                 statusMap[p.id_peserta_magang] = !!p.surat_balasan;
+                filesMap[p.id_peserta_magang] = p.surat_balasan || null;
             });
             setUploadedStatus(statusMap);
+            setUploadedFiles(filesMap)
         }catch(error){
            setError("gagal mengambil data")
         }finally{
@@ -60,6 +63,7 @@ function Ditolak() {
     const [filterInstansi, setFilterInstansi] = useState("");
     const [openInstansi, setOpenInstansi] = useState({});
     const [fileUploads, setFileUploads] = useState({});
+    const [uploadedFiles, setUploadedFiles] = useState({});
 
     const handleOpenModal = (peserta) => {
         setSelectedPeserta(peserta);
@@ -97,14 +101,34 @@ function Ditolak() {
         );
 
         setUploadedStatus(prev=>({ ...prev, [pesertaId]: true }));
+        setUploadedFiles((prev) => ({ ...prev, [pesertaId]: file.name }));
         setFileUploads(prev=>({ ...prev, [pesertaId]: null }));
         alert(`File "${file.name}" berhasil diupload untuk peserta ID ${pesertaId}`);
+        fetchPesertaDitolak()
     }catch (error) {
             console.error(error);
             alert("Upload gagal!");
         }
     };
 
+    const handleSaveProfile = async()=>{
+        const token = localStorage.getItem("token")
+        try{
+            await axios.patch(`http://localhost:3000/admin/dasbor/update/profile/${selectedPeserta.id_peserta_magang}`, {
+                nama: selectedPeserta.nama,
+                nomor_identitas: selectedPeserta.nomor_identitas, 
+                instansi: selectedPeserta.instansi,
+            }, {
+                headers: { Authorization: `Bearer ${token}` },
+            })
+            alert("Profil berhasil diperbarui!");
+            setSelectedPeserta({ ...selectedPeserta, isEditing: false });
+            fetchPesertaDitolak();
+        }catch(error){
+            console.error(error);
+            alert("Gagal memperbarui profil!");
+        }
+    }
 
     const pesertaFiltered = filterInstansi
         ? PesertaDitolak.filter((p) => p.instansi === filterInstansi)
@@ -133,7 +157,7 @@ function Ditolak() {
             initialState[instansi] = true;
         });
         setOpenInstansi(initialState);
-    }, [filterInstansi]);
+    }, [PesertaDitolak,filterInstansi]);
 
     return (
         <div className="app-layout">
@@ -354,7 +378,7 @@ function Ditolak() {
                                                 Edit Profil
                                             </button>
                                         ) : (
-                                            <button className="btn-save" onClick={() => setSelectedPeserta({...selectedPeserta, isEditing: false})}>
+                                            <button className="btn-save" onClick={handleSaveProfile}>
                                                 Simpan
                                             </button>
                                         )}
@@ -370,7 +394,7 @@ function Ditolak() {
 
                                     <div className="peserta-detail-item">
                                         <b>NIM/NIP :</b>
-                                        <input className="peserta-input" type="text" value={selectedPeserta.nomor_identitas} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, nim: e.target.value})} />
+                                        <input className="peserta-input" type="text" value={selectedPeserta.nomor_identitas} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, nomor_identitas: e.target.value})} />
                                     </div>
 
                                     <div className="peserta-detail-item">
@@ -380,7 +404,7 @@ function Ditolak() {
 
                                     <div className="peserta-detail-item">
                                         <b>Email :</b>
-                                        <input className="peserta-input" type="text" value={selectedPeserta.email} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, email: e.target.value})} />
+                                        <input className="peserta-input" type="text" value={selectedPeserta.email} disabled/>
                                     </div>
 
                                     {/* <div className="peserta-detail-item">
@@ -403,12 +427,17 @@ function Ditolak() {
                                         <input className="peserta-input" type="text" value={selectedPeserta.status_penerimaan || "Belum ada"} disabled />
                                     </div>
 
-                                    <div className="peserta-detail-item">
+                                     <div className="peserta-detail-item">
                                         <b>Status Upload Surat Balasan:</b>{" "}
                                         {uploadedStatus[selectedPeserta.id_peserta_magang] ? (
-                                        <span className="status-label sukses">Sudah Upload</span>
-                                        ) : (
-                                        <span className="status-label gagal">Belum Upload</span>
+                                            <>
+                                            <span className="status-label sukses">Sudah Upload</span>
+                                            {uploadedFiles[selectedPeserta.id_peserta_magang] && (
+                                                <span className="file-name"> &nbsp;({uploadedFiles[selectedPeserta.id_peserta_magang]})</span>
+                                            )}
+                                            </>
+                                            ) : (
+                                            <span className="status-label gagal">Belum Upload</span>
                                         )}
                                     </div>
                                 </div>

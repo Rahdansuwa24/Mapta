@@ -19,6 +19,14 @@ class Model_Peserta{
                 throw(error);
             }
     }
+    static async updatePesertaMagang(id, data) {
+            try {
+                const [result] = await db.query(`update peserta_magang set ? where id_jadwal = ?`, [data, id]);
+                return result
+            } catch (error) {
+                throw(error);
+            }
+    }
     static async countPeserta() {
             try {
                 const [result] = await db.query(`select count(id_peserta_magang) as total from peserta_magang`);

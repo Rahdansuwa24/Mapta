@@ -53,9 +53,8 @@ export default function LoginPage() {
             }
         }catch(error){
             console.error("Login error:", error);
-             if (error.response) {
+            if (error.response) {
             const errorMessage = error.response.data.message;
-
             if (errorMessage) {
                 alert(errorMessage);
             } else {

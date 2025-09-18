@@ -213,10 +213,10 @@ static async storeAspek(data){
             throw(error)
         }
     }
-    static async deleteAspek(id){
+    static async deleteAspek(ids){
         try{
-            const placeHolder = id.map(()=>'?').join(',')
-            const [result] = await db.query(`delete from aspek where id_aspek in (${placeHolder})`, [id])
+            const placeHolder = ids.map(()=>'?').join(',')
+            const [result] = await db.query(`delete from aspek where id_aspek in (${placeHolder})`, ids)
             return result
         }catch(error){
             throw(error)

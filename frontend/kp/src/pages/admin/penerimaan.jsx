@@ -42,10 +42,13 @@ function Diterima() {
             setPesertaDiterima(dataPeserta)
 
             const statusMap = {}
-                dataPeserta.forEach(p => {
+            const filesMap = {}
+            dataPeserta.forEach(p => {
                 statusMap[p.id_peserta_magang] = !!p.surat_balasan;
+                filesMap[p.id_peserta_magang] = p.surat_balasan || null;
             });
             setUploadedStatus(statusMap);
+            setUploadedFiles(filesMap)
         }catch(error){
            setError("gagal mengambil data")
         }finally{
@@ -60,7 +63,7 @@ function Diterima() {
     const [openInstansi, setOpenInstansi] = useState({});
     const [fileUploads, setFileUploads] = useState({});
 
-    // const [uploadedFiles, setUploadedFiles] = useState({});
+    const [uploadedFiles, setUploadedFiles] = useState({});
 
     const handleOpenModal = (peserta) => {
         setSelectedPeserta(peserta);
@@ -81,18 +84,6 @@ function Diterima() {
         return;
     }
 
-    // const handleUpload = (pesertaId) => {
-    // if (fileUploads[pesertaId]) {
-    //     const fileName = fileUploads[pesertaId].name;
-    //     alert(`File "${fileName}" berhasil diupload untuk peserta ID ${pesertaId}`);
-    //     setUploadedStatus({ ...uploadedStatus, [pesertaId]: true });
-    //     setUploadedFiles({ ...uploadedFiles, [pesertaId]: fileName }); // simpan nama file
-    //     setFileUploads({ ...fileUploads, [pesertaId]: null });
-    // } else {
-    //     alert("Pilih file terlebih dahulu!");
-    // }
-    // };
-
     const token = localStorage.getItem("token");
     const formData = new FormData();
     formData.append("surat_balasan", file);
@@ -101,22 +92,43 @@ function Diterima() {
         await axios.patch(
         `http://localhost:3000/admin/dasbor/update-surat-balasan/${pesertaId}`,
         formData,
-        {
-            headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-            },
-        }
+            {
+                headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "multipart/form-data",
+                },
+            }
         );
 
         setUploadedStatus(prev=>({ ...prev, [pesertaId]: true }));
+        setUploadedFiles((prev) => ({ ...prev, [pesertaId]: file.name }));
         setFileUploads(prev=>({ ...prev, [pesertaId]: null }));
         alert(`File "${file.name}" berhasil diupload untuk peserta ID ${pesertaId}`);
+        fetchPesertaDiterima()
     }catch (error) {
             console.error(error);
             alert("Upload gagal!");
         }
     };
+
+    const handleSaveProfile = async()=>{
+        const token = localStorage.getItem("token")
+        try{
+            await axios.patch( `http://localhost:3000/admin/dasbor/update/profile/${selectedPeserta.id_peserta_magang}`, {
+                nama: selectedPeserta.nama,
+                nomor_identitas: selectedPeserta.nomor_identitas, 
+                instansi: selectedPeserta.instansi,
+            },{
+                headers: { Authorization: `Bearer ${token}` },
+            })
+            alert("Profil berhasil diperbarui!");
+            setSelectedPeserta({ ...selectedPeserta, isEditing: false });
+            fetchPesertaDiterima();
+        }catch(error){
+            console.error(error);
+            alert("Gagal memperbarui profil!");
+        }
+    }
 
     const pesertaFiltered = filterInstansi
         ? PesertaDiterima.filter((p) => p.instansi === filterInstansi)
@@ -145,7 +157,7 @@ function Diterima() {
             initialState[instansi] = true;
         });
         setOpenInstansi(initialState);
-    }, [filterInstansi]);
+    }, [PesertaDiterima,filterInstansi]);
 
     return (
         <div className="app-layout">
@@ -366,7 +378,7 @@ function Diterima() {
                                                 Edit Profil
                                             </button>
                                         ) : (
-                                            <button className="btn-save" onClick={() => setSelectedPeserta({...selectedPeserta, isEditing: false})}>
+                                            <button className="btn-save" onClick={handleSaveProfile}>
                                                 Simpan
                                             </button>
                                         )}
@@ -382,7 +394,7 @@ function Diterima() {
 
                                     <div className="peserta-detail-item">
                                         <b>NIM/NIP :</b>
-                                        <input className="peserta-input" type="text" value={selectedPeserta.nomor_identitas} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, nim: e.target.value})} />
+                                        <input className="peserta-input" type="text" value={selectedPeserta.nomor_identitas} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, nomor_identitas: e.target.value})} />
                                     </div>
 
                                     <div className="peserta-detail-item">
@@ -392,7 +404,7 @@ function Diterima() {
 
                                     <div className="peserta-detail-item">
                                         <b>Email :</b>
-                                        <input className="peserta-input" type="text" value={selectedPeserta.email} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, email: e.target.value})} />
+                                        <input className="peserta-input" type="text" value={selectedPeserta.email} disabled/>
                                     </div>
 
                                     {/* <div className="peserta-detail-item">
@@ -414,31 +426,20 @@ function Diterima() {
                                         <b>Status :</b>
                                         <input className="peserta-input" type="text" value={selectedPeserta.status_penerimaan || "Belum ada"} disabled />
                                     </div>
-
                                     <div className="peserta-detail-item">
                                         <b>Status Upload Surat Balasan:</b>{" "}
                                         {uploadedStatus[selectedPeserta.id_peserta_magang] ? (
-                                        <span className="status-label sukses">Sudah Upload</span>
-                                        ) : (
-                                        <span className="status-label gagal">Belum Upload</span>
+                                            <>
+                                            <span className="status-label sukses">Sudah Upload</span>
+                                            {uploadedFiles[selectedPeserta.id_peserta_magang] && (
+                                                <span className="file-name"> &nbsp;({uploadedFiles[selectedPeserta.id_peserta_magang]})</span>
+                                            )}
+                                            </>
+                                            ) : (
+                                            <span className="status-label gagal">Belum Upload</span>
                                         )}
                                     </div>
                                 </div>
-
-    {/* <div className="peserta-detail-item">
-    <b>Status Upload Surat Penerimaan:</b>{" "}
-    {uploadedStatus[selectedPeserta.id] ? (
-        <>
-        <span className="status-label sukses">Sudah Upload</span>
-        {uploadedFiles[selectedPeserta.id] && (
-            <span className="file-name"> &nbsp;({uploadedFiles[selectedPeserta.id]})</span>
-        )}
-        </>
-    ) : (
-        <span className="status-label gagal">Belum Upload</span>
-    )}
-    </div> */}
-
                                 {/* Dokumen tetap */}
                                 <div className="peserta-detail-item">
                                     <b>Dokumen :</b>
