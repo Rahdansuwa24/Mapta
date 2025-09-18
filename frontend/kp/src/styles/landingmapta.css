@@ -1,0 +1,1274 @@
+        body.landing-mapta {
+        background: #FFFFFF;
+        }
+
+        /* HERO SECTION */
+        .mapta-hero {
+            background: linear-gradient(to bottom, #2D5A9C, #142846);
+            color: white;
+            padding: 40px 100px;
+            border-radius: 7rem;
+            margin: 20px 20px 0 20px; /* atas, kanan, bawah, kiri */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        /* HEADER */
+        .mapta-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        }
+
+        .mapta-logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        }
+
+        .mapta-logo img {
+        width: 110px;
+        height: auto;
+        }
+
+        .mapta-logo span {
+        font-family: 'Saira Stencil One', sans-serif;
+        font-size: 40px;
+        letter-spacing: 2px;
+        }
+
+.mapta-nav a {
+  margin: 0 20px;
+  text-decoration: none;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  transition: 
+    color 0.3s ease,
+    background-position 0.4s ease,
+    transform 0.3s ease;
+}
+.mapta-nav a:hover {
+  color: #DAE9F5;
+  transform: translateY(-3px) scale(1.05);
+  text-shadow:
+    0 3px 0 #0b1724,
+    0 6px 10px rgba(0,0,0,0.4);
+}
+
+        .mapta-auth {
+        display: flex;
+        gap: 15px;
+        }
+
+        .mapta-btn {
+        padding: 10px 22px;
+        border-radius: 40px;
+        border: none;
+        font-size: 15px;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 5px 8px rgba(0,0,0,0.35), inset 0 3px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .mapta-btn.daftar {
+        background: #90BDE8;
+        color: white;
+        }
+
+        .mapta-btn.login {
+        background: #EAEFF5;
+        color: #333;
+        }
+
+        /* MAIN CONTENT */
+        .mapta-main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        /* gambar jadi background kanan lebih besar */
+        background: url('../assets/images/book-lover.png') no-repeat right center;
+        background-size: 55%; /* awal: lebih besar dari contain */
+        position: relative;
+        filter: drop-shadow(0 8px 24px rgba(227, 226, 226, 0.25));
+
+        }
+
+        .mapta-text {
+        width: 100%;
+        max-width: none;
+        z-index: 1;
+        }
+
+        .mapta-text span {
+        font-family: 'Anton SC', sans-serif;
+        font-size: clamp(3.5rem, 6vw, 6rem);
+        line-height: 1.1;
+        text-shadow: 4px 5px 3px rgba(213, 213, 213, 0.4);
+        display: block;
+        }
+
+        /* ================== RESPONSIVE ================== */
+        @media (min-width: 1440px) {
+        .mapta-hero {
+            padding: 60px 120px;
+        }
+
+        .mapta-text span {
+            font-size: clamp(4rem, 5vw, 7rem);
+            line-height: 1.2;
+        }
+
+        .mapta-main {
+            background-size: 55%; /* layar sangat besar gambar setengah kanan */
+        }
+        }
+
+        /* responsif 1024px */
+        @media (max-width: 1024px) {
+        .mapta-hero {
+            padding: 30px 50px;
+        }
+
+        .mapta-logo img {
+            width: 90px;
+        }
+
+        .mapta-logo span {
+            font-size: 32px;
+        }
+
+        .mapta-nav a {
+            font-size: 16px;
+            margin: 0 15px;
+        }
+
+        .mapta-text span {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-top: 3rem;
+        }
+
+        .mapta-main {
+            background-size: 70%; /* tablet lebih lebar */
+            background-position: center bottom; 
+            flex-direction: column;
+            text-align: center;
+        }
+        }
+
+
+        /* responsif 900px */
+        @media (max-width: 900px) {
+        .mapta-main {
+            flex-direction: column;
+            text-align: center;
+            gap: 30px;
+        }
+
+        .mapta-logo img {
+            width: 80px;
+        }
+
+        .mapta-logo span {
+            font-size: 28px;
+        }
+
+        .mapta-nav a {
+            font-size: 15px;
+        }
+
+        .mapta-text span {
+            font-size: clamp(2rem, 5.5vw, 4rem);
+            margin-top: 50px;
+        }
+
+        .mapta-main {
+            background-size: 80%; /* HP besar */
+            background-position: center bottom;
+            flex-direction: column;
+            text-align: center;
+        }
+        }
+
+
+        /* responsif 768px */
+        @media (max-width: 768px) {
+        .mapta-header {
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .mapta-logo img {
+            width: 70px;
+        }
+
+        .mapta-logo span {
+            font-size: 24px;
+        }
+
+        .mapta-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .mapta-nav a {
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .mapta-auth {
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .mapta-hero {
+            padding: 25px 20px;
+            border-radius: 2rem;
+            min-height: 95vh;
+        }
+        .mapta-main {
+            background-size: 80%;
+            background-position: center bottom;
+            flex-direction: column;
+            text-align: center;
+            align-items: center;
+        }
+
+        .mapta-text span {
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            line-height: 1.4;
+            margin-top: 10px;
+        }
+        }
+
+
+        /* responsif 600px */
+        @media (max-width: 600px) {
+        .mapta-hero {
+            padding: 20px;
+            border-radius: 2rem;
+            min-height: 80vh;
+        }
+
+        .mapta-main {
+            background-size: 100%; /* HP kecil */
+            background-position: center bottom;
+            flex-direction: column;
+            text-align: center;
+            align-items: center;
+        }
+
+        .mapta-header {
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+        }
+
+        .mapta-logo img {
+            width: 60px;
+        }
+
+        .mapta-logo span {
+            font-size: 20px;
+        }
+
+        .mapta-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .mapta-nav a {
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .mapta-auth {
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .mapta-btn {
+            padding: 6px 14px;
+            font-size: 13px;
+        }
+        
+        .mapta-text span {
+            font-size: clamp(1.6rem, 6vw, 3rem);
+            line-height: 1.4;
+            margin: 5px 0 8px;
+        }
+        }
+
+    /* ===== PROFIL SECTION ===== */
+    .mapta-profil {
+    height: 100vh;
+    background: url('../assets/images/bg-1.png') no-repeat center center;
+    background-size: 100% 185%; /* lebar 100% tinggi 150% kontainer */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    }
+
+    .mapta-profil-title {
+    font-size: 3.5em;
+    color: #142846;
+    margin-bottom: 45px;
+    font-family: 'Anton SC', sans-serif;
+    text-shadow: 3px 4px 2px rgba(83, 120, 174, 0.5);
+    }
+
+    .mapta-profil-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    max-width: 1400px;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    padding: 25px;
+    }
+
+    .mapta-profil-img {
+    max-width: 550px;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.25));
+    }
+
+    .mapta-profil-text {
+    text-align: justify;
+    font-size: 1.1em;
+    }
+
+    /* ================== RESPONSIVE BREAKPOINTS ================== */
+
+    @media (max-width: 1024px) {
+    .mapta-profil {
+    height: auto; /* tinggi mengikuti isi */
+    background-size: cover; /* background kembali normal */
+    background-position: center;
+    }
+    .mapta-profil-title {
+        font-size: 3em;
+        margin-top: 30px;
+        margin-bottom: 60px;
+    }
+    
+    .mapta-profil-content {
+        gap: 40px;
+        padding: 25px;
+    }
+
+    .mapta-profil-img {
+        max-width: 400px;
+    }
+
+    .mapta-profil-text {
+        font-size: 14px;
+    }
+    }
+
+    /* Untuk layar dengan lebar hingga 900px */
+    @media (max-width: 900px) {
+    .mapta-profil {
+    height: auto; /* tinggi mengikuti isi */
+    background-size: cover; /* background kembali normal */
+    background-position: center;
+    }
+    
+    .mapta-profil-title {
+        font-size: 2.8em;
+        margin-bottom: 40px;
+        margin-top: 20px;
+    }
+    
+    .mapta-profil-content {
+        gap: 30px;
+        padding: 25px;
+    }
+
+    .mapta-profil-img {
+        max-width: 350px;
+    }
+
+    .mapta-profil-text {
+        font-size: 12px;
+    }
+    }
+
+    /* Untuk layar dengan lebar hingga 768px (misalnya tablet dalam mode portrait) */
+    @media (max-width: 768px) {
+    .mapta-profil {
+        height: auto; /* tinggi mengikuti isi */
+        padding: 20px;
+        background-size: cover; /* background kembali normal */
+        background-position: center;
+    }
+    
+    .mapta-profil-content {
+        flex-direction: column;
+        gap: 20px;
+        padding: 0;
+    }
+    
+    .mapta-profil-title {
+        font-size: 2.5em;
+        margin-bottom: 40px;
+    }
+
+    .mapta-profil-img {
+        max-width: 300px;
+    }
+
+    .mapta-profil-text {
+        text-align: justify;
+    }
+    }
+
+    /* Untuk layar dengan lebar hingga 600px (misalnya ponsel) */
+    @media (max-width: 600px) {
+    .mapta-profil-title {
+        font-size: 2em;
+        margin-bottom: 30px;
+    }
+    
+    .mapta-profil-img {
+        max-width: 250px;
+    }
+
+    .mapta-profil-text {
+        font-size: 0.9em;
+    }
+    }
+
+
+/* organisasi */
+
+.org-contain{
+    min-height: 100vh;
+}
+
+.org-section {
+  font-family: 'Poppins', sans-serif;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.org-container {
+  display: grid;
+  grid-template-columns: 0.7fr 1.3fr; /* kiri lebih kecil */
+  width: 90%;
+  max-width: 1300px;
+  height: 100%; /* penuh tinggi parent */
+}
+
+/* kiri */
+.org-image-box {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr); /* 3 baris fr, 2 untuk img, 1 untuk button */
+  gap: 20px;
+  align-self: stretch; /* biar penuh tinggi */
+  height: 100%;
+}
+
+/* gambar 2 kotak kanan */
+.org-image-box img {
+  grid-row: span 2; /* tinggi = 2 baris kanan */
+  width: 95%;       
+  height: 100%;     
+  object-fit: cover;
+  border-radius: 30px;
+  box-shadow: 4px 8px 2px rgba(0,0,0,0.3);
+  /* justify-self: center; */
+}
+
+/* tombol 1 kotak kanan */
+.org-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #20406F, #5378AE); /* gradasi biru */
+  color: #fff;
+  text-decoration: none;
+  padding: 25px 30px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 20px;
+  box-shadow: 4px 8px 2px rgba(0,0,0,0.3);
+  box-sizing: border-box;
+  width: 95%;
+  height: 100%;
+  /* justify-self: center; */
+  transition: transform .2s ease;
+}
+
+.org-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* lingkaran panah */
+.org-btn .arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e6ecf3;        /* abu muda */
+  color: #3d6da8;                   /* panah biru */
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  font-size: 20px;
+
+  /* shadow luar + shadow dalam di atas */
+  box-shadow:
+    0 4px 6px rgba(0,0,0,0.6),          /* shadow luar bawah */
+    inset 0 5px 5px rgba(0, 0, 0, 0.4); /* highlight dalam atas */
+
+  flex-shrink: 0;
+  transition: background .2s ease;
+    transform: rotate(-45deg);
+}
+
+.org-btn:hover .arrow {
+  background-color: #dce3ec;
+}
+
+/* LIST kanan */
+.org-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 1fr; /* tiap kotak tinggi sama */
+  gap: 20px;
+  height: 100%;
+  align-self: stretch;
+}
+.org-item {
+  background-color: #5378AE;
+  color: #fff;
+  padding: 22px;              /* padding lebih enak */
+  border-radius: 30px;
+  box-shadow: 4px 8px 2px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-sizing: border-box;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.org-item .number {
+  background-color: #fff;
+  color: #4b79b2;
+  font-weight: 700;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+
+/* Bagian AJAKAN magang */
+.daftar-section {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(90deg, #579ddd, #20406F);
+  margin-top: 60px;
+  padding: 60px; /* sedikit lebih lega */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  color: #fff;
+  text-align: left;
+}
+
+.daftar-section p {
+  font-size: 20px; /* lebih besar */
+  margin: 0;
+  flex: 1;
+}
+
+/* Tombol daftar */
+.btn-daftar {
+  display: inline-flex; /* supaya icon gampang rata */
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  color: #23406a;
+  padding: 15px 15px; /* lebih lebar & tinggi */
+  border-radius: 40px; /* radius lebih bulat */
+  text-decoration: none;
+  font-weight: 700; /* lebih tebal */
+  font-size: 20px; /* lebih besar */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.6);
+  white-space: nowrap;
+  transition: all .2s ease-in-out;
+}
+
+.btn-daftar span {
+  margin-left: 10px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 22px; /* ikon panah lebih besar */
+  font-style: italic;
+  font-weight: bold;
+}
+
+/* Efek hover tombol */
+.btn-daftar:hover {
+  background-color: #f0f0f0; /* sedikit abu saat hover */
+  transform: translateY(-2px);
+  box-shadow: 0 8px 14px rgba(0,0,0,0.2),
+              inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* lingkaran biru di belakang panah */
+.btn-daftar .arrow {
+  margin-left: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #5378AE; /* biru */
+  color: #fff;              /* panah putih */
+  font-size: 20px;
+  box-shadow:inset 0 5px 5px rgba(0, 0, 0, 0.4);
+  transition: background-color .2s ease;
+}
+
+.btn-daftar:hover .arrow {
+  background-color: #20406F; /* lebih gelap saat hover */
+}
+
+/* Responsif */
+@media (max-width: 992px) {
+  .org-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .org-section {
+    margin-top: 30px;
+    min-height: auto;
+    /* padding: 20px; */
+  }
+  .org-image-box {
+    grid-template-rows: auto auto;
+    gap: 20px;
+  }
+  .org-image-box img {
+    width: 100%;
+    height: auto;
+  }
+  .org-btn {
+    width: 100%;
+  }
+  .org-list {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .daftar-section {
+    flex-direction: column;      /* ubah jadi kolom */
+    text-align: center;          /* teks jadi center */
+    padding: 40px 20px;           /* padding lebih kecil */
+  }
+
+  .daftar-section p {
+    font-size: 18px;             /* teks sedikit lebih kecil di mobile */
+    margin-bottom: 20px;         /* beri jarak ke tombol */
+    flex: unset;                 /* hilangkan flex 1 agar tinggi sesuai */
+  }
+
+  .btn-daftar {     
+  padding: 10px 10px; 
+    justify-content: center;     /* konten tombol center */
+    font-size: 5px;             /* font tombol lebih kecil */
+  }
+
+  .btn-daftar .arrow {
+    width: 35px;
+    height: 35px;
+    font-size: 15px;
+    margin-left: 15px;
+  }
+}
+
+
+
+/* TATA CARA SECTION */
+.tata-cara {
+  width: 100%;
+  height: 100vh; /* full satu layar */
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  box-sizing: border-box;
+}
+
+.tata-cara .judul {
+  /* judul fleksibel: min 1.8rem, max 3.5rem, skala 3vw */
+  font-size: clamp(1.8rem, 3vw, 3.5rem);
+  color: #142846;
+  font-family: 'Anton SC', sans-serif;
+  text-shadow: 3px 4px 2px rgba(83, 120, 174, 0.5);
+  text-align: center;
+}
+
+.tata-cara-body {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* Mockup */
+.mockup {
+  flex: 0 0 auto;
+  transform: translateX(-160px);
+}
+
+.mockup img {
+  /* lebih ramping: min 250px, skala 45vw, max 700px */
+  width: clamp(250px, 50vw, 750px);
+  height: auto;
+  display: block;
+}
+
+/* Konten */
+.content {
+  flex: 1;
+}
+
+/* Steps timeline */
+.steps {
+  position: relative;
+  padding-right: 10px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.steps ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.steps li {
+  position: relative;
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.steps li::before {
+  content: "";
+  position: absolute;
+  right: 7px;
+  top: 0;
+  bottom: -25px;
+  width: 2px;
+  background-color: #1e2b50;
+  z-index: 0;
+}
+
+.steps li:last-child::before {
+  bottom: auto;
+  height: 8px;
+}
+
+/* teks isi langkah */
+.steps li .text {
+  flex: 1;
+  text-align: right;
+  line-height: 1.6;
+  padding-right: 40px;
+  /* lebih kecil lagi: min 0.7rem, skala 0.9vw, max 0.85rem */
+  font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+}
+
+.steps li .text strong {
+  font-style: italic;
+  font-weight: bold;
+  /* lebih kecil juga */
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+}
+
+.steps li .dot {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 14px; /* lebih kecil */
+  height: 14px;
+  background-color: #2D5A9C;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* responsif tablet */
+
+@media (max-width: 1280px) {
+  .steps li::before {left: 7px;}
+  .steps li .dot {left: 0;}
+  .steps li .text {
+    text-align: left;
+    padding-left: 35px;
+    font-size: 0.9rem;
+  }
+  .tata-cara .judul {font-size: 2.8rem;}
+  .mockup {display: none;}
+}
+
+@media (max-width: 1024px) {
+  .steps li::before {left: 7px;}
+  .steps li .dot {left: 0;}
+  .steps li .text {
+    text-align: left;
+    padding-left: 35px;
+    font-size: 0.9rem;
+  }
+  .tata-cara .judul {font-size: 2.8rem;}
+  .mockup {display: none;}
+}
+
+@media (max-width: 900px) {
+  .steps li .text {
+    font-size: 0.85rem;
+    padding-left: 30px;
+  }
+  .tata-cara .judul {font-size: 2.6rem;}
+  .mockup {display: none;}
+}
+
+@media (max-width: 768px) {
+  .tata-cara .judul {
+    font-size: 2em;
+    margin: 0;
+  }
+  .tata-cara {
+    height: auto;
+    padding: 30px;
+  }
+  .tata-cara-body {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .mockup {display: none;}
+  .content {width: 100%;}
+  .steps {padding-right: 0;}
+  .steps li .text {
+    font-size: 0.8rem;
+    padding-left: 30px;
+  }
+  .judul {font-size: 1.4rem;}
+}
+
+
+
+
+
+/* BAGIAN FAQ */
+.faq-section {
+  display: flex;
+  justify-content: center;           /* konten di tengah */
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  padding: 60px 80px;
+  box-sizing: border-box;
+  background: url('../assets/images/bg-2.png') no-repeat center center/cover;
+  overflow-x: hidden;
+  gap: 40px;                         /* jarak antar kolom */
+}
+
+.faq-content {
+  flex: 1;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.faq-title {
+    text-align: center;
+    font-size: 3.5em;
+    color: #142846;
+    font-family: 'Anton SC', sans-serif;
+    text-shadow: 3px 4px 2px rgba(83, 120, 174, 0.5);
+}
+
+.faq-item {
+  background-color: #F5F7FB;
+  box-shadow: 0 3px 2px rgba(20, 40, 70, 0.5), inset 0 -2px 2px rgba(20, 40, 70, 0.5);
+  border-radius: 8px;
+  overflow: hidden; /* supaya border radius rapi */
+}
+
+.faq-question {
+  width: 100%;
+  padding: 18px 20px;
+  font-size: 1rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: left; 
+}
+
+.faq-question span {
+  flex-shrink: 0;             /* supaya panah tetap di kanan */
+}
+
+.faq-question .arrow {
+  transition: transform 0.3s ease;
+}
+
+.faq-item.active .arrow {
+  transform: rotate(180deg); /* panah berputar saat aktif */
+}
+
+.faq-answer {
+  font-family: 'Poppins', sans-serif;
+  max-height: 0;
+  overflow: hidden;
+  font-size: 0.80rem;
+  padding: 0 20px;
+  color: #333;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  text-align: left; 
+}
+
+.faq-item.active .faq-answer {
+  max-height: 500px; /* tinggi cukup besar untuk konten */
+  padding: 15px 20px 20px;
+}
+
+.faq-image {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end; /* dorong ke kanan */
+  align-items: center;
+  overflow: visible;         /* supaya boleh keluar sedikit */
+  position: relative;
+}
+
+.faq-image img {
+  max-width: 650px;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+  transform: translateX(30%); /* geser 15% keluar kanan */
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .faq-section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .faq-image {
+    justify-content: center; /* balik tengah pada tablet */
+    overflow: hidden;
+    margin-top: 40px;
+  }
+
+  .faq-image img {
+    max-width: 350px;
+    transform: translateX(0); /* normal pada ukuran kecil */
+  }
+}
+
+@media (max-width: 768px) {
+  .faq-title {
+    font-size: 2rem;
+  }
+  .faq-question {
+    font-size: 0.9rem;
+  }
+  .faq-image img {
+    max-width: 250px;
+  }
+}
+
+
+
+/* FOOTER */
+.footer-section {
+  background-color: #0B1724;
+  color: #ffffff;
+  padding: 60px 40px 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.footer-content {
+  display: flex;
+  font-family: 'Poppins', sans-serif;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 60px;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+/* Kolom kiri tetap besar */
+.footer-left span{
+  display: block; /* supaya flexnya jalan normal */
+  width: 100%;
+  max-width: 500px; /* lebar maksimal kiri */
+  text-align: left;
+  font-family: 'Anton SC', sans-serif;
+  font-size: 2.5rem;
+}
+
+/* Kolom tengah lebih kecil */
+.footer-center {
+  max-width: 450px; /* atur lebarnya */
+  flex: 0 0 450px;  /* paksa 450px */
+}
+.footer-center p {
+  text-align: center;
+  margin: 5px 0;
+}
+.footer-center p:first-child {
+  font-size: 1.2rem;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+/* Kolom kanan lebih kecil */
+.footer-right {
+  max-width: 450px; /* atur lebarnya */
+  flex: 0 0 450px;  /* paksa 300px */
+}
+.footer-right p {
+  text-align: justify;
+  margin: 5px 0;
+}
+.footer-right p:first-child {
+  font-size: 1.2rem;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+
+/* MAPTA besar */
+.footer-mapta {
+  font-family: 'Saira Stencil One', sans-serif;
+  display: block;
+  width: 100%;                /* pastikan penuh */
+  margin: 0 auto;             /* center */
+  text-align: center;
+  line-height: 1;
+  background: linear-gradient(to bottom,
+    #ffffff 25%,
+    #0B1724 75%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  position: relative;
+
+  /* lebih besar di desktop */
+  font-size: clamp(350px, 22vw, 420px);
+  /* letter-spacing agak rapat supaya tidak terlalu longgar */
+  letter-spacing: clamp(2rem, 4vw, 4rem);
+  left: 1.5rem;
+  transform: translateY(80px);
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1400px) {
+  .footer-mapta {
+    /* lebih kecil dibanding default */
+    font-size: clamp(220px, 15vw, 300px);
+    letter-spacing: clamp(2rem, 4vw, 4rem);
+    transform: translateY(55px); 
+    left: 0;
+    
+  }
+}
+
+@media (max-width: 1340px) {
+  .footer-mapta {
+    /* lebih kecil dibanding default */
+    font-size: clamp(200px, 15vw, 280px);
+    letter-spacing: clamp(2rem, 4vw, 4rem);
+    transform: translateY(45px); 
+    left: 0;
+    
+  }
+}
+
+/* ≤1280px – struktur footer */
+@media (max-width: 1280px) {
+  .footer-section {
+    padding: 50px 35px 0;
+  }
+
+  .footer-content {
+    gap: 50px;
+  }
+
+  .footer-left span {
+    font-size: 2.3rem;
+    max-width: 450px;
+  }
+
+  .footer-center,
+  .footer-right {
+    flex: 0 0 400px;
+    max-width: 400px;
+  }
+
+  /* Mapta lebih kecil di 1280px */
+  .footer-mapta {
+    /* override clamp */
+    font-size: clamp(190px, 15vw, 260px);
+    letter-spacing: clamp(1.8rem, 3.5vw, 3.5rem);
+    transform: translateY(40px);
+  left: 0;
+  }
+}
+
+
+/* ≤1024px */
+@media (max-width: 1024px) {
+  .footer-section {
+    padding: 40px 30px 0;
+  }
+
+  .footer-content {
+    gap: 45px;
+  }
+
+  .footer-left span {
+    font-size: 1.9rem;
+    max-width: 380px;
+  }
+
+  .footer-center,
+  .footer-right {
+    flex: 0 0 320px;
+    max-width: 320px;
+  }
+
+  .footer-mapta {
+    font-size: clamp(180px, 18vw, 240px);
+    letter-spacing: clamp(1.5rem, 3vw, 2rem);
+    transform: translateY(35px);
+  left: 0;
+
+  }
+}
+
+/* ≤900px */
+@media (max-width: 900px) {
+  .footer-section {
+    padding: 30px 20px 0;
+  }
+
+  .footer-content {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+    gap: 40px;
+  }
+
+  .footer-left span {
+    font-size: 1.6rem;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .footer-center,
+  .footer-right {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+    .footer-right p {
+  text-align: center;
+  }
+
+
+  .footer-center p:first-child,
+  .footer-right p:first-child {
+    font-size: 1rem;
+  }
+
+  .footer-mapta {
+    font-size: clamp(150px, 16vw, 200px);
+    letter-spacing: clamp(1rem, 2.5vw, 1.5rem);
+    transform: translateY(30px);
+  left: 0;
+
+  }
+}
+
+/* ≤768px */
+@media (max-width: 768px) {
+  .footer-section {
+    padding: 20px 15px 0;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .footer-left span {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  .footer-center,
+  .footer-right {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .footer-center p,
+  .footer-right p {
+    text-align: center;
+    font-size: 13px;
+  }
+
+
+  .footer-mapta {
+    font-size: clamp(90px, 14vw, 120px);
+    letter-spacing: clamp(0.5rem, 2vw, 1rem);
+    transform: translateY(20px);
+  left: 0;
+
+  }
+}

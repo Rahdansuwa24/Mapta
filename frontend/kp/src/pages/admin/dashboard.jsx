@@ -53,6 +53,10 @@ function Dashboard() {
     const [filterInstansi, setFilterInstansi] = useState("");
     const [openInstansi, setOpenInstansi] = useState({}); // state untuk toggle tabel per instansi
 
+    // state untuk popup kuota
+  const [showKuotaModal, setShowKuotaModal] = useState(false);
+  const [kuota, setKuota] = useState(50);
+
     const handleOpenModal = (peserta) => {
         setSelectedPeserta(peserta);
         setShowModal(true);
@@ -91,6 +95,15 @@ function Dashboard() {
         setOpenInstansi(initialState);
     }, [calonPeserta, filterInstansi]);
 
+    // handler kuota
+  const incrementKuota = () => setKuota((prev) => prev + 1);
+  const decrementKuota = () => setKuota((prev) => (prev > 0 ? prev - 1 : 0));
+  const handleInputKuota = (e) => setKuota(Number(e.target.value));
+  const handleSaveKuota = () => {
+    alert("Nilai kuota disimpan: " + kuota);
+    setShowKuotaModal(false);
+  };
+
     return (
         <div className="app-layout">
             <SidebarAdm />
@@ -100,6 +113,15 @@ function Dashboard() {
                 <section className="main">
                     <div className="submain">
                         <p className="judul-submain">Peserta Magang yang Mendaftar</p>
+                        
+                        {/* tombol ubah kuota */}
+                        <button
+                            className="btn-kuota"
+                            onClick={() => setShowKuotaModal(true)}
+                            >
+                            Ubah Kuota Magang
+                        </button>
+
                         <select
                             className="dropdown-instansi"
                             value={filterInstansi}
@@ -448,6 +470,52 @@ function Dashboard() {
                         </div>
                     </div>
                 )}
+                {/* MODAL UBAH KUOTA */}
+                {showKuotaModal && (
+                <div className="kuota-overlay" onClick={() => setShowKuotaModal(false)}>
+                    <div
+                    className="input-group" // class utama tetap input-group sesuai style lama
+                    onClick={(e) => e.stopPropagation()} // klik di dalam tidak menutup
+                    >
+                    <div className="kuota-header">
+                        <button
+                        className="kuota-close"
+                        onClick={() => setShowKuotaModal(false)}
+                        >
+                        <FaTimes />
+                        </button>
+                    </div>
+
+                        <span id="kuota-text">
+                        Kuota Magang Saat Ini: {kuota} peserta
+                        </span>
+
+                        <div className="number-row">
+                        <button className="tombol decrement" onClick={decrementKuota}>−</button>
+                        <input
+                            type="number"
+                            value={kuota}
+                            min="0"
+                            id="kuota-input"
+                            onChange={handleInputKuota}
+                        />
+                        <button className="tombol increment" onClick={incrementKuota}>+</button>
+                        <button className="save-button" onClick={handleSaveKuota}>
+                            Simpan
+                        </button>
+                        </div>
+
+                        <div className="desc">
+                        Silakan ubah jumlah peserta magang sesuai kebutuhan melalui kolom
+                        input ini. Jika ingin menambah atau mengurangi jumlah peserta,
+                        gunakan tombol +/− atau masukkan angka baru pada kolom input,
+                        kemudian klik tombol Simpan untuk menyimpan perubahan.
+                        <b> Pastikan angka yang dimasukkan sesuai dengan kuota yang diinginkan.</b>
+                        </div>
+                    </div>
+                </div>
+                )}
+
             </div>
         </div>
     );

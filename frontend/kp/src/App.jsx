@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import "./index.css";
+import LandingMapta from "./pages/landingpage.jsx";
 import LoginPage from "./pages/login";
 import FormPendaftaran from "./pages/pendaftaran";
 import Dashboard from "./pages/admin/dashboard.jsx";
@@ -26,6 +27,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<LandingMapta />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/pendaftaran" element={<FormPendaftaran />} />
         <Route path="/admin-dashboard" element={<Protection><Dashboard /></Protection>} />

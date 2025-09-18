@@ -1103,12 +1103,167 @@ tbody tr:nth-child(even) {
     text-align: center;
     }
 
+
+    /* popup kuota */
+    .input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    border-radius: 20px;
+    background: #e0e0e0;
+    max-width: 500px;
+    position: relative; /* supaya posisi absolute close button mengacu ke modal */
+    }
+    .input-group span {
+        font-weight: 600;
+        font-size: 16px;
+        color: #333;
+    }
+    .number-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    /* Hilangkan panah input number */
+    .number-row input::-webkit-outer-spin-button,
+    .number-row input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .number-row input[type=number] {
+        -moz-appearance: textfield;
+    }
+    .number-row input {
+        width: 80px;
+        text-align: center;
+        font-size: 18px;
+        border: none;
+        outline: none;
+        padding: 10px;
+        border-radius: 16px;
+        background: #e0e0e0;
+        color: #333;
+        box-shadow: inset 4px 4px 8px #bebebe,
+                    inset -4px -4px 8px #ffffff;
+    }
+    .tombol {
+        border: none;
+        outline: none;
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: bold;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: #e0e0e0;
+        color: #555;
+        box-shadow: 4px 4px 8px #bebebe,
+                    -4px -4px 8px #ffffff;
+        transition: all 0.2s ease;
+    }
+    .tombol:hover {
+        color: #000;
+    }
+    .tombol:active {
+        box-shadow: inset 4px 4px 8px #bebebe,
+                    inset -4px -4px 8px #ffffff;
+    }
+    .save-button {
+        padding: 12px 20px;
+        border-radius: 16px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        background: #e0e0e0;
+        color: #333;
+        font-weight: 600;
+        font-size: 16px;
+        box-shadow: 4px 4px 8px #bebebe,
+                    -4px -4px 8px #ffffff;
+        transition: all 0.2s ease;
+    }
+    .save-button:hover {
+        color: #000;  
+    }
+    .save-button:active {
+        box-shadow: inset 4px 4px 8px #bebebe,
+                    inset -4px -4px 8px #ffffff;
+    }
+    .desc {
+        font-size: 14px;
+        text-align: center;
+        color: #444;
+    }
+    .desc b {
+        display: block;
+        margin-top: 4px;
+    }
+
+    .kuota-overlay {
+        display: flex; /* awalnya disembunyikan */
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+    }
+    .kuota-header {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+    .kuota-header .kuota-close {
+        width: 28px;
+        height: 28px;
+        border: 2px solid #900;
+        color: #900;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+        background: #e0e0e0; /* agar menyatu dengan modal */
+    }
+    .kuota-header .kuota-close:hover {
+        background: #900;
+        color: #FEFFFE;
+    }
+
+    .btn-kuota {
+    background: #2D5A9C;
+    font-size: 13px;
+    color: #fff;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s ease; /* supaya animasi halus */
+    }
+
+    /* efek hover */
+    .btn-kuota:hover {
+    background: #3468b5;        /* sedikit lebih terang */
+    transform: translateY(-2px); /* naik sedikit */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    /* efek ditekan */
+    .btn-kuota:active {
+    transform: translateY(1px) scale(0.97); /* agak mengecil */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+
+
+
     @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.95);}
     to { opacity: 1; transform: scale(1);}
     }
-
-
 
     /* RESPONSIVE */
     @media (max-width: 768px) {
