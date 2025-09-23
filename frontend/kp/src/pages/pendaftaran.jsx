@@ -10,7 +10,7 @@ import logoMapta from "../assets/images/logo_mapta.png";
 
 export default function PendaftaranMagang() {
     useEffect(() => {
-        document.title = "Form Pendaftaran";
+        document.title = "Registration Form MAPTA";
     }, []);
 
     const [sections, setSections] = useState([0]);

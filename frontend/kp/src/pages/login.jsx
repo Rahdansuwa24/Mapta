@@ -13,7 +13,7 @@ import vectorBg from "../assets/images/vector_1.png";
 
 export default function LoginPage() {
     useEffect(() => {
-        document.title = "Login Page";
+        document.title = "Login MAPTA";
     }, []);
 
     const navigate = useNavigate();

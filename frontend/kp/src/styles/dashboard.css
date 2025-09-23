@@ -196,6 +196,8 @@ tbody tr:nth-child(even) {
     object-fit: cover;
 }
 
+
+
     /* Overlay untuk dashboard*/
     .overlay {
         display: flex; /* awalnya disembunyikan */
@@ -256,7 +258,9 @@ tbody tr:nth-child(even) {
         color: #FEFEFE;
     }
 
-    /* Body */
+
+
+
 
 .modal-body {
   flex: 1;                  /* supaya body mengisi sisa tinggi modal */
@@ -285,6 +289,9 @@ tbody tr:nth-child(even) {
   display: block;
   word-break: break-word;   /* kalau nama file panjang, pecah */
 }
+
+
+
 
     /* Foto Profil */
     .profile-pic {
@@ -1024,9 +1031,30 @@ tbody tr:nth-child(even) {
     }
 
     /* Body */
-    .nilai-modal-body {
-    padding: 20px;
-    }
+/* Untuk container utama */
+.nilai-modal-body span {
+  display: block;
+  font-style: italic;      /* miring seperti gambar */
+  font-weight: 600;
+  margin-bottom: 8px;      /* jarak ke kotak */
+  font-size: 16px;         /* bisa disesuaikan */
+}
+
+/* Kotak departemen */
+.nilai-subjudul {
+  background-color: #F5F6FA; /* abu-abu muda */
+  border-radius: 8px;        /* sudut tumpul */
+  padding: 10px 15px;        /* ruang dalam */
+  display: inline-block;     /* agar mengikuti panjang teks */
+  margin-bottom: 10px;
+  
+}
+
+.nilai-subjudul p {
+  font-size: 14px;          /* ukuran teks */
+  font-weight: 500;         /* sedikit tebal */
+  color: #333;              /* warna teks */
+}
 
     .nilai-section {
     margin-bottom: 28px;
@@ -1102,6 +1130,7 @@ tbody tr:nth-child(even) {
     width: 90px;
     text-align: center;
     }
+
 
 
     /* popup kuota */
@@ -1260,10 +1289,13 @@ tbody tr:nth-child(even) {
 
 
 
+
     @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.95);}
     to { opacity: 1; transform: scale(1);}
     }
+
+
 
     /* RESPONSIVE */
     @media (max-width: 768px) {

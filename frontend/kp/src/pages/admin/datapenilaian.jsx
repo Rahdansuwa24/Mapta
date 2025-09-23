@@ -15,7 +15,7 @@ import profil2 from "../../assets/images/profil2.jpeg";
 
 function DataPenilaianAspek() {
     useEffect(() => {
-        document.title = "Data Penilaian Aspek";
+        document.title = "Admin MAPTA";
     }, []);
 
     const penilaianDummy = [

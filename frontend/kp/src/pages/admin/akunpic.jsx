@@ -12,7 +12,7 @@ import "../../styles/dashboard.css";
 
 function AkunPIC() {
     useEffect(() => {
-        document.title = "Admin Akun PIC";
+        document.title = "Admin MAPTA";
     }, []);
 
     const [showModal, setShowModal] = useState(false);

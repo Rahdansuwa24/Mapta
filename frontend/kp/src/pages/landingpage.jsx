@@ -96,7 +96,7 @@ const fadeUp = {
                     <ScrollLink to="faq" smooth={true} duration={500}>FAQ's</ScrollLink>
                 </nav>
                 <div className="mapta-auth">
-                    <Link to="/pendaftaran">
+                    <Link to="/choose-role">
                         <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -200,7 +200,7 @@ const fadeUp = {
                 <p>
                     Pendaftaran magang dibuka bagi peserta yang ingin mengikuti program magang di lingkungan Dinas Perpustakaan dan Kearsipan Provinsi Jawa Timur.
                 </p>
-                <Link to="/pendaftaran">
+                <Link to="/choose-role">
                     <motion.a href="#" className="btn-daftar">
                     <span className="text">Daftar</span>
                     <span className="arrow"><FaArrowRight /></span>

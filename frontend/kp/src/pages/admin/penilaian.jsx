@@ -11,7 +11,7 @@ import "../../styles/dashboard.css";
 
 function Penilaian() {
     useEffect(() => {
-        document.title = "Admin Aspek Penilaian";
+        document.title = "Admin MAPTA";
     }, []);
 
     const [showModal, setShowModal] = useState(false);
