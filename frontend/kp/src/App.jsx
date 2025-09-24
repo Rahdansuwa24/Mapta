@@ -4,6 +4,7 @@ import "./index.css";
 import LandingMapta from "./pages/landingpage.jsx";
 import LoginPage from "./pages/login";
 import FormPendaftaran from "./pages/pendaftaran";
+import FormPendaftaranDinas from "./pages/pendaftarandinas.jsx";
 import ChooseRole from "./pages/chooserole.jsx";
 import Dashboard from "./pages/admin/dashboard.jsx";
 import Diterima from "./pages/admin/penerimaan.jsx";
@@ -32,6 +33,7 @@ function App() {
         <Route path="/" element={<LandingMapta />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/pendaftaran" element={<FormPendaftaran />} />
+        <Route path="/pendaftarandinas" element={<FormPendaftaranDinas />} />
         <Route path="/choose-role" element={<ChooseRole />} />
         <Route path="/admin-dashboard" element={<Protection><Dashboard /></Protection>} />
         <Route path="/admin-penerimaan" element={<Protection><Diterima /></Protection>} />

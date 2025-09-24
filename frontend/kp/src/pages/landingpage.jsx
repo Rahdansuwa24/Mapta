@@ -66,9 +66,9 @@ const fadeUp = {
 
     const steps = [
         { t: "Klik Daftar", d: "Pilih tombol Daftar di navigasi untuk menuju halaman Form Pendaftaran." },
-        { t: "Perhatikan Catatan", d: "Baca dengan seksama note/perintah sebelum mulai mengisi data." },
-        { t: "Pilih Kategori", d: "Kelompok → tombol “Tambah” aktif setelah pilih kategori. Individu → isi data langsung tanpa tombol “Tambah”." },
         { t: "Pilih Jenjang", d: "SMK/SMA/Mahasiswa → pilih Siswa. Pegawai/ASN → pilih Dinas" },
+        { t: "Perhatikan Catatan", d: "Baca dengan seksama note/perintah sebelum mulai mengisi data." },
+        { t: "Pilih Kategori bagi Siswa", d: "Kelompok → tombol “Tambah” aktif setelah pilih kategori. Individu → isi data langsung tanpa tombol “Tambah”." },
         { t: "Isi Instansi Lengkap", d: "Tuliskan nama sekolah/universitas tanpa singkatan." },
         { t: "Upload Dokumen (Wajib untuk Siswa)", d: "Surat pernyataan/proposal dari kampus atau sekolah dan Dokumen pendukung lain. Untuk Pegawai/ASN, dokumen tidak diwajibkan." },
         { t: "Tunggu Konfirmasi Email", d: "Setelah selesai melengkapi semua data dan mengunggah dokumen, klik Daftar dan tunggu proses konfirmasi melalui email dan Anda akan menerima balasan apakah pendaftaran diterima atau ditolak." },

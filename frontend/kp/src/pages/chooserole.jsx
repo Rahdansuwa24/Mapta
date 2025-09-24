@@ -1,19 +1,30 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa"; // ikon panah
 import chooseImage from "../assets/images/choose.png";
 import "../styles/choose.css";
 
 const ChooseRoleSection = () => {
+    const navigate = useNavigate();
+
     useEffect(() => {
-            document.title = "MAPTA";
+        document.title = "MAPTA";
     }, []);
 
     return (
         <section className="gradient-bg">
+        {/* Tombol back */}
+        <button
+            onClick={() => navigate(-1)}
+            className="back-button"
+        >
+            <FaArrowLeft size={18} />
+        </button>
+
         <motion.div
             className="choose-contain"
-            initial={{ opacity: 0, y: 50 }} 
+            initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
         >
@@ -68,7 +79,9 @@ const ChooseRoleSection = () => {
                 setiap bidang, sehingga dapat menjadi bekal dalam peningkatan
                 kompetensi dan pemahaman kerja di instansi masing-masing.
                 </span>
+                <Link to="/pendaftarandinas">
                 <button>Daftar Sebagai Dinas</button>
+                </Link>
             </motion.div>
             </div>
         </motion.div>

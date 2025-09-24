@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa"; // ikon panah
 import { motion } from "framer-motion"; 
 import { ImEye, ImEyeBlocked } from "react-icons/im";
 import "../styles/login.css";
@@ -68,6 +69,10 @@ export default function LoginPage() {
     }
     return (
         <section className="login-section">
+            {/* Tombol back */}
+            <button className="back-btn" onClick={() => navigate(-1)}>
+            <FaArrowLeft size={18} />
+            </button>
             <div className="container">
                 {/* LEFT: FORM LOGIN */}
                 <motion.div
