@@ -39,7 +39,7 @@ function App() {
         <Route path="/admin-sertifikat" element={<Sertifikat />} />
         <Route path="/admin-pic" element={<Protection><AkunPIC /></Protection>} />
         <Route path="/pic-jadwal" element={<Protection><JadwalPIC /></Protection>} />
-        <Route path="/pic-penilaian" element={<PenilaianPIC />} />
+        <Route path="/pic-penilaian" element={<Protection><PenilaianPIC /></Protection>} />
         <Route path="/peserta-nilai" element={<NilaiPeserta />} />
         <Route path="/peserta-jadwal" element={<JadwalPeserta />} />
         <Route path="/peserta-sertifikat" element={<SertifikatPeserta />} />

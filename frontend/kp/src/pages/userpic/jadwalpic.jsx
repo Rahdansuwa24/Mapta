@@ -7,6 +7,10 @@ import { LuAlignJustify } from "react-icons/lu";
 import { FaTimes } from "react-icons/fa";
 import { BiSolidCalendar } from "react-icons/bi";
 import { RiBallPenFill } from "react-icons/ri";
+import axios from 'axios'
+import dayjs from 'dayjs';
+import 'dayjs/locale/id';
+dayjs.locale('id');
 
 import "../../styles/user.css";
 
@@ -16,8 +20,47 @@ import profil2 from "../../assets/images/profil2.jpeg";
 function JadwalPic() {
     useEffect(() => {
         document.title = "Jadwal PIC";
+        fetchJadwalPic()
     }, []);
 
+
+    const fetchJadwalPic = async()=>{
+        const token = localStorage.getItem("token")
+        try{
+            let res = await axios.get("http://localhost:3000/pic/jadwal", {
+                 headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            console.log(res.data.data)
+            const rawData = res.data.data
+            const groupedData = rawData.reduce((acc, item)=>{
+                const instansi = item.instansi
+                const periode = `${dayjs(item.tanggal_mulai).format("DD MMM YYYY")} s.d. ${dayjs(item.tanggal_selesai).format("DD MMM YYYY")}`;
+
+                if(!acc[instansi]) acc[instansi] = {instansi, jadwal: []}
+                let jadwal = acc[instansi].jadwal.find((j)=> j.tanggal === periode)
+                if(!jadwal){
+                    jadwal = {tanggal:periode, peserta:[]}
+                    acc[instansi].jadwal.push(jadwal)
+                }
+                jadwal.peserta.push({
+                    id: item.id_peserta_magang,
+                    nama: item.nama,
+                    nim: item.nomor_identitas,
+                    instansi: item.instansi,
+                    profil: `http://localhost:3000/static/images/${item.foto_diri}`
+
+                })
+                return acc
+            }, {})
+            setDataJadwalPic(Object.values(groupedData));
+            setDataJadwalPicBidang(res.data.dataPic)
+        }catch(error){
+            console.error(error)
+            alert("Gagal mengambil data")
+        }
+    }
     // contoh data jadwal per instansi
     const jadwalDummy = [
     {
@@ -169,6 +212,8 @@ function JadwalPic() {
     const [openInstansi, setOpenInstansi] = useState({});
     const [showModal, setShowModal] = useState(false);
     const [selectedPeserta, setSelectedPeserta] = useState(null);
+    const [dataJadwalPic, setDataJadwalPic] = useState([])
+    const [dataJadwalPicBidang, setDataJadwalPicBidang] = useState([])
 
     const handleOpenModal = (peserta) => {
         setSelectedPeserta(peserta);
@@ -180,12 +225,12 @@ function JadwalPic() {
         arr.reduce((acc, _, i) => (i % size ? acc : [...acc, arr.slice(i, i + size)]), []);
 
     // ambil daftar instansi untuk filter
-    const instansiList = jadwalDummy.map((item) => item.instansi);
+    const instansiList = dataJadwalPic.map((item) => item.instansi);
 
     // filter instansi
     const jadwalFiltered = filterInstansi
-        ? jadwalDummy.filter((j) => j.instansi === filterInstansi)
-        : jadwalDummy;
+        ? dataJadwalPic.filter((j) => j.instansi === filterInstansi)
+        : dataJadwalPic;
 
     // toggle instansi buka/tutup
     const toggleInstansi = (instansi) => {
@@ -201,7 +246,7 @@ function JadwalPic() {
         initialState[instansi] = true;
         });
         setOpenInstansi(initialState);
-    }, [filterInstansi]);
+    }, [dataJadwalPic, filterInstansi]);
 
     return (
         <div className="jp-app-layout">
