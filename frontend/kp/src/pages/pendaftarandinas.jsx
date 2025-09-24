@@ -9,11 +9,11 @@ import axios from 'axios'
 import "../styles/pendaftaran.css";
 import logoMapta from "../assets/images/logo_mapta.png";
 
-export default function PendaftaranMagang() {
+export default function PendaftaranDinas() {
     useEffect(() => {
         document.title = "Registration Form MAPTA";
     }, []);
-    
+
     const navigate = useNavigate();
 
     const [sections, setSections] = useState([0]);
@@ -247,7 +247,7 @@ export default function PendaftaranMagang() {
         >
             {withTopInfo && (
                 <div className="top-info">
-                    <button
+                    {/* <button
                         type="button"
                         onClick={addSection}
                         disabled={kategoriPertama !== "kelompok"}
@@ -258,10 +258,8 @@ export default function PendaftaranMagang() {
                         }}
                     >
                         Tambah
-                    </button>
-                    Pilih jenis pendaftaran: individu atau kelompok. Jika
-                    berkelompok, isi data anggota pertama dan klik "Tambah
-                    Anggota" untuk menambahkan.
+                    </button> */}
+                    <b>Note:</b> Peserta Instansi/Dinas wajib mengunggah foto berseragam dinas, sedangkan dokumen bersifat opsional (dapat dikirim saat pendaftaran atau menyusul).
                 </div>
             )}
 
@@ -440,23 +438,20 @@ export default function PendaftaranMagang() {
                     </div>
                     )}
 
-                <p>
-                    Note: Tulis nama instansi lengkap, misal{" "}
-                    <b>SMK Negeri 1 Surabaya</b> (bukan SMKN 1 SBY) atau{" "}
-                    <b>Universitas Airlangga</b> (bukan UNAIR).
-                    Peserta Siswa/Mahasiswa diwajibkan mengunggah foto dengan mengenakan almamater universitas/sekolah masing-masing.
-                </p>
+                {/* <p>
+
+                </p> */}
             </div>
         </motion.div>
     );
     return (
         <section className="pendaftaran-page">
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="back-button"
-                    >
-                        <FaArrowLeft size={18} />
-                    </button>
+        <button
+            onClick={() => navigate(-1)}
+            className="back-button"
+        >
+            <FaArrowLeft size={18} />
+        </button>
             <section className="hero">
                 <div className="header">
                     <div className="logo-wrap">
@@ -469,7 +464,7 @@ export default function PendaftaranMagang() {
                     </a>
                 </div>
                 <div className="title">
-                    <h1>Formulir Pendaftaran Magang Siswa</h1>
+                    <h1>Formulir Pendaftaran Magang Dinas</h1>
                     <hr />
                     <p>
                         Silakan lengkapi data diri dan dokumen yang diperlukan

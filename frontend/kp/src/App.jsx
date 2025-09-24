@@ -4,9 +4,12 @@ import "./index.css";
 import LandingMapta from "./pages/landingpage.jsx";
 import LoginPage from "./pages/login";
 import FormPendaftaran from "./pages/pendaftaran";
+import FormPendaftaranDinas from "./pages/pendaftarandinas.jsx";
+import ChooseRole from "./pages/chooserole.jsx";
 import Dashboard from "./pages/admin/dashboard.jsx";
 import Diterima from "./pages/admin/penerimaan.jsx";
 import Ditolak from "./pages/admin/penolakan.jsx";
+import SelesaiMagang from "./pages/admin/selesai.jsx";
 import Jadwal from "./pages/admin/jadwal.jsx";
 import Penilaian from "./pages/admin/penilaian.jsx";
 import DataPenilaian from "./pages/admin/datapenilaian.jsx";
@@ -30,9 +33,12 @@ function App() {
         <Route path="/" element={<LandingMapta />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/pendaftaran" element={<FormPendaftaran />} />
+        <Route path="/pendaftarandinas" element={<FormPendaftaranDinas />} />
+        <Route path="/choose-role" element={<ChooseRole />} />
         <Route path="/admin-dashboard" element={<Protection><Dashboard /></Protection>} />
         <Route path="/admin-penerimaan" element={<Protection><Diterima /></Protection>} />
         <Route path="/admin-penolakan" element={<Protection><Ditolak /></Protection>} />
+        <Route path="/admin-selesai" element={<SelesaiMagang />} />
         <Route path="/admin-jadwal" element={<Protection><Jadwal /></Protection>} />
         <Route path="/admin-penilaian" element={<Protection><Penilaian /></Protection>} />
         <Route path="/admin-data-penilaian" element={<DataPenilaian />} />

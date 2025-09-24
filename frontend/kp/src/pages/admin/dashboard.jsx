@@ -19,7 +19,7 @@ import profil2 from "../../assets/images/profil2.jpeg";
 
 function Dashboard() {
     useEffect(() => {
-        document.title = "Admin Dashboard";
+        document.title = "Admin MAPTA";
     }, []);
 
     const [calonPeserta, setCalonPeserta] = useState([])

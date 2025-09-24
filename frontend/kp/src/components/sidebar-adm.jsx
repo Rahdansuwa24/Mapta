@@ -7,6 +7,7 @@ import { IoDocumentText } from "react-icons/io5";
 import { HiUserGroup } from "react-icons/hi2";
 import { MdApps } from "react-icons/md";
 import { MdArticle } from "react-icons/md";
+import { AiOutlineFileDone } from "react-icons/ai";
 import { FaCheck, FaTimes, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import logoMapta from "../assets/images/logo_mapta.png";
 
@@ -21,7 +22,8 @@ export default function Sidebar() {
     useEffect(() => {
         if (
         location.pathname === "/admin-penerimaan" ||
-        location.pathname === "/admin-penolakan"
+        location.pathname === "/admin-penolakan" ||
+        location.pathname === "/admin-selesai" 
         ) {
         setOpenDropdown(true);
         }
@@ -77,6 +79,13 @@ export default function Sidebar() {
                 <div className={`dropdown-item ${isActive("/admin-penolakan") ? "active" : ""}`}>
                     <span className="icon"><FaTimes /></span>
                     Ditolak
+                </div>
+                </Link>
+
+                <Link to="/admin-selesai">
+                <div className={`dropdown-item ${isActive("/admin-selesai") ? "active" : ""}`}>
+                    <span className="icon"><AiOutlineFileDone /></span>
+                    Selesai Magang
                 </div>
                 </Link>
             </div>

@@ -13,7 +13,7 @@ import profil2 from "../../assets/images/profil2.jpeg";
 
 function Sertifikat() {
     useEffect(() => {
-        document.title = "Admin Sertifikat";
+        document.title = "Admin MAPTA";
     }, []);
 
     const pesertaDummy = [

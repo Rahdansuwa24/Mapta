@@ -18,7 +18,7 @@ import profil2 from "../../assets/images/profil2.jpeg";
 
 function Diterima() {
     useEffect(() => {
-        document.title = "Admin Penerimaan";
+        document.title = "Admin MAPTA";
     }, []);
 
     const [PesertaDiterima, setPesertaDiterima] = useState([])

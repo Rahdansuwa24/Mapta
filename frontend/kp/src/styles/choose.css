@@ -1,0 +1,163 @@
+    /* background gradien baru */
+    .gradient-bg {
+      background: linear-gradient(135deg, #142846,#2D5A9C 25%, #3B78D1 50%, #5AA9FF 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .choose-contain {
+      max-width: 1400px;
+      width: 100%;
+      padding: 40px 20px;
+    }
+
+    .choose-title {
+      display: block;
+      text-align: center;
+      font-family: 'Anton SC', sans-serif;
+      font-size: 3.5rem;
+      color: #fff;
+      margin-bottom: 50px;
+      letter-spacing: 1px;
+    }
+
+    .choose-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 50px;
+      flex-wrap: wrap;
+    }
+
+    /* teks lebih lebar dan line-height sedikit lebih kecil */
+    .choose-text {
+      flex: 1;
+      max-width: 500px;
+      text-align: justify;
+      color: #fff;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    .choose-text span {
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    /* tombol menyesuaikan warna baru */
+    .choose-text button {
+    display: block;
+    margin: 0 auto;
+    background: linear-gradient(135deg, #ffffff 0%, #e6ecf8 100%);
+    color: #2D5A9C;
+    font-weight: 600;
+    border: none;
+    padding: 16px 40px;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .choose-text button:hover {
+    background: linear-gradient(135deg, #f8faff 0%, #ffffff 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  /* efek tekan */
+  .choose-text button:active {
+    transform: scale(0.95) translateY(0);  /* sedikit mengecil saat ditekan */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s ease;       /* animasi cepat saat ditekan */
+  }
+
+    .choose-image {
+      flex: 2;
+      display: flex;
+      justify-content: center;
+    }
+
+    .choose-image img {
+      max-width: 600px;
+      width: 100%;
+      display: block;
+      margin: 0 auto;
+      filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.35));
+    }
+
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  /* bentuk lingkaran */
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  /* efek glass iOS */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* ikon iOS biru */
+  color: white; 
+  cursor: pointer;
+  z-index: 10;
+
+  /* transisi lembut */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.25s ease;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+}
+
+.back-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+    @media (max-width: 1280px) {
+      .choose-title { font-size: 3rem; }
+      .choose-text { font-size: 1rem; max-width: 400px; }
+      .choose-image img { max-width: 500px; }
+    }
+
+    @media (max-width: 900px) {
+      .choose-wrapper {
+        flex-direction: column;
+        text-align: center;
+      }
+      .choose-text {
+        max-width: 90%;
+      }
+      .choose-image img {
+        max-width: 300px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .choose-title {
+        font-size: 2.4rem;
+        margin-bottom: 30px;
+      }
+      .choose-text {
+        font-size: 1rem;
+      }
+      .choose-text button {
+        font-size: 1rem;
+        padding: 12px 30px;
+      }
+    }

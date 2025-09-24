@@ -66,9 +66,9 @@ const fadeUp = {
 
     const steps = [
         { t: "Klik Daftar", d: "Pilih tombol Daftar di navigasi untuk menuju halaman Form Pendaftaran." },
-        { t: "Perhatikan Catatan", d: "Baca dengan seksama note/perintah sebelum mulai mengisi data." },
-        { t: "Pilih Kategori", d: "Kelompok → tombol “Tambah” aktif setelah pilih kategori. Individu → isi data langsung tanpa tombol “Tambah”." },
         { t: "Pilih Jenjang", d: "SMK/SMA/Mahasiswa → pilih Siswa. Pegawai/ASN → pilih Dinas" },
+        { t: "Perhatikan Catatan", d: "Baca dengan seksama note/perintah sebelum mulai mengisi data." },
+        { t: "Pilih Kategori bagi Siswa", d: "Kelompok → tombol “Tambah” aktif setelah pilih kategori. Individu → isi data langsung tanpa tombol “Tambah”." },
         { t: "Isi Instansi Lengkap", d: "Tuliskan nama sekolah/universitas tanpa singkatan." },
         { t: "Upload Dokumen (Wajib untuk Siswa)", d: "Surat pernyataan/proposal dari kampus atau sekolah dan Dokumen pendukung lain. Untuk Pegawai/ASN, dokumen tidak diwajibkan." },
         { t: "Tunggu Konfirmasi Email", d: "Setelah selesai melengkapi semua data dan mengunggah dokumen, klik Daftar dan tunggu proses konfirmasi melalui email dan Anda akan menerima balasan apakah pendaftaran diterima atau ditolak." },
@@ -96,7 +96,7 @@ const fadeUp = {
                     <ScrollLink to="faq" smooth={true} duration={500}>FAQ's</ScrollLink>
                 </nav>
                 <div className="mapta-auth">
-                    <Link to="/pendaftaran">
+                    <Link to="/choose-role">
                         <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -200,7 +200,7 @@ const fadeUp = {
                 <p>
                     Pendaftaran magang dibuka bagi peserta yang ingin mengikuti program magang di lingkungan Dinas Perpustakaan dan Kearsipan Provinsi Jawa Timur.
                 </p>
-                <Link to="/pendaftaran">
+                <Link to="/choose-role">
                     <motion.a href="#" className="btn-daftar">
                     <span className="text">Daftar</span>
                     <span className="arrow"><FaArrowRight /></span>

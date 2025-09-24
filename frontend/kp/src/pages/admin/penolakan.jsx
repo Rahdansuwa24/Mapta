@@ -6,6 +6,7 @@ import NavbarAdmTl from "../../components/navbar-adm";
 import { LuAlignJustify } from "react-icons/lu";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
+import { MdDeleteOutline } from "react-icons/md";
 import axios from 'axios'
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
@@ -18,7 +19,7 @@ import profil2 from "../../assets/images/profil2.jpeg";
 
 function Ditolak() {
     useEffect(() => {
-        document.title = "Admin Penolakan";
+        document.title = "Admin MAPTA";
     }, []);
 
     const [PesertaDitolak, setPesertaDitolak] = useState([])
@@ -262,6 +263,11 @@ function Ditolak() {
                                                         <td className="aksi-cell">
                                                             <div className="aksi-wrapper">
                                                             <FaEllipsisVertical style={{ cursor: "pointer" }} title="Detail Profil" onClick={() => handleOpenModal(peserta)} />
+
+                                                            <MdDeleteOutline
+                                                            style={{ cursor: "pointer", color: "red", fontSize: "22px" }}
+                                                            title="Hapus Akun"
+                                                            />
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -330,6 +336,11 @@ function Ditolak() {
                                                             style={{ cursor: "pointer" }}
                                                             title="Detail Profil"
                                                             onClick={() => handleOpenModal(peserta)}
+                                                        />
+
+                                                        <MdDeleteOutline
+                                                            style={{ cursor: "pointer", color: "red", fontSize: "22px" }}
+                                                            title="Hapus Akun"
                                                         />
                                                         </div>
                                                     </td>

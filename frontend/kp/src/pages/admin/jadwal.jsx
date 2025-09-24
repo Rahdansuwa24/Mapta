@@ -17,7 +17,7 @@ import "../../styles/dashboard.css";
 
 function Jadwal() {
     useEffect(() => {
-        document.title = "Admin Jadwal";
+        document.title = "Admin MAPTA";
     }, []);
 
     useEffect(() => {
