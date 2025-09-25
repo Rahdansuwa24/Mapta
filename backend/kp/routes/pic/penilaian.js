@@ -10,8 +10,10 @@ router.get('/', verifyToken("pic"),async(req, res)=>{
     try{
         const id_users = req.user.id
         const dataPenilaian = await Model_PIC.getNilai(id_users)
+        console.log(dataPenilaian)
         res.status(200).json({dataPenilaian})
     }catch(err){
+        console.log(err)
         res.status(500).json({ status: false, error: err.message });
     }
 })

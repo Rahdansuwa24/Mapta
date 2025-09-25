@@ -11,17 +11,21 @@ class Model_Pic{
     }
     static async getNilai(id){
         try{
-            const [result] = await db.query(`SELECT pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri, 
+            const [result] = await db.query(`SELECT pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri,
             GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' THEN p.id_penilaian END SEPARATOR ', ') AS id_penilaian_teknis,
             GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' THEN a.id_aspek END SEPARATOR ', ') AS id_aspek_teknis,
             GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' THEN a.subjek END SEPARATOR ', ') AS aspek_teknis,
             GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' THEN p.penilaian END SEPARATOR ', ') AS nilai_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' THEN p.id_penilaian END SEPARATOR ', ') AS id_penilaian_non_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' THEN p.id_penilaian END SEPARATOR ', ') AS id_penilaian_non_teknis, 
             GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' THEN a.subjek END SEPARATOR ', ') AS aspek_non_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' THEN p.penilaian END SEPARATOR ', ') AS nilai_non_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' THEN a.id_aspek END SEPARATOR ', ') AS id_aspek_non_teknis
-            FROM penilaian p LEFT JOIN aspek a ON p.id_aspek = a.id_aspek LEFT JOIN peserta_magang pe ON pe.id_peserta_magang = p.id_peserta_magang WHERE a.bidang = (SELECT bidang FROM pic WHERE id_users = ?) OR a.bidang = 'GLOBAL'
-            GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri;`,[id])
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' THEN p.penilaian END SEPARATOR ', ') AS nilai_non_teknis, GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' THEN a.id_aspek END SEPARATOR ', ') AS id_aspek_non_teknis FROM peserta_magang AS pe
+            LEFT JOIN penilaian AS p ON pe.id_peserta_magang = p.id_peserta_magang
+            LEFT JOIN aspek AS a ON p.id_aspek = a.id_aspek
+            WHERE pe.id_peserta_magang IN (SELECT p_sub.id_peserta_magang FROM penilaian AS p_sub
+            LEFT JOIN aspek AS a_sub ON p_sub.id_aspek = a_sub.id_aspek
+            WHERE a_sub.bidang = (SELECT bidang FROM pic WHERE id_users = ?))
+            AND (a.bidang = (SELECT bidang FROM pic WHERE id_users = ?) OR a.bidang = 'GLOBAL')
+            GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri;`,[id, id])
             return result
         }catch(error){
             throw(error)
