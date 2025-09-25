@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var verifyToken = require('../../config/middleware/jwt')
 var Model_Admin = require('../../model/Model_Admin')
-const {upload, hapusFiles, file} = require('../../config/middleware/multer-admin')
+const {upload, hapusFiles} = require('../../config/middleware/multer-admin')
 const path = require('path');
 
 router.get('/', verifyToken('admin'), async(req, res)=>{
@@ -91,6 +91,44 @@ router.patch('/update/profile/(:id)', verifyToken('admin'), async(req, res)=>{
         await Model_Admin.updateStatus(id, data)
         res.status(200).json({message: "data berhasil diperbarui"})
     }catch(err){
+        res.status(500).json({ status: false, error: err.message });
+    }
+})
+
+router.delete('/delete/penolakan/(:id)', verifyToken('admin'), async(req, res)=>{
+    try{
+        let id = req.params.id
+        console.log(id)
+        let fileLama = await Model_Admin.getDataCalonPesertaDitolakById(id)
+        console.log(fileLama)
+        if(!fileLama || fileLama.length === 0){
+            return res.status(404).json({message: "Data tidak ditemukan"})
+        }
+        const hapusSuratBalasan = fileLama[0].surat_balasan
+        if(hapusSuratBalasan){
+            hapusFiles({filename: hapusSuratBalasan, path: path.join(__dirname, '../../public/document-admin/ditolak', hapusSuratBalasan)})
+        }  
+        const hapusFotoDiri = fileLama[0].foto_diri
+        if(hapusFotoDiri){
+            hapusFiles({filename: hapusFotoDiri, path: path.join(__dirname, '../../public/images', hapusFotoDiri)})
+        }
+        const hapusDokumenPendukung = fileLama[0].dokumen_pendukung
+        if(hapusDokumenPendukung){
+            try{
+                const dokumenPendukungArray = JSON.parse(hapusDokumenPendukung)
+                const dokumenPendukungArrHapus = dokumenPendukungArray.map(filename=>{
+                    filename: filename
+                    path.join(__dirname, '../../public/document', filename)
+                }) 
+                hapusFiles(dokumenPendukungArrHapus)
+            }catch(err){
+                console.error('Gagal memproses JSON dokumen_pendukung:', err);
+            }
+        }
+        await Model_Admin.deleteDataCalonPesertaDitolak(id)
+        res.status(200).json({message: "data berhasil dihapus"})
+    }catch(err){
+        console.error(err)
         res.status(500).json({ status: false, error: err.message });
     }
 })

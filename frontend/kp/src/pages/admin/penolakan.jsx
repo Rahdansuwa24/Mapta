@@ -72,13 +72,22 @@ function Ditolak() {
     };
 
     const handleFileChange = (pesertaId, e) => {
+        const file = e.target.files[0];
+        const allowedTypes = [
+            'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ];
+        if (!allowedTypes.includes(file.type)) {
+            alert("Hanya boleh upload dalam format dokumen dan pdf");
+            e.target.value = ""; 
+            return;
+        }
         setFileUploads({
             ...fileUploads,
             [pesertaId]: e.target.files[0]
         });
     };
 
-     const handleUpload = async (pesertaId) => {
+    const handleUpload = async (pesertaId) => {
     const file = fileUploads[pesertaId];
     if (!file) {
         alert("Pilih file terlebih dahulu!");
@@ -128,6 +137,23 @@ function Ditolak() {
         }catch(error){
             console.error(error);
             alert("Gagal memperbarui profil!");
+        }
+    }
+
+    const handleDeleteData = async(id)=>{
+        const token = localStorage.getItem("token")
+        if(!window.confirm("Yakin ingin mengahpus data ini?")) return
+        try{
+            await axios.delete(`http://localhost:3000/admin/dasbor/delete/penolakan/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            alert("data peserta ditolak berhasil dihapus");
+            fetchPesertaDitolak()
+        }catch(error){
+            console.error(error)
+            alert("gagal menghapus data")
         }
     }
 
@@ -267,6 +293,7 @@ function Ditolak() {
                                                             <MdDeleteOutline
                                                             style={{ cursor: "pointer", color: "red", fontSize: "22px" }}
                                                             title="Hapus Akun"
+                                                            onClick={() => handleDeleteData(peserta.id_users)}
                                                             />
                                                             </div>
                                                         </td>
@@ -341,6 +368,7 @@ function Ditolak() {
                                                         <MdDeleteOutline
                                                             style={{ cursor: "pointer", color: "red", fontSize: "22px" }}
                                                             title="Hapus Akun"
+                                                            onClick={() => handleDeleteData(peserta.id_users)}
                                                         />
                                                         </div>
                                                     </td>

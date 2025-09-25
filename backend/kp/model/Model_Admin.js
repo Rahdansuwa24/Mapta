@@ -28,6 +28,14 @@ class Model_Admin{
             throw(error)
         }
     }
+    static async deleteDataCalonPesertaDitolak(id){
+        try{
+            const [result] = await db.query(`delete from users where id_users = ?`, [id])
+            return result
+        }catch(error){
+            throw(error)
+        }
+    }
     static async getDataCalonPesertaById(id){
         try{
             const [result] = await db.query(`SELECT distinct u.*, p.* FROM users u LEFT JOIN peserta_magang p ON u.id_users = p.id_users where p.status_penerimaan = 'dipending' and p.id_peserta_magang  =  ? ORDER BY p.instansi, p.kategori`, [id])
@@ -54,7 +62,7 @@ class Model_Admin{
     }
     static async getDataCalonPesertaDitolakById(id){
         try{
-            const [result] = await db.query(`SELECT distinct u.*, p.* FROM users u LEFT JOIN peserta_magang p ON u.id_users = p.id_users where p.status_penerimaan = 'ditolak' and p.id_peserta_magang  =  ? ORDER BY p.instansi, p.kategori`, [id])
+            const [result] = await db.query(`SELECT distinct u.*, p.* FROM users u LEFT JOIN peserta_magang p ON u.id_users = p.id_users where p.status_penerimaan = 'ditolak' and p.id_users  =  ? ORDER BY p.instansi, p.kategori`, [id])
             return result
         }catch(error){
             throw(error)
