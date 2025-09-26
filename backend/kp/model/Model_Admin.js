@@ -230,6 +230,26 @@ static async storeAspek(data){
             throw(error)
         }
     }
+    static async getNilai(){
+        try{
+            const [result] = await db.query(`SELECT pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' THEN p.id_penilaian END SEPARATOR ', ') AS id_penilaian_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' THEN a.id_aspek END SEPARATOR ', ') AS id_aspek_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' THEN a.subjek END SEPARATOR ', ') AS aspek_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' THEN p.penilaian END SEPARATOR ', ') AS nilai_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' THEN p.id_penilaian END SEPARATOR ', ') AS id_penilaian_non_teknis, 
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' THEN a.subjek END SEPARATOR ', ') AS aspek_non_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' THEN p.penilaian END SEPARATOR ', ') AS nilai_non_teknis, GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' THEN a.id_aspek END SEPARATOR ', ') AS id_aspek_non_teknis FROM peserta_magang AS pe
+            LEFT JOIN penilaian AS p ON pe.id_peserta_magang = p.id_peserta_magang
+            LEFT JOIN aspek AS a ON p.id_aspek = a.id_aspek
+            GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri
+            HAVING COUNT(CASE WHEN p.penilaian IS NULL THEN 1 END) = 0;
+            `)
+            return result
+        }catch(error){
+            throw(error)
+        }
+    }
 
 }
 module.exports = Model_Admin

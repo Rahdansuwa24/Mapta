@@ -9,8 +9,9 @@ const Model_User = require('../../model/Model_User');
 router.get('/', verifyToken("pic"),async(req, res)=>{
     try{
         const id_users = req.user.id
-        const dataPenilaian = await Model_PIC.getNilai(id_users)
-        console.log(dataPenilaian)
+        let dataId = await Model_PIC.getIdPIC(id_users)
+        let id_pic = dataId[0].id_pic
+        const dataPenilaian = await Model_PIC.getNilai(id_pic)
         res.status(200).json({dataPenilaian})
     }catch(err){
         console.log(err)
@@ -47,7 +48,11 @@ router.get('/periode-kosong', async(req, res)=>{
 router.post('/store', verifyToken("pic"),async(req, res)=>{
     try{
         let {penilaian, id_aspek, id_peserta_magang} = req.body
-        let data = {penilaian, id_aspek, id_peserta_magang}
+        let id_users = req.user.id
+        let dataId = await Model_PIC.getIdPIC(id_users)
+        let id_pic = dataId[0].id_pic
+
+        let data = {penilaian, id_aspek, id_peserta_magang, id_pic}
         await Model_PIC.storeNilai(data)
         res.status(200).json({message: 'penambahan berhasil'})
     }catch(err){

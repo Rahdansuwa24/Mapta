@@ -6,6 +6,10 @@ import NavbarUsr from "../../components/navbar-adm";
 import { LuAlignJustify } from "react-icons/lu";
 import { FaTimes, FaTrash } from "react-icons/fa";
 import { TbEdit } from "react-icons/tb";
+import axios from 'axios'
+import dayjs from 'dayjs';
+import 'dayjs/locale/id';
+dayjs.locale('id');
 
 import "../../styles/dashboard.css";
 import "../../styles/datanilaiaspek.css";
@@ -64,6 +68,53 @@ function DataPenilaianAspek() {
         },
     ];
 
+    const fetchNilaiAdmin = async()=>{
+        const token = localStorage.getItem(("token"))
+        try{
+            const res = await axios.get("http://localhost:3000/admin/penilaian", {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            }) 
+            const data = res.data.data.map((item)=>{
+                    //mapping teknis
+                    const aspekTeknisArr = item.aspek_teknis?item.aspek_teknis.split(", "): []
+                    const nilaiTeknisArr = item.nilai_teknis?item.nilai_teknis.split(", ").map(Number): []
+                    const idPenilaianTeknisArr = item.id_penilaian_teknis?item.id_penilaian_teknis.split(", ").map(x=>parseInt(x.trim())): []
+                    const idAspekTeknisArr = item.id_aspek_teknis?item.id_aspek_teknis.split(", ").map(x=>parseInt(x.trim())): []
+
+                    //maping non-teknis
+                    const aspekNonTeknisArr = item.aspek_non_teknis?item.aspek_non_teknis.split(", "): []
+                    const nilaiNonTeknisArr = item.nilai_non_teknis?item.nilai_non_teknis.split(", ").map(Number): []
+                    const idPenilaianNonTeknisArr = item.id_penilaian_non_teknis?item.id_penilaian_non_teknis.split(", ").map(x=>parseInt(x.trim())):[]
+                    const idAspekNonTeknisArr = item.id_aspek_non_teknis?item.id_aspek_non_teknis.split(", ").map(x=>parseInt(x.trim())): []
+
+                    //contructuring array
+                    const aspekTeknis = aspekTeknisArr.map((a, i)=>({
+                        id_aspek: idAspekTeknisArr[i] || null,
+                        id_penilaian: idPenilaianTeknisArr[i] || null,
+                        nama: a,
+                        nilai: nilaiTeknisArr[i] || 0
+                    }))
+                    const aspekNonTeknis = aspekNonTeknisArr.map((a, i)=>({
+                        id_aspek: idAspekNonTeknisArr[i] || null,
+                        id_penilaian: idPenilaianNonTeknisArr[i] || null,
+                        nama: a,
+                        nilai: nilaiNonTeknisArr[i] || 0
+                    }))
+
+                    return{
+                        ...item,
+                        aspekTeknis,
+                        aspekNonTeknis
+                    }
+            })
+            setDataNilaPeserta(data)
+        }catch(err){
+            alert("gagal fetch data")
+        }
+    }
+
     const aspekTeknisList = ["Manajemen", "Pengolahan", "Pengamanan"];
     const aspekNonTeknisList = [
         "Kehadiran",
@@ -80,6 +131,7 @@ function DataPenilaianAspek() {
     const [selectedInstansi, setSelectedInstansi] = useState("");
     const [selectedPeserta, setSelectedPeserta] = useState(null);
     const [nilaiAspek, setNilaiAspek] = useState({});
+    const [dataNilaiPeserta, setDataNilaPeserta] = useState([])
     const [isEdit, setIsEdit] = useState(false);
 
     const toggleInstansi = (instansi) => {

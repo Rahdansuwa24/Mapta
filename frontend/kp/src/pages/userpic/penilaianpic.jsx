@@ -64,7 +64,6 @@ function PenilaianPic() {
                     Authorization: `Bearer ${token}`
                 }
             })
-            console.log(res.data.dataPenilaian)
             const data = res.data.dataPenilaian.map((item)=>{
 
             const aspekTeknisArr = item.aspek_teknis?item.aspek_teknis.split(", "): []
@@ -149,7 +148,7 @@ function PenilaianPic() {
         const initState = {};
         instansiList.forEach((instansi) => (initState[instansi] = true));
         setOpenInstansi(initState);
-    }, [filterInstansi, fetchDataPeserta]);
+    }, [filterInstansi, DataPesertaHome]);
 
     const handleInputChange = (aspek, value) => {
         setNilaiAspek((prev) => ({

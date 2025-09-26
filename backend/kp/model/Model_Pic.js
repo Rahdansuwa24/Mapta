@@ -12,20 +12,22 @@ class Model_Pic{
     static async getNilai(id){
         try{
             const [result] = await db.query(`SELECT pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' THEN p.id_penilaian END SEPARATOR ', ') AS id_penilaian_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' THEN a.id_aspek END SEPARATOR ', ') AS id_aspek_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' THEN a.subjek END SEPARATOR ', ') AS aspek_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' THEN p.penilaian END SEPARATOR ', ') AS nilai_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' THEN p.id_penilaian END SEPARATOR ', ') AS id_penilaian_non_teknis, 
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' THEN a.subjek END SEPARATOR ', ') AS aspek_non_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' THEN p.penilaian END SEPARATOR ', ') AS nilai_non_teknis, GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' THEN a.id_aspek END SEPARATOR ', ') AS id_aspek_non_teknis FROM peserta_magang AS pe
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.id_pic = ? THEN p.id_penilaian END SEPARATOR ', ') AS id_penilaian_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.id_pic = ? THEN a.id_aspek END SEPARATOR ', ') AS id_aspek_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.id_pic = ? THEN a.subjek END SEPARATOR ', ') AS aspek_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.id_pic = ? THEN p.penilaian END SEPARATOR ', ') AS nilai_teknis,
+                
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN p.id_penilaian END SEPARATOR ', ') AS id_penilaian_non_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN a.id_aspek END SEPARATOR ', ') AS id_aspek_non_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN a.subjek END SEPARATOR ', ') AS aspek_non_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN p.penilaian END SEPARATOR ', ') AS nilai_non_teknis
+
+            FROM peserta_magang AS pe
             LEFT JOIN penilaian AS p ON pe.id_peserta_magang = p.id_peserta_magang
             LEFT JOIN aspek AS a ON p.id_aspek = a.id_aspek
-            WHERE pe.id_peserta_magang IN (SELECT p_sub.id_peserta_magang FROM penilaian AS p_sub
-            LEFT JOIN aspek AS a_sub ON p_sub.id_aspek = a_sub.id_aspek
-            WHERE a_sub.bidang = (SELECT bidang FROM pic WHERE id_users = ?))
-            AND (a.bidang = (SELECT bidang FROM pic WHERE id_users = ?) OR a.bidang = 'GLOBAL')
-            GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri;`,[id, id])
+            WHERE EXISTS (SELECT 1 FROM penilaian p_sub WHERE p_sub.id_peserta_magang = pe.id_peserta_magang AND p_sub.id_pic = ?
+            )GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri;
+            `,[id, id, id, id, id, id, id, id, id])
             return result
         }catch(error){
             throw(error)
@@ -66,6 +68,14 @@ class Model_Pic{
     static async deleteNilai(id){
         try{
             const [result] = await db.query('delete from penilaian where id_penilaian = ?', [id])
+            return result
+        }catch(err){
+            throw err
+        }
+    }
+    static async getIdPIC(id){
+        try{
+            const [result] = await db.query('select id_pic from pic where id_users = ?', [id])
             return result
         }catch(err){
             throw err

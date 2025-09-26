@@ -17,6 +17,7 @@ var aspekAdmin =  require('./routes/admin/aspek')
 var sertifAdmin =  require('./routes/admin/sertifikat')
 var jadwalPic =  require('./routes/pic/jadwal')
 var penilaianPic =  require('./routes/pic/penilaian')
+var penilaianAdmin =  require('./routes/admin/penilaian')
 const {backendDomain} = require('./config/middleware/cors')
 
 var app = express();
@@ -45,6 +46,7 @@ app.use('/admin/jadwal', jadwalAdmin)
 app.use('/admin/pic', picAdmin)
 app.use('/admin/aspek', aspekAdmin)
 app.use('/admin/sertifikat', sertifAdmin)
+app.use('/admin/penilaian', penilaianAdmin)
 app.use('/pic/jadwal', jadwalPic)
 app.use('/pic/penilaian', penilaianPic)
 
