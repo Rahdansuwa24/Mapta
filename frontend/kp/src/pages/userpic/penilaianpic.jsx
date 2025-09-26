@@ -166,7 +166,7 @@ function PenilaianPic() {
                 aspekTeknis: found?.aspekTeknis || [],
                 aspekNonTeknis: found?.aspekNonTeknis || [],
             }
-        });
+    });
 
     const filteredPesertaList = pesertaList.filter((p) => {
         if (isEdit) {
@@ -181,76 +181,74 @@ function PenilaianPic() {
     });
 
     const handleSave = async () => {
-    if (!selectedPeserta) return alert("Pilih peserta terlebih dahulu");
-    if (Object.keys(nilaiAspek).length === 0) return alert("Isi minimal 1 nilai aspek!");
+        if (!selectedPeserta) return alert("Pilih peserta terlebih dahulu");
+        if (Object.keys(nilaiAspek).length === 0) return alert("Isi minimal 1 nilai aspek!");
 
-    const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
 
-    try {
-        // gabungkan semua aspek dengan nilai yang diinput user
-        const aspekSemua = [
-           ...aspekTeknisList.map(a => {
-                const found = selectedPeserta.aspekTeknis.find(x => Number(x.id_aspek) === Number(a.id_aspek));
-                return {
-                    id_aspek: a.id_aspek,
-                    id_penilaian: found ? Number(found.id_penilaian) : null,
-                    nilai: nilaiAspek[a.id_aspek] !== undefined ? parseFloat(nilaiAspek[a.id_aspek]) : null,
-                };
-            }),
-            ...aspekNonTeknisList.map(a => {
-                const found = selectedPeserta.aspekNonTeknis.find(x => Number(x.id_aspek) === Number(a.id_aspek));
-                return {
-                    id_aspek: a.id_aspek,
-                    id_penilaian: found ? parseInt(found.id_penilaian) : null,
-                    nilai: nilaiAspek[a.id_aspek] !== undefined ? parseFloat(nilaiAspek[a.id_aspek]) : null,
-                };
-            })
-        ];
+        try {
+            const aspekSemua = [
+            ...aspekTeknisList.map(a => {
+                    const found = selectedPeserta.aspekTeknis.find(x => Number(x.id_aspek) === Number(a.id_aspek));
+                    return {
+                        id_aspek: a.id_aspek,
+                        id_penilaian: found ? Number(found.id_penilaian) : null,
+                        nilai: nilaiAspek[a.id_aspek] !== undefined ? parseFloat(nilaiAspek[a.id_aspek]) : null,
+                    };
+                }),
+                ...aspekNonTeknisList.map(a => {
+                    const found = selectedPeserta.aspekNonTeknis.find(x => Number(x.id_aspek) === Number(a.id_aspek));
+                    return {
+                        id_aspek: a.id_aspek,
+                        id_penilaian: found ? parseInt(found.id_penilaian) : null,
+                        nilai: nilaiAspek[a.id_aspek] !== undefined ? parseFloat(nilaiAspek[a.id_aspek]) : null,
+                    };
+                })
+            ];
 
-        console.log("Aspek semua sebelum simpan:", aspekSemua);
+            console.log("Aspek semua sebelum simpan:", aspekSemua);
 
-        // hanya simpan aspek yang diisi user
-        const requests = aspekSemua
-            .filter(a => a.nilai !== null)
-            .map(a => {
-                if (a.id_penilaian) {
-                    // update
-                    return axios.patch(
-                        `http://localhost:3000/pic/penilaian/update/${a.id_penilaian}`,
-                        { penilaian: a.nilai },
-                        { headers: { Authorization: `Bearer ${token}` } }
-                    );
-                } else {
-                    // insert
-                    return axios.post(
-                        "http://localhost:3000/pic/penilaian/store",
-                        {
-                            id_aspek: a.id_aspek,
-                            id_peserta_magang: selectedPeserta.id_peserta_magang,
-                            penilaian: a.nilai
-                        },
-                        { headers: { Authorization: `Bearer ${token}` } }
-                    );
-                }
-            });
+            const requests = aspekSemua
+                .filter(a => a.nilai !== null)
+                .map(a => {
+                    if (a.id_penilaian) {
+                        // update
+                        return axios.patch(
+                            `http://localhost:3000/pic/penilaian/update/${a.id_penilaian}`,
+                            { penilaian: a.nilai },
+                            { headers: { Authorization: `Bearer ${token}` } }
+                        );
+                    } else {
+                        // insert
+                        return axios.post(
+                            "http://localhost:3000/pic/penilaian/store",
+                            {
+                                id_aspek: a.id_aspek,
+                                id_peserta_magang: selectedPeserta.id_peserta_magang,
+                                penilaian: a.nilai
+                            },
+                            { headers: { Authorization: `Bearer ${token}` } }
+                        );
+                    }
+                });
 
-        await Promise.all(requests);
+            await Promise.all(requests);
 
-        alert("Nilai berhasil disimpan");
-        fetchNilai();
-        fetchDataPesertaPerInstansi();
+            alert("Nilai berhasil disimpan");
+            fetchNilai();
+            fetchDataPesertaPerInstansi();
 
-        setShowModal(false);
-        setNilaiAspek({});
-        setSelectedPeserta(null);
-        setSelectedInstansi("");
-        setIsEdit(false);
+            setShowModal(false);
+            setNilaiAspek({});
+            setSelectedPeserta(null);
+            setSelectedInstansi("");
+            setIsEdit(false);
 
-    } catch (error) {
-        console.error(error);
-        alert("Gagal menyimpan data");
-    }
-};
+        } catch (error) {
+            console.error(error);
+            alert("Gagal menyimpan data");
+        }
+    };
 
 
     const handleDelete = async (peserta)=>{
