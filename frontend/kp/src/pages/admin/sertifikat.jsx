@@ -106,16 +106,6 @@ function Sertifikat() {
         tglSelesai: "30-11-2025",
         status: "Selesai",
         profil: profil1,
-        nilaiTeknis: [
-        { aspek: "Kehadiran", skor: 85, huruf: "B+" },
-        { aspek: "Skill/Keahlian", skor: 89, huruf: "B+" },
-        { aspek: "Kreatifitas", skor: 87, huruf: "B+" },
-        ],
-        nilaiNonTeknis: [
-        { aspek: "Kerjasama", skor: 90, huruf: "A-" },
-        { aspek: "Komunikasi", skor: 84, huruf: "B" },
-        { aspek: "Sikap/Etika", skor: 89, huruf: "B+" },
-        ],
     },
     {
         id: 6,
@@ -126,16 +116,6 @@ function Sertifikat() {
         tglSelesai: "30-11-2025",
         status: "Selesai",
         profil: profil2,
-        nilaiTeknis: [
-        { aspek: "Kehadiran", skor: 97, huruf: "A" },
-        { aspek: "Skill/Keahlian", skor: 91, huruf: "A-" },
-        { aspek: "Kreatifitas", skor: 94, huruf: "A" },
-        ],
-        nilaiNonTeknis: [
-        { aspek: "Kerjasama", skor: 95, huruf: "A" },
-        { aspek: "Komunikasi", skor: 92, huruf: "A-" },
-        { aspek: "Sikap/Etika", skor: 96, huruf: "A" },
-        ],
     },
     ];
 
@@ -143,7 +123,7 @@ function Sertifikat() {
     const [fileUploads, setFileUploads] = useState({});
     const [uploadedStatus, setUploadedStatus] = useState({});
     const [showModal, setShowModal] = useState(false);
-    const [showNilai, setShowNilai] = useState(false);
+    // const [showNilai, setShowNilai] = useState(false);
     const [selectedPeserta, setSelectedPeserta] = useState(null);
 
     const handleFileChange = (pesertaId, e) => {
@@ -174,10 +154,10 @@ function Sertifikat() {
         setShowModal(true);
     };
 
-    const handleOpenNilai = (peserta) => {
-        setSelectedPeserta(peserta);
-        setShowNilai(true);
-    };
+    // const handleOpenNilai = (peserta) => {
+    //     setSelectedPeserta(peserta);
+    //     setShowNilai(true);
+    // };
 
     return (
         <div className="app-layout">
@@ -202,7 +182,7 @@ function Sertifikat() {
                     <th>Status Magang</th>
                     <th>Download Sertifikat</th>
                     <th>Upload Sertifikat</th>
-                    <th>Detail Nilai</th>
+                    {/* <th>Detail Nilai</th> */}
                     <th>Aksi</th>
                     </tr>
                 </thead>
@@ -253,14 +233,14 @@ function Sertifikat() {
                         </td>
 
                         {/* Detail Nilai */}
-                        <td>
+                        {/* <td>
                         <span
                             className="label-action nilai"
                             onClick={() => handleOpenNilai(peserta)}
                         >
                             Lihat Nilai
                         </span>
-                        </td>
+                        </td> */}
 
                         {/* Aksi */}
                         <td className="aksi-cell">
@@ -327,7 +307,7 @@ function Sertifikat() {
             )}
 
             {/* MODAL DETAIL NILAI */}
-            {showNilai && selectedPeserta && (
+            {/* {showNilai && selectedPeserta && (
             <div className="nilai-overlay" onClick={() => setShowNilai(false)}>
                 <div className="nilai-modal" onClick={(e) => e.stopPropagation()}>
                 <div className="nilai-modal-header">
@@ -335,11 +315,11 @@ function Sertifikat() {
                     <div className="nilai-close-btn" onClick={() => setShowNilai(false)}>
                     <FaTimes />
                     </div>
-                </div>
+                </div> */}
 
-                <div className="nilai-modal-body">
+                {/* <div className="nilai-modal-body"> */}
                     {/* ASPEK TEKNIS */}
-                    <div className="nilai-section">
+                    {/* <div className="nilai-section">
                     <h4>Aspek Teknis</h4>
                     <table className="nilai-table">
                         <thead>
@@ -361,10 +341,10 @@ function Sertifikat() {
                         ))}
                         </tbody>
                     </table>
-                    </div>
+                    </div> */}
 
                     {/* ASPEK NON TEKNIS */}
-                    <div className="nilai-section">
+                    {/* <div className="nilai-section">
                     <h4>Aspek Non Teknis</h4>
                     <table className="nilai-table">
                         <thead>
@@ -390,7 +370,7 @@ function Sertifikat() {
                 </div>
                 </div>
             </div>
-            )}
+            )} */}
         </div>
         </div>
     );
