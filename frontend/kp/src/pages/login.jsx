@@ -23,22 +23,20 @@ export default function LoginPage() {
             email: "",
             password: ""
     })
+    const [statusPeserta, setStatusPeserta] = useState({status: ""})
 
     const handleChange = (e)=>{
         setFormData({
             ...formData, [e.target.name]: e.target.value
         })
     }
-
     const handleLogin = async ()=>{
         try{
             const response = await axios.post("http://localhost:3000/login", formData)
             if(response.data.status){
                 localStorage.setItem("token", response.data.token)
                 const decoded = jwtDecode(response.data.token)
-                console.log(decoded)
                 const userLevel = decoded.user_level
-                console.log(userLevel)
                 if(userLevel === 'admin'){
                     navigate("/admin-dashboard")
                 }

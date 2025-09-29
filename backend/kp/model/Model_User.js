@@ -85,6 +85,14 @@ class Model_User{
             throw err
         }
     }
+    static async getStatusPenerimaan(email){
+        try{
+            const [result] = await db.query('select status_penerimaan from peserta_magang left join users on peserta_magang.id_users = users.id_users where users.email = ?', [email])
+            return result
+        }catch(err){
+            throw err
+        }
+    }
 
 }
 
