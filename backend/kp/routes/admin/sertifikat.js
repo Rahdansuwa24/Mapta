@@ -13,6 +13,9 @@ router.get('/', async(req, res)=>{
         res.status(500).json({ status: false, error: err.message });
     }
 })
+router.get('/cek-sertif', async(req, res)=>{
+    res.render("template/sertifikat")
+})
 
 router.post('/store', async(req, res)=>{
     try{
