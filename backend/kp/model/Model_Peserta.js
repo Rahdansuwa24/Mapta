@@ -35,6 +35,14 @@ class Model_Peserta{
                 throw(error);
             }
     }
+    static async getJadwalPeserta(id) {
+            try {
+                const [result] = await db.query(`select j.tanggal_mulai, j.tanggal_selesai, j.bidang, p.nama from jadwal j left join peserta_magang p on j.id_peserta_magang = p.id_peserta_magang where p.id_users = ?`, [id]);
+                return result
+            } catch (error) {
+                throw(error);
+            }
+    }
 }
 
 module.exports = Model_Peserta

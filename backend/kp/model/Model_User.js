@@ -1,7 +1,7 @@
 const db = require('../config/database')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-
+// model  digunakan untuk tabel users
 class Model_User{
     static async login(email, password){
         try {

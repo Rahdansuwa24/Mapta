@@ -1,18 +1,23 @@
 import { motion } from "framer-motion";
 
 // PAGE JADWAL PESERTA
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import SidebarUsr from "../../components/sidebar-user";
 import NavbarUsr from "../../components/navbar-user";
 import { BiSolidCalendar } from "react-icons/bi";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoDocumentText } from "react-icons/io5";
+import axios from 'axios'
+import dayjs from 'dayjs';
+import 'dayjs/locale/id';
+dayjs.locale('id');
 
 import "../../styles/user.css";
 
 function JadwalPeserta() {
     useEffect(() => {
         document.title = "Jadwal Peserta";
+        fetchDataJadwal()
     }, []);
 
     // Contoh data jadwal (dummy)
@@ -32,7 +37,37 @@ function JadwalPeserta() {
             { nama: "Kesekretariatan", jadwal: ["-", "-", "-", "-", "Budi Santoso"] },
         ],
     };
+    const fetchDataJadwal = async()=>{
+        const token = localStorage.getItem("token")
+        try{
+            const res = await axios.get("http://localhost:3000/peserta/jadwal", {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            const jadwalPeserta = res.data.data
+            const periode = jadwalPeserta.map((item) =>
+            `${dayjs(item.tanggal_mulai).format("DD MMMM YYYY")} s.d. ${dayjs(item.tanggal_selesai).format("DD MMMM YYYY")}`
+            );
+            const bidangMap = {}
+            jadwalPeserta.forEach((item, idx) => {
+            if (!bidangMap[item.bidang]) {
+                bidangMap[item.bidang] = Array(jadwalPeserta.length).fill("-");
+            }
+                bidangMap[item.bidang][idx] = item.nama;
+            });
+            const bidang = Object.keys(bidangMap).map((key) => ({
+                nama: key,
+                jadwal: bidangMap[key],
+            }));
+            setJadwalPeserta({periode, bidang})
+        }catch(error){
+            console.error(error)
+            alert("Gagal fetch data")
+        }
+    }
 
+    const [jadwalPeserta, setJadwalPeserta] = useState([])
     // Variants untuk animasi
     const containerVariants = {
         hidden: { opacity: 0, y: 30 },
@@ -47,7 +82,7 @@ function JadwalPeserta() {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 },
     };
-
+    if (!jadwalPeserta) return <p>Jadwal Belum Disediakan Oleh Admin</p>;
     return (
         <div className="jp-app-layout">
             <SidebarUsr 
@@ -84,13 +119,13 @@ function JadwalPeserta() {
                             <thead>
                                 <tr>
                                     <th>Tempat Departemen</th>
-                                    {jadwalDummy.periode.map((p, idx) => (
-                                        <th key={idx}>{p}</th>
+                                    {jadwalPeserta.periode?.map((p, idx) => (
+                                         <th key={idx}>{p}</th>
                                     ))}
                                 </tr>
                             </thead>
                             <motion.tbody variants={containerVariants}>
-                                {jadwalDummy.departemen.map((d, i) => (
+                                {jadwalPeserta.bidang?.map((d, i) => (
                                     <motion.tr key={i} variants={rowVariants}>
                                         <td className="jp-departemen-cell">{d.nama}</td>
                                         {d.jadwal.map((j, k) => (
