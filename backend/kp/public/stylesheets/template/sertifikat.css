@@ -15,7 +15,7 @@
       margin: 0 auto;
       padding: 18mm;
       position: relative;
-      background: url('background.png') no-repeat center center;
+      background: url('/assets-certif/background.png') no-repeat center center;
       background-size: cover;
       box-sizing: border-box;
       page-break-after: always; /* penting agar pindah halaman */
