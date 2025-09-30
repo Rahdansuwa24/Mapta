@@ -1,0 +1,247 @@
+@page {
+      size: A4 landscape;
+      margin: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      margin: 0;
+    }
+
+    .sertifikat {
+      width: 297mm;
+      height: 210mm;
+      margin: 0 auto;
+      padding: 18mm;
+      position: relative;
+      background: url('background.png') no-repeat center center;
+      background-size: cover;
+      box-sizing: border-box;
+      page-break-after: always; /* penting agar pindah halaman */
+    }
+    .sertifikat:last-child {
+      page-break-after: auto;
+    }
+
+    /* logo kanan atas */
+    .top-right {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      display: flex;
+      align-items: flex-start;
+    }
+    .top-right img:first-child {
+      width: 90px;
+      height: auto;
+      margin-right: -30px;
+    }
+    .top-right img:last-child {
+      width: 260px;
+      height: auto;
+    }
+
+    /* logo utama */
+    .logo-utama {
+      text-align: center;
+      margin-top: 5px;
+    }
+    .logo-utama img {
+      width: 50px;
+      height: auto;
+      justify-self: center;
+    }
+
+    /* instansi */
+    .instansi {
+      font-family: 'League Spartan', sans-serif;
+      font-size: 10px;
+      margin-top: 5px;
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* judul sertifikat */
+    .judul-hal1 {
+      text-align: center;
+      font-family: 'Calistoga', serif;
+      font-size: 36px;
+    }
+
+    .nomor {
+      text-align: center;
+      font-size: 14.5px;
+    }
+
+    .diberikan {
+      text-align: center;
+      margin-top: 5px;
+      font-size: 20px;
+    }
+
+    /* nama penerima */
+    .nama {
+      text-align: center;
+      font-family: 'Calistoga', serif;
+      font-size: 26px;
+      margin-top: 6px;
+    }
+
+    hr {
+      width: 45%;
+      margin: 2px auto;
+      height: 1.4px;               /* ketebalan garis */
+      background-color: #000;      /* warna garis */
+      border: none;
+    }
+
+    /* nama universitas */
+    .univ {
+      text-align: center;
+      font-family: 'Calistoga', serif;
+      font-size: 20px;
+    }
+
+    /* deskripsi */
+    .deskripsi {
+      text-align: center;
+      margin-top: 15px;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    /* tanda tangan */
+    .ttd-section {
+      display: flex;
+      align-items: center;
+      justify-self: center;
+      margin-top: 30px;
+      padding: 0 30mm;
+      gap: 50px;
+    }
+    .piagam {
+      width: 150px;
+      text-align: center;
+    }
+    .piagam img {
+      width: 100%;
+      height: auto;
+    }
+
+    .ttd {
+      text-align: left;
+      flex: 1;
+      font-family: 'Inter', sans-serif; /* font untuk tanda tangan */
+    }
+    .ttd p {
+      margin: 3px 0;
+      font-size: 14px;
+    }
+    .ttd .ttd-image {
+      display: block;
+      height: 105px;
+    }
+
+    .nama-pejabat {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+/* Judul halaman kedua */
+.wrapper-tabel-sertifikat{
+  width: 100%;
+  display: flex;
+  justify-content: center;  /* horizontal tengah */
+  align-items: center;      /* vertikal tengah */
+  flex-direction: column;
+}
+
+.judul-hal2 {
+  text-align: center;
+  font-family: 'Calistoga', serif;
+  font-size: 20px; /* sedikit lebih kecil */
+  margin-bottom: 15px;
+}
+
+.subjudul-hal2{
+  text-align:left;
+  margin-bottom:5px;
+  font-family: 'Calistoga', serif;
+  font-size: 14px;
+}
+
+/* umum untuk kedua tabel */
+.tabel-teknis,
+.tabel-nonteknis {
+  width: 60%;
+  margin: 0 auto;
+  font-family: 'Calistoga', serif;
+  font-size: 11.5px;
+  text-align: center; /* ini otomatis bikin heading di atas tabel rata tengah */
+}
+
+/* kalau judulnya elemen h3/h4 di dalam container */
+.tabel-teknis h3, .tabel-teknis h4,
+.tabel-nonteknis h3, .tabel-nonteknis h4 {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+/* tabel */
+.tabel-teknis table,
+.tabel-nonteknis table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 3px solid #000;
+  table-layout: fixed;
+  margin: 0 auto;
+}
+
+.tabel-teknis th, .tabel-teknis td,
+.tabel-nonteknis th, .tabel-nonteknis td {
+  border: 3px solid #000;
+  padding: 3px 6px;
+  text-align: center;
+  font-weight: normal;
+  word-wrap: break-word;
+}
+
+/* atur lebar kolom */
+.tabel-teknis th:nth-child(1), .tabel-teknis td:nth-child(1),
+.tabel-nonteknis th:nth-child(1), .tabel-nonteknis td:nth-child(1) {
+  width: 5%;
+}
+
+.tabel-teknis th:nth-child(2), .tabel-teknis td:nth-child(2),
+.tabel-nonteknis th:nth-child(2), .tabel-nonteknis td:nth-child(2) {
+  width: 30%;
+  text-align: left;
+}
+
+.tabel-teknis th:nth-child(3), .tabel-teknis td:nth-child(3),
+.tabel-nonteknis th:nth-child(3), .tabel-nonteknis td:nth-child(3) {
+  width: 20%;
+}
+
+.tabel-teknis th:nth-child(4), .tabel-teknis td:nth-child(4),
+.tabel-nonteknis th:nth-child(4), .tabel-nonteknis td:nth-child(4) {
+  width: 20%;
+}
+
+/* header kolom “ASPEK YANG DINILAI SKS” rata tengah */
+.aspek-header {
+  text-align: center !important;
+}
+
+.text-center { text-align:center !important; }
+
+/* baris Jumlah & Nilai Rata-rata rata tengah semua kolom */
+.tabel-teknis tr:last-child td,
+.tabel-teknis tr:nth-last-child(2) td,
+.tabel-nonteknis tr:last-child td,
+.tabel-nonteknis tr:nth-last-child(2) td {
+  text-align: center !important;
+}
