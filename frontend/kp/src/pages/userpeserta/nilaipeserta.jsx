@@ -7,6 +7,10 @@ import { LuAlignJustify } from "react-icons/lu";
 import { BiSolidCalendar } from "react-icons/bi";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoDocumentText } from "react-icons/io5";
+import axios from 'axios'
+import dayjs from 'dayjs';
+import 'dayjs/locale/id';
+dayjs.locale('id');
 
 import "../../styles/user.css";
 
@@ -15,8 +19,57 @@ import profil1 from "../../assets/images/profil1.jpg";
 function NilaiPeserta() {
     useEffect(() => {
         document.title = "Nilai Peserta";
+        fetchNilaiPeserta()
     }, []);
 
+
+    const fetchNilaiPeserta = async()=>{
+        const token = localStorage.getItem("token")
+        try{
+            const res = await axios.get("http://localhost:3000/peserta/penilaian", {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            console.log(res.data.data)
+            const dataNilai = res.data.data.map((item)=>{
+                const aspekTeknisArr = item.aspek_teknis?item.aspek_teknis.split(", "): []
+                const nilaiTeknisArr = item.nilai_teknis?item.nilai_teknis.split(", ").map(Number): []
+                const idPenilaianTeknisArr = item.id_penilaian_teknis ? item.id_penilaian_teknis.split(",").map(x => parseInt(x.trim())) : [];
+                const idAspekTeknisArr = item.id_aspek_teknis ? item.id_aspek_teknis.split(",").map(x => parseInt(x.trim())) : [];
+
+                const aspekNonTeknisArr = item.aspek_non_teknis ? item.aspek_non_teknis.split(", "):[];
+                const nilaiNonTeknisArr = item.nilai_non_teknis ? item.nilai_non_teknis.split(", ").map(Number):[];
+                const idPenilaianNonTeknisArr = item.id_penilaian_non_teknis ? item.id_penilaian_non_teknis.split(",").map(x => parseInt(x.trim())) : [];
+                const idAspekNonTeknisArr = item.id_aspek_non_teknis ? item.id_aspek_non_teknis.split(",").map(x => parseInt(x.trim())) : [];
+
+                const aspekTeknis = aspekTeknisArr.map((a, i) => ({
+                    id_aspek: idAspekTeknisArr[i] || null,
+                    id_penilaian: idPenilaianTeknisArr[i] || null,
+                    aspek: a,
+                    nilai: nilaiTeknisArr[i] || 0,
+                }))
+
+                const aspekNonTeknis = aspekNonTeknisArr.map((a, i) => ({
+                    id_aspek: idAspekNonTeknisArr[i] || null,
+                    id_penilaian: idPenilaianNonTeknisArr[i] || null,
+                    aspek: a,
+                    nilai: nilaiNonTeknisArr[i] || 0,
+                }))
+
+                return {
+                    ...item,
+                    bidang: item.bidang || "-",   // ⬅️ tambahkan bidang
+                    aspekTeknis,
+                    aspekNonTeknis,
+                }
+            })
+            setNilaiPeserta(dataNilai)
+        }catch(error){
+            console.error(error)
+            alert("gagal fetching data")
+        }
+    }
     // contoh data nilai (dummy) UNTUK SATU USER
     const nilaiDummy = [
         {
@@ -53,6 +106,7 @@ function NilaiPeserta() {
 
     const [filterDepartemen, setFilterDepartemen] = useState("");
     const [openDepartemen, setOpenDepartemen] = useState({});
+    const [nilaiPeserta, setNilaiPeserta] = useState([])
 
     // toggle departemen buka/tutup
     const toggleDepartemen = (departemen) => {
@@ -62,17 +116,17 @@ function NilaiPeserta() {
         }));
     };
 
-    const departemenList = nilaiDummy.map((item) => item.departemen);
+    const departemenList = nilaiPeserta.map((item) => item.bidang);
 
     const dataFiltered = filterDepartemen
-        ? nilaiDummy.filter((d) => d.departemen === filterDepartemen)
-        : nilaiDummy;
+        ? nilaiPeserta.filter((d) => d.bidang === filterDepartemen)
+        : nilaiPeserta;
 
     useEffect(() => {
         const initState = {};
-        departemenList.forEach((departemen) => (initState[departemen] = true));
+        departemenList.forEach((bidang) => (initState[bidang] = true));
         setOpenDepartemen(initState);
-    }, [filterDepartemen]);
+    }, [filterDepartemen, nilaiPeserta]);
 
     const hitungIndeksHuruf = (nilai) => {
         if (!nilai && nilai !== 0) return "-";
@@ -124,19 +178,18 @@ function NilaiPeserta() {
                     </div>
 
                     {dataFiltered.map((data) => {
-                        const isOpen = openDepartemen[data.departemen];
-                        const p = data.peserta; // langsung ambil satu peserta
+                        const isOpen = openDepartemen[data.bidang];
                         return (
-                            <div className="jp-container-instansi" key={data.departemen}>
+                            <div className="jp-container-instansi" key={data.bidang}>
                                 <div className="jp-instansi-header">
                                     <LuAlignJustify
                                         size={25}
                                         style={{ cursor: "pointer" }}
-                                        onClick={() => toggleDepartemen(data.departemen)}
+                                        onClick={() => toggleDepartemen(data.bidang)}
                                     />
                                     <div className="jp-teks-instansi">
                                         <p>Departemen</p>
-                                        <p>{data.departemen}</p>
+                                        <p>{data.bidang}</p>
                                     </div>
                                 </div>
 
@@ -145,9 +198,9 @@ function NilaiPeserta() {
                                         !isOpen ? "jp-with-gap" : ""
                                     }`}
                                 >
-                                    <div className="jp-penilaian-card" key={p.id}>
+                                    <div className="jp-penilaian-card" key={data.id_peserta_magang}>
                                         <div className="jp-penilaian-header">
-                                            <span>{p.nama}</span>
+                                            <span>{data.nama}</span>
                                         </div>
 
                                         <div className="jp-aspek-container">
@@ -164,16 +217,16 @@ function NilaiPeserta() {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {p.aspekTeknis.length === 0 ? (
+                                                        {data.aspekTeknis.length === 0 ? (
                                                             <tr>
                                                                 <td colSpan={4}>Belum ada nilai</td>
                                                             </tr>
                                                         ) : (
                                                             <>
-                                                                {p.aspekTeknis.map((a, i) => (
+                                                                {data.aspekTeknis.map((a, i) => (
                                                                     <tr key={i}>
                                                                         <td>{i + 1}</td>
-                                                                        <td>{a.nama}</td>
+                                                                        <td>{a.aspek}</td>
                                                                         <td>{a.nilai}</td>
                                                                         <td>{hitungIndeksHuruf(a.nilai)}</td>
                                                                     </tr>
@@ -182,8 +235,8 @@ function NilaiPeserta() {
                                                                     <td colSpan={2}>
                                                                         <b>Rata-rata</b>
                                                                     </td>
-                                                                    <td>{getRataRata(p.aspekTeknis).nilai}</td>
-                                                                    <td>{getRataRata(p.aspekTeknis).indeks}</td>
+                                                                    <td>{getRataRata(data.aspekTeknis).nilai}</td>
+                                                                    <td>{getRataRata(data.aspekTeknis).indeks}</td>
                                                                 </tr>
                                                             </>
                                                         )}
@@ -204,16 +257,16 @@ function NilaiPeserta() {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {p.aspekNonTeknis.length === 0 ? (
+                                                        {data.aspekNonTeknis.length === 0 ? (
                                                             <tr>
                                                                 <td colSpan={4}>Belum ada nilai</td>
                                                             </tr>
                                                         ) : (
                                                             <>
-                                                                {p.aspekNonTeknis.map((a, i) => (
+                                                                {data.aspekNonTeknis.map((a, i) => (
                                                                     <tr key={i}>
                                                                         <td>{i + 1}</td>
-                                                                        <td>{a.nama}</td>
+                                                                        <td>{a.aspek}</td>
                                                                         <td>{a.nilai}</td>
                                                                         <td>{hitungIndeksHuruf(a.nilai)}</td>
                                                                     </tr>
@@ -222,8 +275,8 @@ function NilaiPeserta() {
                                                                     <td colSpan={2}>
                                                                         <b>Rata-rata</b>
                                                                     </td>
-                                                                    <td>{getRataRata(p.aspekNonTeknis).nilai}</td>
-                                                                    <td>{getRataRata(p.aspekNonTeknis).indeks}</td>
+                                                                    <td>{getRataRata(data.aspekNonTeknis).nilai}</td>
+                                                                    <td>{getRataRata(data.aspekNonTeknis).indeks}</td>
                                                                 </tr>
                                                             </>
                                                         )}
