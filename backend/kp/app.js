@@ -19,6 +19,8 @@ var penilaianAdmin =  require('./routes/admin/penilaian')
 var jadwalPic =  require('./routes/pic/jadwal')
 var penilaianPic =  require('./routes/pic/penilaian')
 var jadwalPeserta = require('./routes/peserta/jadwal')
+var penilaianPeserta = require('./routes/peserta/penilaian')
+var sertifikatPeserta = require('./routes/peserta/sertifikat')
 const {backendDomain} = require('./config/middleware/cors')
 
 var app = express();
@@ -51,6 +53,8 @@ app.use('/admin/penilaian', penilaianAdmin)
 app.use('/pic/jadwal', jadwalPic)
 app.use('/pic/penilaian', penilaianPic)
 app.use('/peserta/jadwal', jadwalPeserta)
+app.use('/peserta/penilaian', penilaianPeserta)
+app.use('/peserta/jadwal', sertifikatPeserta)
 
 app.use((err, req, res, next) => {
     if (err instanceof multer.MulterError) {
