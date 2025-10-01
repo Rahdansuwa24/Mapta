@@ -115,7 +115,6 @@ function PenilaianPic() {
     const [nilaiAspek, setNilaiAspek] = useState({});
     const [isEdit, setIsEdit] = useState(false); // 🔑 mode tambah/edit
     const [fetchDataPeserta, setFetcDataPeserta] = useState([])
-    const [aspekList, setAspekList] = useState([])
     const [aspekTeknisList, setAspekTeknisList] = useState([])
     const [aspekNonTeknisList, setAspekNonTeknisList] = useState([])
     const [DataPesertaHome, setDataPesertaHome] = useState([])
@@ -205,9 +204,6 @@ function PenilaianPic() {
                     };
                 })
             ];
-
-            console.log("Aspek semua sebelum simpan:", aspekSemua);
-
             const requests = aspekSemua
                 .filter(a => a.nilai !== null)
                 .map(a => {

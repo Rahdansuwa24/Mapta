@@ -23,52 +23,6 @@ function DataPenilaianAspek() {
         fetchNilaiAdmin()
     }, []);
 
-    const penilaianDummy = [
-        {
-            instansi: "Politeknik Elektronika Negeri Surabaya",
-            peserta: [
-                {
-                    id: 1,
-                    nama: "Budi Santoso",
-                    nim: "1234567890",
-                    instansi: "Politeknik Elektronika Negeri Surabaya",
-                    profil: profil1,
-                    aspekTeknis: [
-                        { nama: "Manajemen", nilai: 80 },
-                        { nama: "Pengolahan", nilai: 75 },
-                    ],
-                    aspekNonTeknis: [
-                        { nama: "Kehadiran", nilai: 90 },
-                        { nama: "Etika", nilai: 85 },
-                    ],
-                },
-                {
-                    id: 2,
-                    nama: "Ahmad Ifcel",
-                    nim: "1122334455",
-                    instansi: "Politeknik Elektronika Negeri Surabaya",
-                    profil: profil2,
-                    aspekTeknis: [],
-                    aspekNonTeknis: [],
-                },
-            ],
-        },
-        {
-            instansi: "Universitas Indonesia",
-            peserta: [
-                {
-                    id: 3,
-                    nama: "Dewi Lestari",
-                    nim: "5678901234",
-                    instansi: "Universitas Indonesia",
-                    profil: profil1,
-                    aspekTeknis: [],
-                    aspekNonTeknis: [],
-                },
-            ],
-        },
-    ];
-
     const fetchNilaiAdmin = async()=>{
         const token = localStorage.getItem(("token"))
         try{
@@ -115,25 +69,6 @@ function DataPenilaianAspek() {
             alert("gagal fetch data")
         }
     }
-
-    const fetchDataPesertaPerInstansi = async()=>{
-        const token = localStorage.getItem("token")
-        try{
-            const res = await axios.get("http://localhost:3000/pic/penilaian/peserta", {
-                headers:{
-                    Authorization: `Bearer ${token}`
-                }
-            })
-            const dataPeserta = res.data.dataPic
-            setFetcDataPeserta(dataPeserta)
-        }catch(error){
-            console.error(error)
-            alert("gagal fetch data")
-        }
-    }
-
-    
-
     const [filterInstansi, setFilterInstansi] = useState("");
     const [openInstansi, setOpenInstansi] = useState({});
     const [showModal, setShowModal] = useState(false);
@@ -144,7 +79,6 @@ function DataPenilaianAspek() {
     const [nilaiAspek, setNilaiAspek] = useState({});
     const [dataNilaiPeserta, setDataNilaPeserta] = useState([])
     const [isEdit, setIsEdit] = useState(false);
-    const [fetchDataPeserta, setFetcDataPeserta] = useState([])
 
     const toggleInstansi = (instansi) => {
         setOpenInstansi((prev) => ({
@@ -174,23 +108,16 @@ function DataPenilaianAspek() {
         setOpenInstansi(initState);
     }, [filterInstansi, dataNilaiPeserta]);
 
-    const handleInputChange = (aspek, value) => {
+    const handleInputChange = (key, value) => {
         setNilaiAspek((prev) => ({
             ...prev,
-            [aspek]: value,
+            [key]: value,
         }));
     };
 
     const pesertaList = (selectedInstansi
-        ? fetchDataPeserta.filter((d) => d.instansi === selectedInstansi)
-        : fetchDataPeserta).map((p)=>{
-            const found = DataPesertaHome.find((d)=> d.id_peserta_magang === p.id_peserta_magang)
-            return{
-                ...p,
-                aspekTeknis: found?.aspekTeknis || [],
-                aspekNonTeknis: found?.aspekNonTeknis || [],
-            }
-    });
+        ? dataNilaiPeserta.filter((d) => d.instansi === selectedInstansi)
+        : dataNilaiPeserta);
 
     const filteredPesertaList = pesertaList.filter((p) => {
         if (isEdit) {
@@ -204,48 +131,56 @@ function DataPenilaianAspek() {
 
     });
 
-    const handleSave = () => {
-        console.log("Simpan nilai:", {
-            instansi: selectedInstansi,
-            peserta: selectedPeserta,
-            nilai: nilaiAspek,
-        });
+    const handleSave = async () => {
+        if (Object.keys(nilaiAspek).length === 0) return alert("Isi minimal 1 nilai aspek!");
+        const token = localStorage.getItem("token");
+
+        try{
+
+            const aspekSemua = [
+            ...aspekTeknisList.map(a => {
+                    const key = a.id_penilaian ? a.id_penilaian : `${a.id_aspek}-${selectedPeserta.id_peserta_magang}`;
+                    return {
+                        id_aspek: a.id_aspek,
+                        id_penilaian: a.id_penilaian || null,
+                        nilai: nilaiAspek[key] !== undefined ? parseFloat(nilaiAspek[key]) : null,
+                    };
+                }),
+                ...aspekNonTeknisList.map(a => {
+                   const key = a.id_penilaian ? a.id_penilaian : `${a.id_aspek}-${selectedPeserta.id_peserta_magang}`;
+                    return {
+                        id_aspek: a.id_aspek,
+                        id_penilaian: a.id_penilaian || null,
+                        nilai: nilaiAspek[key] !== undefined ? parseFloat(nilaiAspek[key]) : null,
+                    };
+                })
+            ];
+
+            await Promise.all(
+                aspekSemua.map((a) => {
+                    if (a.id_penilaian) {
+                        return axios.patch(
+                            `http://localhost:3000/admin/penilaian/update/${a.id_penilaian}`,
+                            { penilaian: a.nilai },
+                            { headers: { Authorization: `Bearer ${token}` } }
+                        );
+                    }
+                    return null;
+                })
+            );
+            alert("Nilai berhasil diperbarui");
+            fetchNilaiAdmin();
+        }catch(error){
+            console.error(error);
+            alert("Gagal update nilai");
+        }
+
         setShowModal(false);
         setNilaiAspek({});
         setSelectedPeserta(null);
         setSelectedInstansi("");
         setIsEdit(false);
     };
-
-    const handleDelete = async (peserta)=>{
-        if(!window.confirm("Yakin ingin hapus nilai peserta?")) return
-        const token = localStorage.getItem("token")
-
-        try{
-            await Promise.all(
-                [...(peserta.aspekTeknis || []), ...(peserta.aspekNonTeknis || [])].map((a) =>
-                    axios.delete(`http://localhost:3000/pic/penilaian/delete/${a.id_penilaian}`, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    })
-                )
-            );
-            setDataPesertaHome((prev) =>
-                prev.map((p) =>
-                    p.id_peserta_magang === peserta.id_peserta_magang
-                        ? { ...p, aspekTeknis: [], aspekNonTeknis: [] }
-                        : p
-                )
-            );
-
-            alert("nilai peserta berhasil dihapus"); 
-            fetchDataPesertaPerInstansi()
-            fetchNilai()
-        }catch(error){
-            console.error(error);
-            alert("gagal menghapus nilai");
-        }
-    }
-
     const hitungIndeksHuruf = (nilai) => {
         if (!nilai && nilai !== 0) return "-";
         const n = parseFloat(nilai);
@@ -339,10 +274,13 @@ function DataPenilaianAspek() {
                                                                 aspekTeknis,
                                                                 aspekNonTeknis
                                                             });
+                                                            setAspekTeknisList(aspekTeknis);
+                                                            setAspekNonTeknisList(aspekNonTeknis);
 
                                                             const nilai = {};
                                                              [...aspekTeknis, ...aspekNonTeknis].forEach(a => {
-                                                                nilai[parseInt(a.id_aspek)] = a.nilai;
+                                                                const key = a.id_penilaian || `${a.id_aspek}-${p.id_peserta_magang}`;
+                                                                nilai[key] = a.nilai;
                                                             });
                                                             setNilaiAspek(nilai);
                                                             setIsEdit(true);
@@ -474,17 +412,23 @@ function DataPenilaianAspek() {
                                 </select>
 
                                 <select
-                                    value={selectedPeserta?.id || ""}
+                                    value={selectedPeserta?.id_peserta_magang || ""}
                                     onChange={(e) => {
                                         const peserta = pesertaList.find(
-                                            (p) => p.id === parseInt(e.target.value)
+                                            (p) => p.id_peserta_magang === parseInt(e.target.value)
                                         );
                                         setSelectedPeserta(peserta);
 
                                         if (peserta) {
                                             const nilai = {};
-                                            peserta.aspekTeknis.forEach((a) => (nilai[a.nama] = a.nilai));
-                                            peserta.aspekNonTeknis.forEach((a) => (nilai[a.nama] = a.nilai));
+                                            peserta.aspekTeknis.forEach((a) => {
+                                                const key = a.id_penilaian || `${a.id_aspek}-${peserta.id_peserta_magang}`;
+                                                nilai[key] = a.nilai;
+                                            });
+                                            peserta.aspekNonTeknis.forEach((a) => {
+                                                const key = a.id_penilaian || `${a.id_aspek}-${peserta.id_peserta_magang}`;
+                                                nilai[key] = a.nilai;
+                                            });
                                             setNilaiAspek(nilai);
                                         } else {
                                             setNilaiAspek({});
@@ -494,7 +438,7 @@ function DataPenilaianAspek() {
                                 >
                                     <option value="">Pilih Peserta</option>
                                     {filteredPesertaList.map((p) => (
-                                        <option key={p.id} value={p.id}>
+                                        <option key={p.id_peserta_magang} value={p.id_peserta_magang}>
                                             {p.nama}
                                         </option>
                                     ))}
@@ -507,30 +451,36 @@ function DataPenilaianAspek() {
                                 )}
 
                                 <p style={{ fontStyle: "italic", fontWeight: 500 }}>Aspek Teknis</p>
-                                {aspekTeknisList.map((a) => (
-                                    <div key={a.id_aspek} className="dp-aspek-item">
-                                        <span>{a.subjek}</span>
-                                        <input
-                                            type="number"
-                                            placeholder="Nilai"
-                                            value={nilaiAspek[a.id_aspek] || ""}
-                                            onChange={(e) => handleInputChange(a.id_aspek, e.target.value)}
-                                        />
-                                    </div>
-                                ))}
+                                {aspekTeknisList.map((a) => {
+                                    const uniqueKey = a.id_penilaian || `${a.id_aspek}-${selectedPeserta.id_peserta_magang}`;
+                                    return (
+                                        <div key={`teknis-${uniqueKey}`} className="dp-aspek-item">
+                                            <span>{a.nama}</span>
+                                            <input
+                                                type="number"
+                                                placeholder="Nilai"
+                                                value={nilaiAspek[uniqueKey] || ""}
+                                                onChange={(e) => handleInputChange(uniqueKey, e.target.value)}
+                                            />
+                                        </div>
+                                    );
+                                })}
 
                                 <p style={{ fontStyle: "italic", fontWeight: 500 }}>Aspek Non Teknis</p>
-                                {aspekNonTeknisList.map((a) => (
-                                    <div key={a.id_aspek} className="dp-aspek-item">
-                                        <span>{a.subjek}</span>
-                                        <input
-                                            type="number"
-                                            placeholder="Nilai"
-                                            value={nilaiAspek[a.id_aspek] || ""}
-                                            onChange={(e) => handleInputChange(a.id_aspek, e.target.value)}
-                                        />
-                                    </div>
-                                ))}
+                                {aspekNonTeknisList.map((a) => {
+                                    const uniqueKey = a.id_penilaian || `${a.id_aspek}-${selectedPeserta.id_peserta_magang}`;
+                                    return (
+                                        <div key={`nonteknis-${uniqueKey}`} className="dp-aspek-item">
+                                            <span>{a.nama}</span>
+                                            <input
+                                                type="number"
+                                                placeholder="Nilai"
+                                                value={nilaiAspek[uniqueKey] || ""}
+                                                onChange={(e) => handleInputChange(uniqueKey, e.target.value)}
+                                            />
+                                        </div>
+                                    );
+                                })}
 
                                 <button className="dp-btn-simpan" onClick={handleSave}>
                                     Simpan Nilai

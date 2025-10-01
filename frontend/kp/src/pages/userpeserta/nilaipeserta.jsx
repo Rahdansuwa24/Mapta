@@ -70,40 +70,6 @@ function NilaiPeserta() {
             alert("gagal fetching data")
         }
     }
-    // contoh data nilai (dummy) UNTUK SATU USER
-    const nilaiDummy = [
-        {
-            departemen: "Pelayanan Perpustakaan dan Informasi",
-            peserta: {
-                id: 1,
-                nama: "Budi Santoso",
-                nim: "1234567890",
-                departemen: "Pelayanan Perpustakaan dan Informasi",
-                profil: profil1,
-                aspekTeknis: [
-                    { nama: "Manajemen", nilai: 80 },
-                    { nama: "Pengolahan", nilai: 75 },
-                ],
-                aspekNonTeknis: [
-                    { nama: "Kehadiran", nilai: 90 },
-                    { nama: "Etika", nilai: 85 },
-                ],
-            },
-        },
-        {
-            departemen: "Deposit, Akuisisi, Pelestarian dan Pengolahan Bahan Perpustakaan",
-            peserta: {
-                id: 2,
-                nama: "Budi Santoso",
-                nim: "1234567890",
-                departemen: "Deposit, Akuisisi, Pelestarian dan Pengolahan Bahan Perpustakaan",
-                profil: profil1,
-                aspekTeknis: [],
-                aspekNonTeknis: [],
-            },
-        },
-    ];
-
     const [filterDepartemen, setFilterDepartemen] = useState("");
     const [openDepartemen, setOpenDepartemen] = useState({});
     const [nilaiPeserta, setNilaiPeserta] = useState([])
