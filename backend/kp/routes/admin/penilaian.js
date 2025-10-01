@@ -14,32 +14,18 @@ router.get('/', verifyToken('admin'),async(req, res)=>{
     }
 })
 
-router.post('/store', verifyToken('admin'),async(req, res)=>{
-    try{
-        let id_users = req.user.id
-        let {aspek, subjek, bidang} = req.body
-        const data = {
-            aspek,
-            subjek,
-            bidang
-        }
-        await Model_Admin.storeAspek(data)
-        res.status(200).json({message: 'penambahhan subjek berhasil'})
-    }catch(err){
-        res.status(500).json({ status: false, error: err.message });
-    }
-})
-
-router.patch('/update/(:id)', verifyToken('admin'),async(req, res)=>{
+router.patch('/update/(:id)', verifyToken("admin"),async(req, res)=>{
     try{
         let id = req.params.id
-        let {bidang, id_peserta_magang, tanggal_mulai, tanggal_selesai} = req.body
-        let data = {
-            bidang, id_peserta_magang, tanggal_mulai, tanggal_selesai
+        let {penilaian} = req.body
+        console.log(penilaian)
+        if(penilaian === undefined){
+            return res.status(400).json({ message: "Nilai harus diisi" });
         }
-        await Model_Admin.updateAspek(id, data)
+        await Model_Admin.updateNilai(id, {penilaian})
         res.status(200).json({message: 'data berhasil diperbarui'})
     }catch(err){
+        console.log(err)
         res.status(500).json({ status: false, error: err.message });
     }
 })
