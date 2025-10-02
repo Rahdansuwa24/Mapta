@@ -48,8 +48,10 @@ router.get('/download-sertifikat/:id', async(req, res)=>{
             angka: nilaiArr[i],
             huruf: convertNilaiHuruf(nilaiArr[i])
         }));
-        const teknis = gabungan.filter(item => item.aspek.toLowerCase().includes("teknis"));
-        const nonTeknis = gabungan.filter(item => item.aspek.toLowerCase().includes("non"));
+        const teknis = gabungan.filter(item => (item.aspek || '').trim().toLowerCase() === 'teknis');
+        const nonTeknis = gabungan.filter(item => (item.aspek || '').trim().toLowerCase() === 'non-teknis');
+        const teknisNumbered = teknis.map((item, i) => ({ ...item, no: i + 1 }));
+        const nonTeknisNumbered = nonTeknis.map((item, i) => ({ ...item, no: i + 1 }));
 
         const hitungJumlah = (arr) => arr.reduce((sum, x) => sum + (x.angka || 0), 0);
         const hitungRata = (arr) => arr.length ? (hitungJumlah(arr) / arr.length).toFixed(2) : 0;
@@ -64,7 +66,7 @@ router.get('/download-sertifikat/:id', async(req, res)=>{
 
         const html = await ejs.renderFile(
           path.join(__dirname, "../../views/template/sertifikat.ejs"),
-          { peserta, teknis, nonTeknis, teknisJumlah, teknisRata, teknisHuruf, nonJumlah, nonRata, nonHuruf }
+          { peserta, teknis:teknisNumbered, nonTeknis:nonTeknisNumbered, teknisJumlah, teknisRata, teknisHuruf, nonJumlah, nonRata, nonHuruf }
         );
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
