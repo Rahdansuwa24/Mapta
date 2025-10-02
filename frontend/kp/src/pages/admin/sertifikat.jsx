@@ -5,6 +5,10 @@ import SidebarAdmSf from "../../components/sidebar-adm";
 import NavbarAdmSf from "../../components/navbar-adm";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
+import axios from 'axios'
+import dayjs from 'dayjs';
+import 'dayjs/locale/id';
+dayjs.locale('id');
 
 import "../../styles/dashboard.css";
 
@@ -14,8 +18,25 @@ import profil2 from "../../assets/images/profil2.jpeg";
 function Sertifikat() {
     useEffect(() => {
         document.title = "Admin MAPTA";
+        fetchDataPesertaSelesai()
     }, []);
 
+    const fetchDataPesertaSelesai = async()=>{
+        const token = localStorage.getItem("token")
+        try{
+            const res = await axios.get("http://localhost:3000/admin/sertifikat", {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            const dataPesertaSelesai = res.data.data
+            setDataPeserta(dataPesertaSelesai)
+        }catch(error){
+            console.error(error)
+            alert("Gagal Fetch Data")
+
+        }
+    }
     const pesertaDummy = [
     {
         id: 1,
@@ -124,6 +145,7 @@ function Sertifikat() {
     const [uploadedStatus, setUploadedStatus] = useState({});
     const [showModal, setShowModal] = useState(false);
     // const [showNilai, setShowNilai] = useState(false);
+    const [dataPeserta, setDataPeserta] = useState([])
     const [selectedPeserta, setSelectedPeserta] = useState(null);
 
     const handleFileChange = (pesertaId, e) => {
@@ -146,7 +168,7 @@ function Sertifikat() {
     };
 
     const handleDownload = (peserta) => {
-        alert(`Download sertifikat untuk ${peserta.nama}`);
+         window.open(`http://localhost:3000/admin/sertifikat/download-sertifikat/${peserta.id_peserta_magang}`, "_blank");
     };
 
     const handleOpenModal = (peserta) => {
@@ -187,19 +209,19 @@ function Sertifikat() {
                     </tr>
                 </thead>
                 <tbody>
-                    {pesertaDummy.map((peserta, idx) => (
-                    <tr key={peserta.id}>
+                    {dataPeserta.map((peserta, idx) => (
+                    <tr key={peserta.id_peserta_magang}>
                         <td>{idx + 1}</td>
                         <td className="nama-cell">
-                        <img src={peserta.profil} alt="Foto Profil" />
+                        <img src={`http://localhost:3000/static/images/${peserta.foto_diri}`} alt="Foto Profil" />
                         <span>{peserta.nama}</span>
                         </td>
                         <td>{peserta.instansi}</td>
-                        <td>{peserta.tglMulai}</td>
-                        <td>{peserta.tglSelesai}</td>
+                        <td>{dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")}</td>
+                        <td>{dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}</td>
                         <td>
                         <span className="status-label selesai">
-                            {peserta.status}
+                            {peserta.status_penerimaan}
                         </span>
                         </td>
 
@@ -280,17 +302,17 @@ function Sertifikat() {
                         <b>Nama :</b> {selectedPeserta.nama}
                     </div>
                     <div className="peserta-detail-item">
-                        <b>NIM/NIP :</b> {selectedPeserta.nim}
+                        <b>NIM/NIP :</b> {selectedPeserta.nomor_identitas}
                     </div>
                     <div className="peserta-detail-item">
                         <b>Instansi :</b> {selectedPeserta.instansi}
                     </div>
                     <div className="peserta-detail-item">
                         <b>Tanggal :</b>{" "}
-                        {selectedPeserta.tglMulai} - {selectedPeserta.tglSelesai}
+                        {dayjs(selectedPeserta.tanggal_mulai_magang).format("DD MMMM YYYY")} - {dayjs(selectedPeserta.tanggal_selesai_magang).format("DD MMMM YYYY")}
                     </div>
                     <div className="peserta-detail-item">
-                        <b>Status Magang :</b> {selectedPeserta.status}
+                        <b>Status Magang :</b> {selectedPeserta.status_penerimaan}
                     </div>
                     <div className="peserta-detail-item">
                         <b>Status Upload Sertifikat:</b>{" "}
