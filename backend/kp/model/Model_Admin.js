@@ -274,5 +274,52 @@ static async storeAspek(data){
         }
     }
 
+    // static async getDataDasborSertif(){
+    //     try{
+    //         const [result] = await db.query(`select nama, nomor_identitas,foto_diri, instansi, tanggal_mulai_magang, tanggal_selesai_magang, status_penerimaan from peserta_magang where status_penerimaan = "selesai"`)
+    //         return result
+    //     }catch(error){
+    //         throw(error)
+    //     }
+    // }
+    static async getDataDasborSertif(){
+        try{
+            const [result] = await db.query(`SELECT p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan,
+            GROUP_CONCAT(CASE WHEN pe.penilaian IS NOT NULL THEN a.aspek END ORDER BY a.aspek SEPARATOR ', ') AS aspek_list,
+            GROUP_CONCAT(CASE WHEN pe.penilaian IS NOT NULL THEN a.subjek END ORDER BY a.aspek SEPARATOR ', ') AS subjek_list,
+            GROUP_CONCAT(CASE WHEN pe.penilaian IS NOT NULL THEN pe.penilaian END ORDER BY a.aspek SEPARATOR ', ') AS penilaian_list
+            FROM peserta_magang p
+            LEFT JOIN penilaian pe 
+            ON p.id_peserta_magang = pe.id_peserta_magang
+            LEFT JOIN aspek a 
+            ON a.id_aspek = pe.id_aspek
+            WHERE p.status_penerimaan = 'selesai'
+            GROUP BY p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan;
+            `)
+            return result
+        }catch(error){
+            throw(error)
+        }
+    }
+    static async getDataDasborSertifById(id){
+        try{
+            const [result] = await db.query(`SELECT p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan,
+            GROUP_CONCAT(CASE WHEN pe.penilaian IS NOT NULL THEN a.aspek END ORDER BY a.aspek SEPARATOR ', ') AS aspek_list,
+            GROUP_CONCAT(CASE WHEN pe.penilaian IS NOT NULL THEN a.subjek END ORDER BY a.aspek SEPARATOR ', ') AS subjek_list,
+            GROUP_CONCAT(CASE WHEN pe.penilaian IS NOT NULL THEN pe.penilaian END ORDER BY a.aspek SEPARATOR ', ') AS penilaian_list
+            FROM peserta_magang p
+            LEFT JOIN penilaian pe 
+            ON p.id_peserta_magang = pe.id_peserta_magang
+            LEFT JOIN aspek a 
+            ON a.id_aspek = pe.id_aspek
+            WHERE p.status_penerimaan = 'selesai' AND p.id_peserta_magang = ?
+            GROUP BY p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan;
+            `, [id])
+            return result
+        }catch(error){
+            throw(error)
+        }
+    }
+
 }
 module.exports = Model_Admin

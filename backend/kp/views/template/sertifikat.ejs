@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sertifikat</title>
     <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Calistoga&family=Open+Sans:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/stylesheets/template/sertifikat.css">
+    <link rel="stylesheet" href="http://localhost:3000/static/stylesheets/template/sertifikat.css">
 
 </head>
 <body>
@@ -13,32 +13,32 @@
     <!-- Halaman 1 -->
     <section class="sertifikat">
         <div class="top-right">
-        <img src="/assets-certif/gambar1.png" alt="Logo 1">
-        <img src="/assets-certif/gambar2.png" alt="Logo 2">
+        <img src="http://localhost:3000/static/assets-certif/gambar1.png" alt="Logo 1">
+        <img src="http://localhost:3000/static/assets-certif/gambar2.png" alt="Logo 2">
         </div>
 
         <div class="logo-utama">
-        <img src="/assets-certif/logo-utama.png" alt="Logo Utama">
+        <img src="http://localhost:3000/static/assets-certif/logo-utama.png" alt="Logo Utama">
         <div class="instansi"><b>DINAS PERPUSTAKAAN DAN KEARSIPAN <br> PROVINSI JAWA TIMUR</b></div>
         </div>
 
         <div class="judul-hal1">SERTIFIKAT</div>
         <div class="nomor">Nomor: 400.14.5.4/665/119.1/2025</div>
         <div class="diberikan">Diberikan kepada</div>
-        <div class="nama">DEVI RIDHO SYAVITRI</div>
+        <div class="nama"><%= peserta.nama %></div>
         <hr>
-        <div class="univ">UNIVERSITAS AIRLANGGA</div>
+        <div class="univ"><%= peserta.instansi %></div>
 
         <div class="deskripsi">
-        Telah melaksanakan Praktik Kerja Lapangan (Magang) <br> dengan “Baik” di Dinas Perpustakaan dan Kearsipan Provinsi Jawa Timur <br> pada tanggal 2 Januari 2025 sampai dengan 7 Februari 2025
+        Telah melaksanakan Praktik Kerja Lapangan (Magang) <br> dengan “Baik” di Dinas Perpustakaan dan Kearsipan Provinsi Jawa Timur <br> pada tanggal <%= peserta.tanggal_mulai_magang %> sampai dengan <%= peserta.tanggal_selesai_magang %>
         </div>
 
         <div class="ttd-section">
         <div class="piagam">
-            <img src="/assets-certif/piagam.png" alt="Piagam">
+            <img src="http://localhost:3000/static/assets-certif/piagam.png" alt="Piagam">
         </div>
         <div class="ttd">
-            <p>Surabaya, 10 Februari 2025</p>
+            <p>Surabaya, .....</p>
             <p>Kepala Dinas</p>
             <p>Perpustakaan dan Kearsipan</p>
             <p>Provinsi Jawa Timur,</p>
@@ -71,25 +71,22 @@
             </tr>
         </thead>
         <tbody>
-            <tr><td>1</td><td>Pelayanan Perpustakaan dan Kearsipan</td><td>88</td><td>A-</td></tr>
-            <tr><td>2</td><td>Pengelolaan Bahan Pustaka dan Arsip</td><td>88</td><td>A-</td></tr>
-            <tr><td>3</td><td>Preservasi Bahan Pustaka dan Arsip</td><td>87</td><td>A-</td></tr>
-            <tr><td>4</td><td>Digitalisasi Arsip</td><td>88</td><td>A-</td></tr>
-            <tr><td>5</td><td>Literasi Informasi</td><td>82</td><td>B+</td></tr>
-            <tr><td>6</td><td>Manajemen Kearsipan</td><td>87</td><td>A-</td></tr>
-            <tr><td>7</td><td>Teknologi Informasi</td><td>90</td><td>A</td></tr>
-            <tr><td>8</td><td>Pengelolaan Kearsipan</td><td>80</td><td>B+</td></tr>
-            <tr><td>9</td><td>Pembinaan Kearsipan</td><td>87</td><td>A-</td></tr>
-            <tr><td>10</td><td>Manajemen Naskah Dinas Perkantoran</td><td>87</td><td>A-</td></tr>
-            <tr>
+             <% teknis.forEach(t => { %>
+              <tr>
+                <td><%= t.no %></td>
+                <td><%= t.subjek %></td>
+                <td><%= t.angka %></td>
+                <td><%= t.huruf %></td>
+              </tr>
+            <% }) %>
             <td colspan="2">Jumlah</td>
-            <td>610</td>
+            <td><%= teknisJumlah %></td>
             <td></td>
             </tr>
             <tr>
             <td colspan="2">Nilai Rata-Rata</td>
-            <td>87,14</td>
-            <td>A-</td>
+            <td><%= teknisRata %></td>
+            <td><%= teknisHuruf %></td>
             </tr>
         </tbody>
         </table>
@@ -111,20 +108,23 @@
             </tr>
         </thead>
         <tbody>
-            <tr><td>1</td><td>Kehadiran</td><td>88</td><td>A-</td></tr>
-            <tr><td>2</td><td>Skill/Keahlian</td><td>86</td><td>A-</td></tr>
-            <tr><td>3</td><td>Kreatifitas</td><td>88</td><td>A-</td></tr>
-            <tr><td>4</td><td>Komunikasi</td><td>87</td><td>A-</td></tr>
-            <tr><td>5</td><td>Sikap/Etika</td><td>88</td><td>A-</td></tr>
+            <% nonTeknis.forEach(n => { %>
+                <tr>
+                <td><%= n.no %></td>
+                <td><%= n.subjek %></td>
+                <td><%= n.angka %></td>
+                <td><%= n.huruf %></td>
+                </tr>
+            <% }) %>
             <tr>
-            <td colspan="2">Jumlah</td>
-            <td>437</td>
-            <td></td>
+                <td colspan="2">Jumlah</td>
+                <td><%= nonJumlah %></td>
+                <td></td>
             </tr>
             <tr>
-            <td colspan="2">Nilai Rata-Rata</td>
-            <td>87,4</td>
-            <td>A-</td>
+                <td colspan="2">Nilai Rata-Rata</td>
+                <td><%= nonRata %></td>
+                <td><%= nonHuruf %></td>
             </tr>
         </tbody>
         </table>

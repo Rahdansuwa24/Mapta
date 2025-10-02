@@ -54,7 +54,7 @@ app.use('/pic/jadwal', jadwalPic)
 app.use('/pic/penilaian', penilaianPic)
 app.use('/peserta/jadwal', jadwalPeserta)
 app.use('/peserta/penilaian', penilaianPeserta)
-app.use('/peserta/jadwal', sertifikatPeserta)
+app.use('/peserta/sertifikat', sertifikatPeserta)
 
 app.use((err, req, res, next) => {
     if (err instanceof multer.MulterError) {
