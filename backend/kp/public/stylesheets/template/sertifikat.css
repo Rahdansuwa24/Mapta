@@ -48,7 +48,7 @@
       margin-top: 5px;
     }
     .logo-utama img {
-      width: 50px;
+      width: 55px;
       height: auto;
       justify-self: center;
     }
@@ -56,7 +56,7 @@
     /* instansi */
     .instansi {
       font-family: 'League Spartan', sans-serif;
-      font-size: 10px;
+      font-size: 9px;
       margin-top: 5px;
       width: 70%;
       margin-left: auto;
@@ -67,12 +67,12 @@
     .judul-hal1 {
       text-align: center;
       font-family: 'Calistoga', serif;
-      font-size: 36px;
+      font-size: 40px;
     }
 
     .nomor {
       text-align: center;
-      font-size: 14.5px;
+      font-size: 15px;
     }
 
     .diberikan {
@@ -101,7 +101,7 @@
     .univ {
       text-align: center;
       font-family: 'Calistoga', serif;
-      font-size: 20px;
+      font-size: 22px;
     }
 
     /* deskripsi */
@@ -109,7 +109,7 @@
       text-align: center;
       margin-top: 15px;
       font-family: 'Open Sans', sans-serif;
-      font-size: 16px;
+      font-size: 17.5px;
       line-height: 1.4;
     }
 
@@ -118,7 +118,7 @@
       display: flex;
       align-items: center;
       justify-self: center;
-      margin-top: 30px;
+      margin-top: 15px;
       padding: 0 30mm;
       gap: 50px;
     }
@@ -138,7 +138,7 @@
     }
     .ttd p {
       margin: 3px 0;
-      font-size: 14px;
+      font-size: 15.5px;
     }
     .ttd .ttd-image {
       display: block;
@@ -147,17 +147,21 @@
 
     .nama-pejabat {
       margin-top: 20px;
-      font-weight: bold;
+      font-weight: 500;
     }
 
-/* Judul halaman kedua */
-.wrapper-tabel-sertifikat{
+
+/* Halaman 2 */
+.wrapper-tabel-sertifikat {
   width: 100%;
+  height: 100%;              /* penuh tinggi halaman */
   display: flex;
-  justify-content: center;  /* horizontal tengah */
-  align-items: center;      /* vertikal tengah */
+  justify-content: center;   /* posisikan konten di tengah vertikal */
+  align-items: center;       /* posisikan konten di tengah horizontal */
   flex-direction: column;
+  box-sizing: border-box;
 }
+
 
 .judul-hal2 {
   text-align: center;
