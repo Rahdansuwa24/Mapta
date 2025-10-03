@@ -23,11 +23,11 @@
         </div>
 
         <div class="judul-hal1">SERTIFIKAT</div>
-        <div class="nomor">Nomor: 400.14.5.4/665/119.1/2025</div>
+        <div class="nomor">Nomor: </div>
         <div class="diberikan">Diberikan kepada</div>
-        <div class="nama"><%= peserta.nama %></div>
+        <div class="nama"><%= peserta.nama.toUpperCase() %></div>
         <hr>
-        <div class="univ"><%= peserta.instansi %></div>
+        <div class="univ"><%= peserta.instansi.toUpperCase() %></div>
 
         <div class="deskripsi">
         Telah melaksanakan Praktik Kerja Lapangan (Magang) <br> dengan “Baik” di Dinas Perpustakaan dan Kearsipan Provinsi Jawa Timur <br> pada tanggal <%= peserta.tanggal_mulai_magang %> sampai dengan <%= peserta.tanggal_selesai_magang %>

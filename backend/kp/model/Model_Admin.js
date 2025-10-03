@@ -292,6 +292,25 @@ static async storeAspek(data){
             throw(error)
         }
     }
+    static async getDownloadSertif(id){
+        try{
+            const [result] = await db.query(`SELECT p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan, p.sertifikat,
+            GROUP_CONCAT(CASE WHEN pe.penilaian IS NOT NULL THEN a.aspek END ORDER BY a.aspek SEPARATOR ', ') AS aspek_list,
+            GROUP_CONCAT(CASE WHEN pe.penilaian IS NOT NULL THEN a.subjek END ORDER BY a.aspek SEPARATOR ', ') AS subjek_list,
+            GROUP_CONCAT(CASE WHEN pe.penilaian IS NOT NULL THEN pe.penilaian END ORDER BY a.aspek SEPARATOR ', ') AS penilaian_list
+            FROM peserta_magang p
+            LEFT JOIN penilaian pe 
+            ON p.id_peserta_magang = pe.id_peserta_magang
+            LEFT JOIN aspek a 
+            ON a.id_aspek = pe.id_aspek
+            WHERE p.status_penerimaan = 'selesai' and p.id_peserta_magang = ?
+            GROUP BY p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan;
+            `, [id])
+            return result
+        }catch(error){
+            throw(error)
+        }
+    }
     static async getDataDasborSertifById(id){
         try{
             const [result] = await db.query(`select sertifikat from peserta_magang where id_peserta_magang = ?`, [id])

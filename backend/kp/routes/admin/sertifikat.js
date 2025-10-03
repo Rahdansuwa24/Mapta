@@ -7,6 +7,11 @@ var htmlDocx = require("html-docx-js")
 var puppeteer = require("puppeteer")
 const path = require("path")
 const {upload, hapusFiles} = require('../../config/middleware/multer-sertif')
+const dayjs = require("dayjs")
+const newLocal = "dayjs/locale/id";
+require(newLocal)
+dayjs.locale("id")
+
 
 function convertNilaiHuruf(nilai) {
   if (nilai === null || nilai === undefined) return "";
@@ -36,8 +41,12 @@ router.get('/cek-sertif', async(req, res)=>{
 router.get('/download-sertifikat/:id', async(req, res)=>{
     try{
         const id = req.params.id
-        const rows = await Model_Admin.getDataDasborSertifById(id)
+        const rows = await Model_Admin.getDownloadSertif(id)
         const peserta = rows[0]
+
+        peserta.tanggal_mulai_magang = dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")
+        peserta.tanggal_selesai_magang = dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")
+        
         const aspekArr = peserta.aspek_list ? peserta.aspek_list.split(", ") : [];
         const subjekArr = peserta.subjek_list ? peserta.subjek_list.split(", ") : [];
         const nilaiArr = peserta.penilaian_list ? peserta.penilaian_list.split(", ").map(Number) : [];
