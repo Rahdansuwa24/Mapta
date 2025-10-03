@@ -31,122 +31,29 @@ function Sertifikat() {
             })
             const dataPesertaSelesai = res.data.data
             setDataPeserta(dataPesertaSelesai)
+
+            const statusMap = {}
+            const filesMap = {}
+            dataPesertaSelesai.forEach(p => {
+                statusMap[p.id_peserta_magang] = !!p.sertifikat;
+                filesMap[p.id_peserta_magang] = p.sertifikat || null;
+            });
+            setUploadedStatus(statusMap);
+            setUploadedFiles(filesMap)
         }catch(error){
             console.error(error)
             alert("Gagal Fetch Data")
 
         }
     }
-    const pesertaDummy = [
-    {
-        id: 1,
-        nama: "Budi Santoso",
-        nim: "1234567890",
-        instansi: "Politeknik Elektronika Negeri Surabaya",
-        tglMulai: "01-09-2025",
-        tglSelesai: "30-11-2025",
-        status: "Selesai",
-        profil: profil1,
-        nilaiTeknis: [
-        { aspek: "Kehadiran", skor: 90, huruf: "A" },
-        { aspek: "Skill/Keahlian", skor: 85, huruf: "B+" },
-        { aspek: "Kreatifitas", skor: 88, huruf: "B+" },
-        ],
-        nilaiNonTeknis: [
-        { aspek: "Kerjasama", skor: 92, huruf: "A-" },
-        { aspek: "Komunikasi", skor: 87, huruf: "B+" },
-        { aspek: "Sikap/Etika", skor: 95, huruf: "A" },
-        ],
-    },
-    {
-        id: 2,
-        nama: "Siti Aisyah",
-        nim: "9876543210",
-        instansi: "Politeknik Elektronika Negeri Surabaya",
-        tglMulai: "01-09-2025",
-        tglSelesai: "30-11-2025",
-        status: "Selesai",
-        profil: profil2,
-        nilaiTeknis: [
-        { aspek: "Kehadiran", skor: 95, huruf: "A" },
-        { aspek: "Skill/Keahlian", skor: 90, huruf: "A-" },
-        { aspek: "Kreatifitas", skor: 93, huruf: "A" },
-        ],
-        nilaiNonTeknis: [
-        { aspek: "Kerjasama", skor: 96, huruf: "A" },
-        { aspek: "Komunikasi", skor: 89, huruf: "B+" },
-        { aspek: "Sikap/Etika", skor: 94, huruf: "A" },
-        ],
-    },
-    {
-        id: 3,
-        nama: "Andi Wijaya",
-        nim: "1122334455",
-        instansi: "Politeknik Elektronika Negeri Surabaya",
-        tglMulai: "01-09-2025",
-        tglSelesai: "30-11-2025",
-        status: "Selesai",
-        profil: profil1,
-        nilaiTeknis: [
-        { aspek: "Kehadiran", skor: 88, huruf: "B+" },
-        { aspek: "Skill/Keahlian", skor: 92, huruf: "A-" },
-        { aspek: "Kreatifitas", skor: 85, huruf: "B+" },
-        ],
-        nilaiNonTeknis: [
-        { aspek: "Kerjasama", skor: 90, huruf: "A-" },
-        { aspek: "Komunikasi", skor: 86, huruf: "B+" },
-        { aspek: "Sikap/Etika", skor: 91, huruf: "A-" },
-        ],
-    },
-    {
-        id: 4,
-        nama: "Dewi Lestari",
-        nim: "5566778899",
-        instansi: "Politeknik Elektronika Negeri Surabaya",
-        tglMulai: "01-09-2025",
-        tglSelesai: "30-11-2025",
-        status: "Selesai",
-        profil: profil2,
-        nilaiTeknis: [
-        { aspek: "Kehadiran", skor: 93, huruf: "A" },
-        { aspek: "Skill/Keahlian", skor: 87, huruf: "B+" },
-        { aspek: "Kreatifitas", skor: 90, huruf: "A-" },
-        ],
-        nilaiNonTeknis: [
-        { aspek: "Kerjasama", skor: 92, huruf: "A-" },
-        { aspek: "Komunikasi", skor: 88, huruf: "B+" },
-        { aspek: "Sikap/Etika", skor: 94, huruf: "A" },
-        ],
-    },
-    {
-        id: 5,
-        nama: "Rizky Pratama",
-        nim: "6677889900",
-        instansi: "Politeknik Elektronika Negeri Surabaya",
-        tglMulai: "01-09-2025",
-        tglSelesai: "30-11-2025",
-        status: "Selesai",
-        profil: profil1,
-    },
-    {
-        id: 6,
-        nama: "Nurul Hidayah",
-        nim: "7788990011",
-        instansi: "Politeknik Elektronika Negeri Surabaya",
-        tglMulai: "01-09-2025",
-        tglSelesai: "30-11-2025",
-        status: "Selesai",
-        profil: profil2,
-    },
-    ];
-
-
+    
     const [fileUploads, setFileUploads] = useState({});
     const [uploadedStatus, setUploadedStatus] = useState({});
     const [showModal, setShowModal] = useState(false);
     // const [showNilai, setShowNilai] = useState(false);
     const [dataPeserta, setDataPeserta] = useState([])
     const [selectedPeserta, setSelectedPeserta] = useState(null);
+    const [uploadedFiles, setUploadedFiles] = useState({});
 
     const handleFileChange = (pesertaId, e) => {
         setFileUploads({
@@ -155,15 +62,35 @@ function Sertifikat() {
         });
     };
 
-    const handleUpload = (pesertaId) => {
-        if (fileUploads[pesertaId]) {
-        alert(
-            `File "${fileUploads[pesertaId].name}" berhasil diupload untuk peserta ID ${pesertaId}`
-        );
-        setUploadedStatus({ ...uploadedStatus, [pesertaId]: true });
-        setFileUploads({ ...fileUploads, [pesertaId]: null });
-        } else {
-        alert("Pilih file terlebih dahulu!");
+    const handleUpload = async (pesertaId) => {
+        const file = fileUploads[pesertaId];
+        if (!file) {
+            alert("Pilih file terlebih dahulu!");
+            return;
+        }
+        const token = localStorage.getItem("token");
+        const formData = new FormData();
+        formData.append("sertifikat", file);
+        
+        try{
+            await axios.patch(
+            `http://localhost:3000/admin/sertifikat/update-sertifikat/${pesertaId}`,
+            formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+            setUploadedStatus(prev=>({ ...prev, [pesertaId]: true }));
+            setUploadedFiles((prev) => ({ ...prev, [pesertaId]: file.name }));
+            setFileUploads(prev=>({ ...prev, [pesertaId]: null }));
+            alert(`File "${file.name}" berhasil diupload untuk peserta`);
+            fetchDataPesertaSelesai()
+        }catch(error){
+            console.error(error);
+            alert("Upload gagal!");
         }
     };
 
@@ -240,15 +167,15 @@ function Sertifikat() {
                         <div className="upload-container">
                             <input
                             type="file"
-                            id={`file-${peserta.id}`}
-                            onChange={(e) => handleFileChange(peserta.id, e)}
+                            id={`file-${peserta.id_peserta_magang}`}
+                            onChange={(e) => handleFileChange(peserta.id_peserta_magang, e)}
                             />
-                            <label htmlFor={`file-${peserta.id}`}>
-                            {fileUploads[peserta.id]
-                                ? fileUploads[peserta.id].name
+                            <label htmlFor={`file-${peserta.id_peserta_magang}`}>
+                            {fileUploads[peserta.id_peserta_magang]
+                                ? fileUploads[peserta.id_peserta_magang].name
                                 : "Upload File"}
                             </label>
-                            <button onClick={() => handleUpload(peserta.id)}>
+                            <button onClick={() => handleUpload(peserta.id_peserta_magang)}>
                             Upload
                             </button>
                         </div>
@@ -316,8 +243,13 @@ function Sertifikat() {
                     </div>
                     <div className="peserta-detail-item">
                         <b>Status Upload Sertifikat:</b>{" "}
-                        {uploadedStatus[selectedPeserta.id] ? (
+                        {uploadedStatus[selectedPeserta.id_peserta_magang] ? (
+                        <>
                         <span className="status-label sukses">Sudah Upload</span>
+                        {uploadedFiles[selectedPeserta.id_peserta_magang] && (
+                            <span className="file-name"> &nbsp;({uploadedFiles[selectedPeserta.id_peserta_magang]})</span>
+                        )}
+                        </>
                         ) : (
                         <span className="status-label gagal">Belum Upload</span>
                         )}
