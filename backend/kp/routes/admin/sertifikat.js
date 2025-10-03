@@ -6,8 +6,7 @@ var ejs = require("ejs")
 var htmlDocx = require("html-docx-js")
 var puppeteer = require("puppeteer")
 const path = require("path")
-const fs = require("fs")
-const Model_User = require('../../model/Model_User');
+const {upload, hapusFiles} = require('../../config/middleware/multer-sertif')
 
 function convertNilaiHuruf(nilai) {
   if (nilai === null || nilai === undefined) return "";
@@ -82,88 +81,29 @@ router.get('/download-sertifikat/:id', async(req, res)=>{
         res.status(500).send("Gagal generate Word");
     }
 })
-// router.get("/download-sertifikat/:id", async (req, res) => {
-//   try {
-//     const id = req.params.id;
-//     const rows = await Model_Admin.getDataDasborSertifById(id);
-//     const peserta = rows[0];
-
-//     const aspekArr = peserta.aspek_list ? peserta.aspek_list.split(", ") : [];
-//     const subjekArr = peserta.subjek_list ? peserta.subjek_list.split(", ") : [];
-//     const nilaiArr = peserta.penilaian_list ? peserta.penilaian_list.split(", ").map(Number) : [];
-
-//     const gabungan = aspekArr.map((aspek, i) => ({
-//       aspek,
-//       subjek: subjekArr[i],
-//       angka: nilaiArr[i],
-//       huruf: convertNilaiHuruf(nilaiArr[i])
-//     }));
-
-//     const teknis = gabungan.filter(item => item.aspek.toLowerCase().includes("teknis"));
-//     const nonTeknis = gabungan.filter(item => item.aspek.toLowerCase().includes("non"));
-
-//     const hitungJumlah = (arr) => arr.reduce((sum, x) => sum + (x.angka || 0), 0);
-//     const hitungRata = (arr) => arr.length ? (hitungJumlah(arr) / arr.length).toFixed(2) : 0;
-
-//     const teknisJumlah = hitungJumlah(teknis);
-//     const teknisRata = hitungRata(teknis);
-//     const teknisHuruf = convertNilaiHuruf(teknisRata);
-
-//     const nonJumlah = hitungJumlah(nonTeknis);
-//     const nonRata = hitungRata(nonTeknis);
-//     const nonHuruf = convertNilaiHuruf(nonRata);
-
-//     // render sertifikat.ejs ke HTML
-//     const html = await ejs.renderFile(
-//       path.join(__dirname, "../../views/template/sertifikat.ejs"),
-//       {
-//         peserta,
-//         teknis,
-//         nonTeknis,
-//         teknisJumlah,
-//         teknisRata,
-//         teknisHuruf,
-//         nonJumlah,
-//         nonRata,
-//         nonHuruf
-//       }
-//     );
-
-//     // convert HTML ke Word buffer
-//     const blob = htmlDocx.asBlob(html);  
-//     const buffer = Buffer.from(await blob.arrayBuffer());  
-
-//     // response ke client
-//     res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-//     res.setHeader("Content-Disposition", `attachment; filename=sertifikat_${peserta.nama}.docx`);
-//     res.end(buffer);
-
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("Gagal generate Word");
-//   }
-// });
-router.post('/store', async(req, res)=>{
+router.patch('/update-sertifikat/(:id)', verifyToken('admin'),  upload.single("sertifikat"), async(req, res)=>{
     try{
-        let {aspek, subjek} = req.body
-        const data = {
-            aspek,
-            subjek
+        let id = req.params.id
+        let dokumen_baru = req.file
+        if(!dokumen_baru){
+            return res.status(400).json({ message: "sertifikat wajib diunggah" });
         }
-        await Model_Admin.storeAspek(data)
-        res.status(200).json({message: 'penambahhan subjek berhasil'})
-    }catch(err){
-        res.status(500).json({ status: false, error: err.message });
-    }
-})
+        const dataLama = await Model_Admin.getDataDasborSertifById(id)
+        const peserta = Array.isArray(dataLama) ? dataLama[0] : dataLama
+        console.log(peserta)
+        const fileLama = peserta.sertifikat
+        console.log(fileLama)
+        if (fileLama) {
+            const docDirSertif = path.resolve('public/document-sertif');
+            const filePath = path.resolve(docDirSertif, fileLama);
 
-router.delete('/delete', async(req, res)=>{
-    try{
-        const {id} = req.body
-        if(!id || id.length === 0) return res.status(400).json({message: 'tidak ada data yang dipilih'})
-        const result = await Model_Admin.deleteAspek(id)
-        res.status(200).json({ message: `${result.affectedRows} Aspek berhasil dihapus` })
+            hapusFiles([{ path: filePath, filename: fileLama }]);
+        }
+        await Model_Admin.updateSertif(id, {sertifikat: dokumen_baru.filename})
+        res.status(200).json({message: "surat balasan berhasil diunggah"})
     }catch(err){
+        hapusFiles(req.file)
+        console.error(err);
         res.status(500).json({ status: false, error: err.message });
     }
 })
