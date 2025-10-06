@@ -23,14 +23,14 @@
         </div>
 
         <div class="judul-hal1">SERTIFIKAT</div>
-        <div class="nomor">Nomor: </div>
+        <div class="nomor">Nomor: ${nomor_naskah}</div>
         <div class="diberikan">Diberikan kepada</div>
         <div class="nama"><%= peserta.nama.toUpperCase() %></div>
         <hr>
         <div class="univ"><%= peserta.instansi.toUpperCase() %></div>
 
         <div class="deskripsi">
-        Telah melaksanakan Praktik Kerja Lapangan (Magang) <br> dengan “Baik” di Dinas Perpustakaan dan Kearsipan Provinsi Jawa Timur <br> pada tanggal <%= peserta.tanggal_mulai_magang %> sampai dengan <%= peserta.tanggal_selesai_magang %>
+        Telah melaksanakan Praktik Kerja Lapangan (Magang) <br> dengan “baik” di Dinas Perpustakaan dan Kearsipan Provinsi Jawa Timur <br> pada tanggal <%= peserta.tanggal_mulai_magang %> sampai dengan <%= peserta.tanggal_selesai_magang %>
         </div>
 
         <div class="ttd-section">
@@ -38,11 +38,11 @@
             <img src="http://localhost:3000/static/assets-certif/piagam.png" alt="Piagam">
         </div>
         <div class="ttd">
-            <p>Surabaya, .....</p>
+            <p>Surabaya, ${tanggal_naskah}</p>
             <p>Kepala Dinas</p>
             <p>Perpustakaan dan Kearsipan</p>
             <p>Provinsi Jawa Timur,</p>
-            <div class="ttd-image"></div>
+            <div class="ttd-image">${ttd_pengirim}</div>
             <p class="nama-pejabat">Ir. Tiat S. Suwardi, M.Si.</p>
             <p>Pembina Utama Muda (IV/c)</p>
             <p>NIP 196704021994032007</p>
