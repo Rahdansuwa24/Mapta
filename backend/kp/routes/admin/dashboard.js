@@ -116,10 +116,10 @@ router.delete('/delete/penolakan/(:id)', verifyToken('admin'), async(req, res)=>
         if(hapusDokumenPendukung){
             try{
                 const dokumenPendukungArray = JSON.parse(hapusDokumenPendukung)
-                const dokumenPendukungArrHapus = dokumenPendukungArray.map(filename=>{
-                    filename: filename
-                    path.join(__dirname, '../../public/document', filename)
-                }) 
+                const dokumenPendukungArrHapus = dokumenPendukungArray.map(filename=>({
+                    filename: filename,
+                    path: path.join(__dirname, '../../public/document', filename)
+                })) 
                 hapusFiles(dokumenPendukungArrHapus)
             }catch(err){
                 console.error('Gagal memproses JSON dokumen_pendukung:', err);

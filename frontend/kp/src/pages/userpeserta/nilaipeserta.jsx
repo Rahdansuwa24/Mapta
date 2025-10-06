@@ -47,19 +47,19 @@ function NilaiPeserta() {
                     id_aspek: idAspekTeknisArr[i] || null,
                     id_penilaian: idPenilaianTeknisArr[i] || null,
                     aspek: a,
-                    nilai: nilaiTeknisArr[i] || 0,
+                    nilai: nilaiTeknisArr[i] ?? null,
                 }))
 
                 const aspekNonTeknis = aspekNonTeknisArr.map((a, i) => ({
                     id_aspek: idAspekNonTeknisArr[i] || null,
                     id_penilaian: idPenilaianNonTeknisArr[i] || null,
                     aspek: a,
-                    nilai: nilaiNonTeknisArr[i] || 0,
+                    nilai: nilaiNonTeknisArr[i] ?? null,
                 }))
 
                 return {
                     ...item,
-                    bidang: item.bidang || "-",   // ⬅️ tambahkan bidang
+                    bidang: item.bidang || "-",
                     aspekTeknis,
                     aspekNonTeknis,
                 }

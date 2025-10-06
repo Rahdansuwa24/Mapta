@@ -46,7 +46,7 @@ router.get('/download-sertifikat/:id', async(req, res)=>{
 
         peserta.tanggal_mulai_magang = dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")
         peserta.tanggal_selesai_magang = dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")
-        
+
         const aspekArr = peserta.aspek_list ? peserta.aspek_list.split(", ") : [];
         const subjekArr = peserta.subjek_list ? peserta.subjek_list.split(", ") : [];
         const nilaiArr = peserta.penilaian_list ? peserta.penilaian_list.split(", ").map(Number) : [];
@@ -83,11 +83,11 @@ router.get('/download-sertifikat/:id', async(req, res)=>{
         await browser.close();
   
         res.setHeader("Content-Type", "application/pdf");
-        res.setHeader("Content-Disposition", `attachment; filename=sertifikat_${peserta.nama}.pdf`);
+        res.setHeader("Content-Disposition", `attachment; filename=sertifikat_${peserta.nama}_${peserta.instansi}.pdf`);
         res.end(pdfBuffer);
     }catch(error){
         console.error(error);
-        res.status(500).send("Gagal generate Word");
+        res.status(500).send("Gagal generate PDF");
     }
 })
 router.patch('/update-sertifikat/(:id)', verifyToken('admin'),  upload.single("sertifikat"), async(req, res)=>{

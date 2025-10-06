@@ -64,11 +64,10 @@ router.patch('/update/(:id)', verifyToken("pic"),async(req, res)=>{
     try{
         let id = req.params.id
         let {penilaian} = req.body
-        console.log(penilaian)
-        if(penilaian === undefined){
-            return res.status(400).json({ message: "Nilai harus diisi" });
-        }
-        await Model_PIC.updateNilai(id, {penilaian})
+        // if(penilaian === undefined){
+        //     return res.status(400).json({ message: "Nilai harus diisi" });
+        // }
+        await Model_PIC.updateNilai(id, {penilaian: penilaian ?? null})
         res.status(200).json({message: 'data berhasil diperbarui'})
     }catch(err){
         console.log(err)

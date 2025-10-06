@@ -164,6 +164,77 @@ router.post('/register', upload.any(), async (req, res) => {
     }
 });
 
+router.post('/register-dinas', upload.any(), async (req, res) => {
+    try {
+        const validatePass = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+        const user_level = 'siswa';
+        const now = new Date();
+        const tanggal_daftar = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+        const { nama, nomor_identitas, instansi, tanggal_mulai_magang, tanggal_selesai_magang, jenjang, email, password } = req.body;
+        
+        const fotoIndividu = req.files.find(f => f.fieldname === 'foto_diri');
+        const dokumenPendukungIndividu = req.files.filter(f => f.fieldname === 'dokumen_pendukung');
+        if (!fotoIndividu) {
+            hapusFiles(req.files);
+            return res.status(400).json({ message: "Foto diri wajib diunggah" });
+        }
+        if (!email || !password || !nama || !nomor_identitas || !instansi || !tanggal_mulai_magang || !tanggal_selesai_magang || !jenjang) {
+            hapusFiles(req.files);
+            return res.status(400).json({ message: 'Pastikan semua data sudah diisi' });
+        }
+        if (!validatePass.test(password)) {
+            hapusFiles(req.files);
+            return res.status(400).json({
+                status: false,
+                message: 'Password harus mengandung minimal 1 huruf besar, 1 angka, dan panjang minimal 8 karakter'
+            });
+        }
+        const existingUserIndividu = await Model_User.getEmail(email);
+        if (existingUserIndividu && existingUserIndividu.length > 0) {
+            hapusFiles(req.files);
+            return res.status(400).json({ message: "Gunakan email lain, email sudah ada yang sama" });
+        }
+
+        const totalSiswa = await Model_Peserta.countPeserta();
+        const sisaKuota = 50 - totalSiswa;
+        if ((user_level === 'siswa' || user_level === 'dinas') && 1 > sisaKuota) {
+            hapusFiles(req.files);
+            return res.status(400).json({
+                status: false,
+                message: `Kuota tersisa ${sisaKuota} peserta saja. Tidak bisa mendaftar.`
+            });
+        }
+        
+        const kelompok = await Model_Peserta.registerTabelKelompok({tanggal_daftar});
+        const idKelompok = kelompok.insertId;
+
+        const akunPeserta = await Model_User.registerAkun(email, password, user_level);
+        const idAkun = akunPeserta.insertId;
+
+        const pesertaData = {
+            nama,
+            nomor_identitas,
+            foto_diri: fotoIndividu.filename,
+            instansi,
+            tanggal_mulai_magang,
+            tanggal_selesai_magang,
+            kategori: 'individu',
+            dokumen_pendukung: JSON.stringify(dokumenPendukungIndividu.map(f => f.filename)),
+            jenjang,
+            id_users: idAkun,
+            id_kelompok: idKelompok
+        };
+
+        await Model_Peserta.registerUser(pesertaData);
+        return res.status(201).json({ message: 'Registrasi dinas berhasil' });
+
+    } catch (err) {
+        hapusFiles(req.files);
+        console.error(err);
+        return res.status(500).json({ message: 'Terjadi kesalahan', error: err.message });
+    }
+});
+
 //router getlAll data
 router.get('/', async (req, res) => {
     try {

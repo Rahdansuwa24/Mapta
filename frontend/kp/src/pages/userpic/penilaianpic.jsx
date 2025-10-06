@@ -81,14 +81,14 @@ function PenilaianPic() {
                 id_aspek: idAspekTeknisArr[i] || null,
                 id_penilaian: idPenilaianTeknisArr[i] || null,
                 nama: a,
-                nilai: nilaiTeknisArr[i] || 0,
+                nilai: nilaiTeknisArr[i] ?? null,
             }));
 
             const aspekNonTeknis = aspekNonTeknisArr.map((a, i) => ({
                 id_aspek: idAspekNonTeknisArr[i] || null,
                 id_penilaian: idPenilaianNonTeknisArr[i] || null,
                 nama: a,
-                nilai: nilaiNonTeknisArr[i] || 0,
+                nilai: nilaiNonTeknisArr[i] ?? null,
             }));
 
 
@@ -176,7 +176,6 @@ function PenilaianPic() {
             (p.aspekNonTeknis?.length || 0) === 0;
         return belumAdaAspek && p.instansi === selectedInstansi;
         }
-
     });
 
     const handleSave = async () => {

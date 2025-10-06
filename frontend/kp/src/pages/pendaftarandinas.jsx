@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BsArrowUpCircle } from "react-icons/bs";
 import { ImEye, ImEyeBlocked } from "react-icons/im";
 import { useNavigate } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa"; // ikon panah
+import { FaArrowLeft } from "react-icons/fa"; 
 import axios from 'axios'
 
 import "../styles/pendaftaran.css";
@@ -20,7 +20,7 @@ export default function PendaftaranDinas() {
     const [dokumenLabels, setDokumenLabels] = useState(["Dokumen:"]);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [kategoriPertama, setKategoriPertama] = useState("");
+    // const [kategoriPertama, setKategoriPertama] = useState("individu");
     const [showScrollTop, setShowScrollTop] = useState(false);
     const [formData, setFormData] = useState([
         {
@@ -32,18 +32,25 @@ export default function PendaftaranDinas() {
             nomor_identitas: "",
             tanggal_mulai_magang: "",
             tanggal_selesai_magang: "",
-            jenjang: "",
-            kategori: "",
+            jenjang: "dinas",
+            kategori: "individu",
             foto: null,
             dokumen: [],
         }
     ])
     const [kuota, setKuota] = useState(0);
 
+    const fetchKuotaTersisa = async()=>{
+        try{
+            let data = await axios.get("http://localhost:3000/peserta/kuota")
+            setKuota(data.data.sisaKuota)
+        }catch(error){
+            console.error(error)
+            alert("gagal fetch data")
+        }
+    }
     useEffect(()=>{
-        axios.get("http://localhost:3000/peserta/kuota")
-        .then(res=> setKuota(res.data.sisaKuota))
-        .catch(err=>console.error(err))
+        fetchKuotaTersisa()
     }, [])
     // Scroll event untuk tombol scroll top
     useEffect(() => {
@@ -51,30 +58,6 @@ export default function PendaftaranDinas() {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
-
-    const addSection = () => {
-        if(kategoriPertama === "kelompok" && sections.length < kuota){
-            setSections((prev) => [...prev, prev.length]);
-            setDokumenLabels((prev) => [...prev, "Dokumen:"]);
-            setFormData((prev)=>[...prev, {
-                email: "",
-                password: "",
-                confirmPassword: "",
-                nama: "",
-                instansi: prev[0].instansi,
-                nomor_identitas: "",
-                tanggal_mulai_magang: prev[0].tanggal_mulai_magang,
-                tanggal_selesai_magang: prev[0].tanggal_selesai_magang,
-                jenjang: "",
-                kategori: "kelompok",
-                foto: null,
-                dokumen: [...prev[0].dokumen]
-            }])
-            setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }), 100);
-        }else{
-            alert(`Kuota tersisa ${kuota - sections.length}. Tidak bisa menambah anggota lagi.`);
-        }
-    };
 
     const removeSection = (index) => {
         setSections((prev) => prev.filter((_, idx) => idx !== index));
@@ -90,7 +73,7 @@ export default function PendaftaranDinas() {
         const validFiles = files.filter(file => allowedTypes.includes(file.type));
         if (validFiles.length !== files.length) {
             alert("Hanya boleh upload file PDF dan Document!");
-            e.target.value = ""; // reset input file agar bisa pilih ulang
+            e.target.value = "";
             return;
         }
         setFormData((prev) => {
@@ -141,75 +124,32 @@ export default function PendaftaranDinas() {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        console.log("Submit terpanggil!");
-        if (!kategoriPertama) {
-            alert("Pilih kategori pendaftaran terlebih dahulu!");
-            return;
-        }
-
-        if (kategoriPertama === "kelompok" && formData.length < 2) {
-            alert("Kelompok harus memiliki minimal 2 anggota.");
-            return;
-        }
-        if (kategoriPertama === "kelompok" && sections.length > kuota) {
-            alert("Kuota sudah penuh, tidak bisa mendaftar.");
-            return;
-        }
         for (let i = 0; i < formData.length; i++) {
             if (formData[i].password !== formData[i].confirmPassword) {
-            alert(`Password dan konfirmasi password tidak sama untuk peserta ${i + 1}`);
+            alert(`Password dan konfirmasi password tidak sama`);
             return;
             }
         }
-        if(kategoriPertama === "kelompok"){
-            for(let i=0; i<formData.length; i++){
-                if(!formData[i].foto){
-                    alert(`Foto untuk anggota ${i + 1} wajib diunggah`);
-                    return;
-                }
-                if (!formData[i].dokumen || formData[i].dokumen.length === 0) {
-                    alert(`Dokumen pendukung untuk anggota ${i + 1} wajib diunggah`);
-                    return;
-                }
-            }
+        const formDataToSend = new FormData();
+        const user = { ...formData[0], kategori: "individu" };
+        for (let key of ["email", "password", "nama", "instansi", "nomor_identitas", "tanggal_mulai_magang", "tanggal_selesai_magang", "jenjang"]) {
+            formDataToSend.append(key, user[key]);
         }
 
-        const formDataToSend = new FormData();
-        formDataToSend.append("kategori", kategoriPertama);
-
-        if (kategoriPertama === 'individu') {
-            const user = { ...formData[0], kategori: "individu" };
-            for (let key of ["email", "password", "nama", "instansi", "nomor_identitas", "tanggal_mulai_magang", "tanggal_selesai_magang", "jenjang"]) {
-                formDataToSend.append(key, user[key]);
-            }
-
-            if (user.foto) formDataToSend.append('foto_diri', user.foto);
-            if (user.dokumen.length > 0) {
-                user.dokumen.forEach(file => formDataToSend.append('dokumen_pendukung', file));
-            }
-        } else { 
-            formData.forEach((user, index) => {
-                for (let key of ["email", "password", "nama", "instansi", "nomor_identitas", "tanggal_mulai_magang", "tanggal_selesai_magang", "jenjang"]) {
-                    formDataToSend.append(`users[${index}][${key}]`, user[key]);
-                }
-
-                if (user.foto) formDataToSend.append(`foto_diri_${index}`, user.foto);
-                if (user.dokumen) {
-                    user.dokumen.forEach(file => formDataToSend.append(`dokumen_pendukung_${index}`, file));
-                }
-                 console.log("Isi dokumen untuk user", index, user.dokumen);
-                 console.log("Isi foto untuk user", index, user.foto);
-            });
-
+        if (user.foto) formDataToSend.append('foto_diri', user.foto);
+        if (user.dokumen.length > 0) {
+            user.dokumen.forEach(file => formDataToSend.append('dokumen_pendukung', file));
         }
         
         for (let pair of formDataToSend.entries()) {
             console.log(pair[0], pair[1]);
         }
         try {
-            const response = await axios.post("http://localhost:3000/peserta/register", formDataToSend) 
+            const response = await axios.post("http://localhost:3000/peserta/register-dinas", formDataToSend) 
             console.log("Response:", response.data);
             alert(response.data.message);
+
+           await fetchKuotaTersisa()
 
             setFormData([{
                 email: "",
@@ -220,14 +160,12 @@ export default function PendaftaranDinas() {
                 nomor_identitas: "",
                 tanggal_mulai_magang: "",
                 tanggal_selesai_magang: "",
-                jenjang: "",
-                kategori: "",
+                jenjang: "dinas",
+                kategori: "individu",
                 foto: null,
                 dokumen: [],
             }]);
             setSections([0]);
-            setKategoriPertama("");
-
             document.querySelectorAll('input[type="file"]').forEach(input => {
                 input.value = "";
             });
@@ -300,40 +238,11 @@ export default function PendaftaranDinas() {
                             <input type="file" onChange={(e) => handleFotoChange(index, e)} />
                         </label>
                         <div className="samping-foto">
-                            <select value={formData[index].jenjang} onChange={(e)=>handleChange(index, "jenjang", e.target.value)}>
-                                <option value="">Pilih Jenjang</option>
-                                <option value="siswa">Siswa</option>
+                            <select value={formData[index].jenjang} onChange={(e)=>handleChange(index, "jenjang", e.target.value)} disabled>
                                 <option value="dinas">Dinas</option>
                             </select>
-                            <select
-                                value={index === 0 ? kategoriPertama : "kelompok"}
-                                disabled={index !== 0}
-                                onChange={(e) => {
-                                    if (index === 0) {
-                                        const Selectvalue = e.target.value
-                                        setKategoriPertama(e.target.value);
-                                        
-                                        setFormData((prev)=>{
-                                            const updated = [...prev]
-                                            updated[0].kategori = Selectvalue;
-
-                                            if(Selectvalue === "individu"){
-                                                return [updated[0]];
-                                            }else{
-                                                    return updated.map((u, idx) => ({
-                                                    ...u,
-                                                    kategori: idx === 0 ? Selectvalue : "kelompok"
-                                                }));
-                                            }
-                                        })
-                                        if (Selectvalue === "individu") {
-                                            setSections([0]);
-                                        }
-                                    }
-                                }}>
-                                <option value="">Pilih Kategori</option>
+                            <select disabled>
                                 <option value="individu">Individu</option>
-                                <option value="kelompok">Kelompok</option>
                             </select>
                         </div>
                     </div>
