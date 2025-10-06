@@ -141,7 +141,9 @@
       font-size: 15.5px;
     }
     .ttd .ttd-image {
-      display: block;
+      display: flex;
+      align-items: center; 
+      justify-content: flex-start;
       height: 105px;
     }
 
