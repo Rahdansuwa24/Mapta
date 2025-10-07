@@ -32,7 +32,7 @@ export default function PendaftaranMagang() {
             nomor_identitas: "",
             tanggal_mulai_magang: "",
             tanggal_selesai_magang: "",
-            jenjang: "",
+            jenjang: "siswa",
             kategori: "",
             foto: null,
             dokumen: [],
@@ -65,7 +65,7 @@ export default function PendaftaranMagang() {
                 nomor_identitas: "",
                 tanggal_mulai_magang: prev[0].tanggal_mulai_magang,
                 tanggal_selesai_magang: prev[0].tanggal_selesai_magang,
-                jenjang: "",
+                jenjang: "siswa",
                 kategori: "kelompok",
                 foto: null,
                 dokumen: [...prev[0].dokumen]
@@ -172,6 +172,13 @@ export default function PendaftaranMagang() {
                     return;
                 }
             }
+
+            const emails = formData.map(user=> user.email.trim().toLowerCase())
+            const duplicatedEmails= emails.filter((email, index)=>emails.indexOf(email)!==index)
+            if (duplicatedEmails.length > 0) {
+                alert(`Terdapat email yang sama dalam kelompok: ${duplicatedEmails.join(", ")}`);
+                return;
+            }
         }
 
         const formDataToSend = new FormData();
@@ -220,7 +227,7 @@ export default function PendaftaranMagang() {
                 nomor_identitas: "",
                 tanggal_mulai_magang: "",
                 tanggal_selesai_magang: "",
-                jenjang: "",
+                jenjang: "siswa",
                 kategori: "",
                 foto: null,
                 dokumen: [],
@@ -302,10 +309,8 @@ export default function PendaftaranMagang() {
                             <input type="file" onChange={(e) => handleFotoChange(index, e)} />
                         </label>
                         <div className="samping-foto">
-                            <select value={formData[index].jenjang} onChange={(e)=>handleChange(index, "jenjang", e.target.value)}>
-                                <option value="">Pilih Jenjang</option>
+                            <select value={formData[index].jenjang} onChange={(e)=>handleChange(index, "jenjang", e.target.value)} disabled>
                                 <option value="siswa">Siswa</option>
-                                <option value="dinas">Dinas</option>
                             </select>
                             <select
                                 value={index === 0 ? kategoriPertama : "kelompok"}
