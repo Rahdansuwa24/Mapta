@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"; // untuk navigasi
 import "../styles/navbar-adm.css";
 import {jwtDecode} from "jwt-decode";
 
-export default function NavbarAdm() {
+export default function NavbarAdm({ onSearch }) {
     const navigate = useNavigate();
 
     const [users, setUsers] = useState({email: "", user_level: ""})
@@ -93,8 +93,12 @@ export default function NavbarAdm() {
             )}
             
             <div className="search-bar">
-            <input type="text" placeholder="Search" />
-            <IoSearch />
+                <input
+                    type="text"
+                    placeholder="Search nama atau instansi..."
+                    onChange={(e) => onSearch(e.target.value)}
+                />
+                <IoSearch />
             </div>
 
             {/* Profile Dummy */}

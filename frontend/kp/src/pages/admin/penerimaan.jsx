@@ -56,6 +56,8 @@ function Diterima() {
         }
     }
 
+    const [searchTerm, setSearchTerm] = useState("");
+
     const [showModal, setShowModal] = useState(false);
     const [uploadedStatus, setUploadedStatus] = useState({});
     const [selectedPeserta, setSelectedPeserta] = useState(null);
@@ -130,15 +132,23 @@ function Diterima() {
         }
     }
 
-    const pesertaFiltered = filterInstansi
-        ? PesertaDiterima.filter((p) => p.instansi === filterInstansi)
-        : PesertaDiterima;
+    // ini baru penggabungan
+const filteredPeserta = PesertaDiterima.filter((p) => {
+  const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
+  const nama = p.nama ? p.nama.toLowerCase() : "";
+  const instansi = p.instansi ? p.instansi.toLowerCase() : "";
+  const matchSearch =
+    nama.includes(searchTerm.toLowerCase()) ||
+    instansi.includes(searchTerm.toLowerCase());
+  return matchInstansi && matchSearch;
+});
 
     const instansiList = [
         ...new Set(PesertaDiterima.map((p) => p.instansi))
     ];
 
-    const pesertaPerInstansi = pesertaFiltered.reduce((acc, peserta) => {
+    // filteredpeserta dipanggil
+    const pesertaPerInstansi = filteredPeserta.reduce((acc, peserta) => {
         if (!acc[peserta.instansi]) acc[peserta.instansi] = [];
         acc[peserta.instansi].push(peserta);
         return acc;
@@ -163,7 +173,7 @@ function Diterima() {
         <div className="app-layout">
             <SidebarAdmTm />
             <div className="content-area">
-                <NavbarAdmTm />
+                <NavbarAdmTm onSearch={setSearchTerm} /> 
 
                 <section className="main">
                     <div className="submain">
