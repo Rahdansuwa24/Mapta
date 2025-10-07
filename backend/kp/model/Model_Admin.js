@@ -10,6 +10,22 @@ class Model_Admin{
             throw(error)
         }
     }
+    static async maksimalPeserta(){
+        try{
+            const [result] = await db.query(`select total from total`)
+            return result
+        }catch(error){
+            throw(error)
+        }
+    }
+    static async updateMaksimalPeserta(data){
+        try{
+            const [result] = await db.query(`update total set ? where id_total = 1`, [data])
+            return result
+        }catch(error){
+            throw(error)
+        }
+    }
     static async getDataCalonPesertaDiterima(){
         try{
             const [result] = await db.query(`SELECT distinct u.*, p.*, k.id_kelompok FROM users u LEFT JOIN peserta_magang p ON u.id_users = p.id_users

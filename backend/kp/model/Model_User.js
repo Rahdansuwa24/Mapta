@@ -33,7 +33,6 @@ class Model_User{
             return { status: 500, message: 'Server error', error: err.message };
         }
     }
-
     static async registerAkun(email, password, user_level) {
         try {
             const hashedPassword = await bcrypt.hash(password, 10);
@@ -43,9 +42,19 @@ class Model_User{
                 throw(error);
             }
     }
-
     static async updateAkunPIC(id, email, password){
         try{
+            if(!password || password.trim()===''){
+                const [result] = await db.query(
+                    `update users set email = ? where id_users = ?`,
+                    [email, id]
+                );
+                return result;
+            }
+            const validatePass = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+            if (!validatePass.test(password)) {
+                    throw new Error('Password harus mengandung minimal 1 huruf besar, 1 angka, dan panjang minimal 8 karakter');
+            }
             const hashedPassword = await bcrypt.hash(password, 10);
             const [result] = await db.query(`update users set email = ?, password = ? where id_users = ?`, [email, hashedPassword, id])
             return result

@@ -13,6 +13,27 @@ router.get('/', verifyToken('admin'), async(req, res)=>{
         res.status(500).json({ status: false, error: err.message });
     }
 })
+
+router.get('/max-peserta', verifyToken('admin'), async(req, res)=>{
+    try{
+        const data = await Model_Admin.maksimalPeserta()
+        const total = data[0].total
+        res.status(200).json({total})
+    }catch(err){
+        res.status(500).json({ status: false, error: err.message });
+    }
+})
+
+router.patch('/update-max-peserta', verifyToken('admin'), async(req, res)=>{
+    try{
+        const {total} = req.body
+        await Model_Admin.updateMaksimalPeserta({total})
+        res.status(200).json({total})
+    }catch(err){
+        res.status(500).json({ status: false, error: err.message });
+    }
+})
+
 router.get('/detail/:id', verifyToken('admin'), async(req, res)=>{
     try{
         let id = req.params.id

@@ -57,21 +57,21 @@ router.patch('/update/(:id)', verifyToken('admin'),async(req, res)=>{
         let {bidang, email, password} = req.body
         console.log(req.body)
         if(!bidang || !email){
-             return res.status(400).json({ message: `pastikan field tidak ada yang kosong` });
+             return res.status(400).json({ message: `pastikan field bidang dan email tidak ada yang kosong` });
         }
-        const validatePass = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
-        if (!validatePass.test(password)) {
-            return res.status(400).json({
-                    message: 'Password harus mengandung minimal 1 huruf besar, 1 angka, dan panjang minimal 8 karakter'
-                });
-        }
+       
         let rows = await Model_Admin.getIdUsersForPIC(id)
-        await Model_User.updateAkunPIC(rows[0].id_users, email, password);
+        const id_users = rows[0].id_users
+        if(!id_users){
+            return res.status(400).json({message: "id_users tidak dapat ditemukan, silahkan login ulang"})
+        }
+        await Model_User.updateAkunPIC(id_users, email, password);
         let data = {
             bidang
         }
         await Model_Admin.updatePIC(id, data)
         res.status(200).json({message: 'data berhasil diperbarui'})
+
     }catch(err){
         res.status(500).json({ status: false, error: err.message });
     }
