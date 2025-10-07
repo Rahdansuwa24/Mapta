@@ -28,6 +28,7 @@ function Dashboard() {
     
     useEffect(()=>{
         fetchPeserta()
+        getKuota()
     }, [])   
 
 
@@ -39,8 +40,23 @@ function Dashboard() {
                         Authorization: `Bearer ${token}`
                     }
                 })
-                console.log(res.data.data)
                 setCalonPeserta(res.data.data)
+            }catch(error){
+                setError("gagal mengambil data")
+                
+            }finally{
+                setLoading(false)
+            }
+    }
+    const getKuota = async() =>{
+            const token = localStorage.getItem("token");
+            try{
+                const res = await axios.get("http://localhost:3000/admin/dasbor/max-peserta",{
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                setKuota(res.data.total)
             }catch(error){
                 setError("gagal mengambil data")
                 
@@ -55,7 +71,7 @@ function Dashboard() {
 
     // state untuk popup kuota
   const [showKuotaModal, setShowKuotaModal] = useState(false);
-  const [kuota, setKuota] = useState(50);
+  const [kuota, setKuota] = useState(null);
 
     const handleOpenModal = (peserta) => {
         setSelectedPeserta(peserta);
@@ -99,9 +115,22 @@ function Dashboard() {
   const incrementKuota = () => setKuota((prev) => prev + 1);
   const decrementKuota = () => setKuota((prev) => (prev > 0 ? prev - 1 : 0));
   const handleInputKuota = (e) => setKuota(Number(e.target.value));
-  const handleSaveKuota = () => {
+
+  const handleSaveKuota = async() => {
+    const token = localStorage.getItem("token")
+    try{
+        await axios.patch("http://localhost:3000/admin/dasbor/update-max-peserta", {
+            total: kuota
+        }, {
+            headers: { Authorization: `Bearer ${token}` },
+        }
+    )
     alert("Nilai kuota disimpan: " + kuota);
     setShowKuotaModal(false);
+    }catch(error){
+        console.log(error)
+        alert("gagal memperbarui data")
+    }
   };
 
     return (
