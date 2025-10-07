@@ -95,7 +95,7 @@ export default function NavbarAdm({ onSearch }) {
             <div className="search-bar">
                 <input
                     type="text"
-                    placeholder="Search nama atau instansi..."
+                    placeholder="cari nama atau instansi"
                     onChange={(e) => onSearch(e.target.value)}
                 />
                 <IoSearch />

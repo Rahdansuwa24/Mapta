@@ -58,6 +58,8 @@ function Ditolak() {
         }
     }
 
+    const [searchTerm, setSearchTerm] = useState("");
+
     const [showModal, setShowModal] = useState(false);
     const [uploadedStatus, setUploadedStatus] = useState({});
     const [selectedPeserta, setSelectedPeserta] = useState(null);
@@ -157,9 +159,15 @@ function Ditolak() {
         }
     }
 
-    const pesertaFiltered = filterInstansi
-        ? PesertaDitolak.filter((p) => p.instansi === filterInstansi)
-        : PesertaDitolak;
+  const pesertaFiltered = PesertaDitolak.filter((p) => {
+    const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
+    const nama = p.nama ? p.nama.toLowerCase() : "";
+    const instansi = p.instansi ? p.instansi.toLowerCase() : "";
+    const matchSearch =
+      nama.includes(searchTerm.toLowerCase()) ||
+      instansi.includes(searchTerm.toLowerCase());
+    return matchInstansi && matchSearch;
+  });
 
     const instansiList = [
         ...new Set(PesertaDitolak.map((p) => p.instansi))
@@ -190,7 +198,7 @@ function Ditolak() {
         <div className="app-layout">
             <SidebarAdmTl />
             <div className="content-area">
-                <NavbarAdmTl />
+                <NavbarAdmTl onSearch={setSearchTerm}/>
 
                 <section className="main">
                     <div className="submain">
