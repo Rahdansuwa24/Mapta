@@ -43,6 +43,14 @@ class Model_Peserta{
                 throw(error);
             }
     }
+    static async getSertifikatPeserta(id) {
+            try {
+                const [result] = await db.query(`select sertifikat from peserta_magang where id_users = ?`, [id]);
+                return result
+            } catch (error) {
+                throw(error);
+            }
+    }
     static async getNilaiPeserta(id) {
             try {
                 const [result] = await db.query(`SELECT pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri, pi.bidang,
