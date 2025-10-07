@@ -10,10 +10,25 @@ import axios from 'axios'
 
 import "../../styles/dashboard.css";
 
+const highlightText = (text, highlight) => {
+  if (!highlight) return text;
+  const regex = new RegExp(`(${highlight})`, "gi");
+  const parts = text.split(regex);
+  return parts.map((part, i) =>
+    regex.test(part) ? (
+      <span key={i} style={{ backgroundColor: "#AFD3F6" }}>{part}</span>
+    ) : (
+      part
+    )
+  );
+};
+
 function AkunPIC() {
     useEffect(() => {
         document.title = "Admin MAPTA";
     }, []);
+
+    const [searchTerm, setSearchTerm] = useState("");
 
     const [showModal, setShowModal] = useState(false);
     const [departemen, setDepartemen] = useState("");
@@ -26,6 +41,11 @@ function AkunPIC() {
         fetchDataAkun()
     }, [])
 
+    const filteredAkun = akunList.filter(
+  (akun) =>
+    akun.bidang.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    akun.email.toLowerCase().includes(searchTerm.toLowerCase())
+);
 
     const fetchDataAkun = async()=>{
             const token = localStorage.getItem("token")
@@ -139,7 +159,7 @@ function AkunPIC() {
         <div className="app-layout">
         <SidebarAdmTm />
         <div className="content-area">
-            <NavbarAdmTm />
+            <NavbarAdmTm onSearch={setSearchTerm}/>
 
             <section className="main">
             <div className="submain">
@@ -176,11 +196,11 @@ function AkunPIC() {
                     </tr>
                     </thead>
                     <tbody>
-                    {akunList.map((akun, idx) => (
+                    {filteredAkun.map((akun, idx) => (
                         <tr key={idx}>
                         <td>{idx + 1}</td>
-                        <td>{akun.bidang}</td>
-                        <td>{akun.email}</td>
+                        <td>{highlightText(akun.bidang, searchTerm)}</td>
+                        <td>{highlightText(akun.email, searchTerm)}</td>
                         {/* <td>{akun.password}</td> */}
                         <td className="aksi-cell">
                             <div className="aksi-wrapper">

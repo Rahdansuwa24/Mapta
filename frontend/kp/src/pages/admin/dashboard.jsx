@@ -68,27 +68,32 @@ function Dashboard() {
     const [selectedPeserta, setSelectedPeserta] = useState(null);
     const [filterInstansi, setFilterInstansi] = useState("");
     const [openInstansi, setOpenInstansi] = useState({}); // state untuk toggle tabel per instansi
+    const [showKuotaModal, setShowKuotaModal] = useState(false);
+    const [kuota, setKuota] = useState(null);
 
-    // state untuk popup kuota
-  const [showKuotaModal, setShowKuotaModal] = useState(false);
-  const [kuota, setKuota] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
     const handleOpenModal = (peserta) => {
         setSelectedPeserta(peserta);
         setShowModal(true);
     };
 
-    // Filter peserta jika dropdown dipilih
-    const pesertaFiltered = filterInstansi
-        ? calonPeserta.filter((p) => p.instansi === filterInstansi)
-        : calonPeserta;
+const pesertaFiltered = calonPeserta.filter((p) => {
+  const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
+  const nama = p.nama ? p.nama.toLowerCase() : "";
+  const instansi = p.instansi ? p.instansi.toLowerCase() : "";
+  const matchSearch =
+    nama.includes(searchTerm.toLowerCase()) ||
+    instansi.includes(searchTerm.toLowerCase());
 
-    // ambil daftar instansi unik
+  return matchInstansi && matchSearch;
+});
+
     const instansiList = [
     ...new Set(calonPeserta.map((p) => p.instansi))
     ];
 
-    // Kelompokkan peserta berdasarkan instansi
+    // mengelompokan peserta berdasarkan instansi
     const pesertaPerInstansi = pesertaFiltered.reduce((acc, peserta) => {
         if (!acc[peserta.instansi]) acc[peserta.instansi] = [];
         acc[peserta.instansi].push(peserta);
@@ -137,7 +142,7 @@ function Dashboard() {
         <div className="app-layout">
             <SidebarAdm />
             <div className="content-area">
-                <NavbarAdm />
+                <NavbarAdm onSearch={setSearchTerm}/>
 
                 <section className="main">
                     <div className="submain">

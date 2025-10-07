@@ -15,6 +15,19 @@ import "../../styles/dashboard.css";
 import profil1 from "../../assets/images/profil1.jpg";
 import profil2 from "../../assets/images/profil2.jpeg";
 
+const highlightText = (text, highlight) => {
+    if (!highlight) return text;
+    const regex = new RegExp(`(${highlight})`, "gi");
+    const parts = text.split(regex);
+    return parts.map((part, i) =>
+        regex.test(part) ? (
+            <span key={i} style={{ backgroundColor: "#AFD3F6" }}>{part}</span>
+        ) : (
+            part
+        )
+    );
+};
+
 function Sertifikat() {
     useEffect(() => {
         document.title = "Admin MAPTA";
@@ -47,6 +60,9 @@ function Sertifikat() {
         }
     }
     
+
+    const [searchTerm, setSearchTerm] = useState("");
+
     const [fileUploads, setFileUploads] = useState({});
     const [uploadedStatus, setUploadedStatus] = useState({});
     const [showModal, setShowModal] = useState(false);
@@ -103,6 +119,11 @@ function Sertifikat() {
         setShowModal(true);
     };
 
+    const filteredPeserta = dataPeserta.filter((p) =>
+    p.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    p.instansi.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
     // const handleOpenNilai = (peserta) => {
     //     setSelectedPeserta(peserta);
     //     setShowNilai(true);
@@ -112,7 +133,7 @@ function Sertifikat() {
         <div className="app-layout">
         <SidebarAdmSf />
         <div className="content-area">
-            <NavbarAdmSf />
+            <NavbarAdmSf onSearch={setSearchTerm}/>
 
             <section className="main">
             <div className="submain">
@@ -136,14 +157,14 @@ function Sertifikat() {
                     </tr>
                 </thead>
                 <tbody>
-                    {dataPeserta.map((peserta, idx) => (
+                    {filteredPeserta.map((peserta, idx) => (
                     <tr key={peserta.id_peserta_magang}>
                         <td>{idx + 1}</td>
                         <td className="nama-cell">
                         <img src={`http://localhost:3000/static/images/${peserta.foto_diri}`} alt="Foto Profil" />
-                        <span>{peserta.nama}</span>
+                        <span>{highlightText(peserta.nama, searchTerm)}</span>
                         </td>
-                        <td>{peserta.instansi}</td>
+                        <td>{highlightText(peserta.instansi, searchTerm)}</td>
                         <td>{dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")}</td>
                         <td>{dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}</td>
                         <td>

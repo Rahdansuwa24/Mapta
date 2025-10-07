@@ -26,6 +26,8 @@ function Jadwal() {
         fetchDataPeserta()
     }, []);
 
+    const [searchTerm, setSearchTerm] = useState("");
+
     const fetchDataJadwal = async()=>{
         const token = localStorage.getItem("token")
         try{
@@ -194,10 +196,17 @@ function Jadwal() {
         "Pembinaan dan Pengawasan Kearsipan",
     ];
 
-    // Filter jadwal berdasarkan departemen
-    const jadwalFiltered = filterDepartemen
-        ? jadwalData.filter((j) => j.bidang === filterDepartemen)
-        : jadwalData;
+// Filter jadwal berdasarkan departemen dan kata kunci pencarian
+const jadwalFiltered = jadwalData.filter((j) => {
+    const matchDepartemen = filterDepartemen ? j.bidang === filterDepartemen : true;
+
+    const nama = j.nama ? j.nama.toLowerCase() : "";
+    const instansi = j.instansi ? j.instansi.toLowerCase() : "";
+    const keyword = searchTerm.toLowerCase();
+
+    const matchSearch = nama.includes(keyword) || instansi.includes(keyword);
+    return matchDepartemen && matchSearch;
+});
 
     // List departemen unik dari jadwal
     const departemenList = [...new Set(jadwalData.map((j) => j.bidang))];
@@ -237,7 +246,7 @@ function Jadwal() {
         <div className="app-layout">
         <SidebarAdmJd />
         <div className="content-area">
-            <NavbarAdmJd />
+            <NavbarAdmJd onSearch={setSearchTerm}/>
 
             <section className="main">
                 <div className="submain">

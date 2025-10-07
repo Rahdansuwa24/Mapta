@@ -91,6 +91,8 @@ function SelesaiMagang() {
         },
     ];
 
+    const [searchTerm, setSearchTerm] = useState("");
+
     const [showModal, setShowModal] = useState(false);
     const [selectedPeserta, setSelectedPeserta] = useState(null);
     const [filterInstansi, setFilterInstansi] = useState("");
@@ -101,9 +103,15 @@ function SelesaiMagang() {
         setShowModal(true);
     };
 
-    const pesertaFiltered = filterInstansi
-        ? pesertaDummy.filter((p) => p.instansi === filterInstansi)
-        : pesertaDummy;
+const pesertaFiltered = pesertaDummy.filter((p) => {
+  const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
+  const nama = p.nama ? p.nama.toLowerCase() : "";
+  const instansi = p.instansi ? p.instansi.toLowerCase() : "";
+  const keyword = searchTerm.toLowerCase();
+
+  const matchSearch = nama.includes(keyword) || instansi.includes(keyword);
+  return matchInstansi && matchSearch;
+});
 
     const instansiList = [...new Set(pesertaDummy.map((p) => p.instansi))];
 
@@ -132,7 +140,7 @@ function SelesaiMagang() {
         <div className="app-layout">
         <SidebarAdm />
         <div className="content-area">
-            <NavbarAdm />
+            <NavbarAdm onSearch={setSearchTerm}/>
             <section className="main">
             <div className="submain">
                 <p className="judul-submain">Daftar Peserta Selesai Magang</p>
