@@ -49,13 +49,13 @@ function DataPenilaianAspek() {
                         id_aspek: idAspekTeknisArr[i] || null,
                         id_penilaian: idPenilaianTeknisArr[i] || null,
                         nama: a,
-                        nilai: nilaiTeknisArr[i] || 0
+                        nilai: nilaiTeknisArr[i] ?? null
                     }))
                     const aspekNonTeknis = aspekNonTeknisArr.map((a, i)=>({
                         id_aspek: idAspekNonTeknisArr[i] || null,
                         id_penilaian: idPenilaianNonTeknisArr[i] || null,
                         nama: a,
-                        nilai: nilaiNonTeknisArr[i] || 0
+                        nilai: nilaiNonTeknisArr[i] ?? null
                     }))
 
                     return{
@@ -79,6 +79,7 @@ function DataPenilaianAspek() {
     const [nilaiAspek, setNilaiAspek] = useState({});
     const [dataNilaiPeserta, setDataNilaPeserta] = useState([])
     const [isEdit, setIsEdit] = useState(false);
+    const [departemenList, setDepartemenList] = useState([])
 
     const toggleInstansi = (instansi) => {
         setOpenInstansi((prev) => ({
@@ -136,14 +137,13 @@ function DataPenilaianAspek() {
         const token = localStorage.getItem("token");
 
         try{
-
             const aspekSemua = [
             ...aspekTeknisList.map(a => {
                     const key = a.id_penilaian ? a.id_penilaian : `${a.id_aspek}-${selectedPeserta.id_peserta_magang}`;
                     return {
                         id_aspek: a.id_aspek,
                         id_penilaian: a.id_penilaian || null,
-                        nilai: nilaiAspek[key] !== undefined ? parseFloat(nilaiAspek[key]) : null,
+                       nilai: nilaiAspek[key] !== undefined ? parseFloat(nilaiAspek[key]) : null,
                     };
                 }),
                 ...aspekNonTeknisList.map(a => {
@@ -161,7 +161,7 @@ function DataPenilaianAspek() {
                     if (a.id_penilaian) {
                         return axios.patch(
                             `http://localhost:3000/admin/penilaian/update/${a.id_penilaian}`,
-                            { penilaian: a.nilai },
+                            { penilaian: a.nilai ?? null },
                             { headers: { Authorization: `Bearer ${token}` } }
                         );
                     }
@@ -181,6 +181,10 @@ function DataPenilaianAspek() {
         setSelectedInstansi("");
         setIsEdit(false);
     };
+
+    // const handleDeleteAspekDepartemen = async()=>{
+
+    // }
     const hitungIndeksHuruf = (nilai) => {
         if (!nilai && nilai !== 0) return "-";
         const n = parseFloat(nilai);

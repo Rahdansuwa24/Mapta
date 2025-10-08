@@ -250,30 +250,28 @@ static async storeAspek(data){
         try{
             const [result] = await db.query(`SELECT pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri,
 
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.penilaian IS NOT NULL 
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' 
                       THEN p.id_penilaian END SEPARATOR ', ') AS id_penilaian_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.penilaian IS NOT NULL 
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis'
                             THEN a.id_aspek END SEPARATOR ', ') AS id_aspek_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.penilaian IS NOT NULL 
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' 
                             THEN a.subjek END SEPARATOR ', ') AS aspek_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.penilaian IS NOT NULL 
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis'
                             THEN p.penilaian END SEPARATOR ', ') AS nilai_teknis,
 
-            -- Non Teknis
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.penilaian IS NOT NULL 
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
                             THEN p.id_penilaian END SEPARATOR ', ') AS id_penilaian_non_teknis, 
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.penilaian IS NOT NULL 
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
                             THEN a.subjek END SEPARATOR ', ') AS aspek_non_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.penilaian IS NOT NULL 
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
                             THEN p.penilaian END SEPARATOR ', ') AS nilai_non_teknis, 
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.penilaian IS NOT NULL 
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
                             THEN a.id_aspek END SEPARATOR ', ') AS id_aspek_non_teknis
-            
             FROM peserta_magang AS pe
             LEFT JOIN penilaian AS p ON pe.id_peserta_magang = p.id_peserta_magang
             LEFT JOIN aspek AS a ON p.id_aspek = a.id_aspek
             GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri
-            HAVING COUNT(p.penilaian) > 0;
+            HAVING COUNT(p.id_penilaian) > 0;
             `)
             return result
         }catch(error){
@@ -282,6 +280,14 @@ static async storeAspek(data){
     }
 
     static async updateNilai(id, penilaian){
+        try{
+            const [result] = await db.query('update penilaian set ? where id_penilaian = ?', [penilaian, id])
+            return result
+        }catch(err){
+            throw err
+        }
+    }
+    static async deleteNilai(id, penilaian){
         try{
             const [result] = await db.query('update penilaian set ? where id_penilaian = ?', [penilaian, id])
             return result

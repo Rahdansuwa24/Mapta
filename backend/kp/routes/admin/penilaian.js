@@ -18,6 +18,9 @@ router.patch('/update/(:id)', verifyToken("admin"),async(req, res)=>{
     try{
         let id = req.params.id
         let {penilaian} = req.body
+        if (penilaian === "" || penilaian === undefined) {
+            penilaian = null;
+        }
         console.log(penilaian)
         if(penilaian === undefined){
             return res.status(400).json({ message: "Nilai harus diisi" });
