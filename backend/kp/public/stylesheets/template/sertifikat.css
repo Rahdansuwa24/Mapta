@@ -15,13 +15,24 @@
       margin: 0 auto;
       padding: 18mm;
       position: relative;
-      background: url('/assets-certif/background.png') no-repeat center center;
+      /* background: url('/assets-certif/background-sertif.png') no-repeat center center; */
       background-size: cover;
       box-sizing: border-box;
       page-break-after: always; /* penting agar pindah halaman */
     }
     .sertifikat:last-child {
       page-break-after: auto;
+    }
+    /* Halaman 1 (tetap pakai background baru) */
+    .sertifikat:nth-of-type(1) {
+      background: url('/assets-certif/background-sertif.png') no-repeat center center;
+      background-size: cover;
+    }
+
+    /* Halaman 2 (gunakan background lama) */
+    .sertifikat:nth-of-type(2) {
+      background: url('/assets-certif/background.png') no-repeat center center;
+      background-size: cover;
     }
 
     /* logo kanan atas */
@@ -120,7 +131,7 @@
       justify-self: center;
       margin-top: 15px;
       padding: 0 30mm;
-      gap: 50px;
+      gap: 55px;
     }
     .piagam {
       width: 150px;
