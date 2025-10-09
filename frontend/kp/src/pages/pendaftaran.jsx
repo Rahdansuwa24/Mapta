@@ -40,10 +40,17 @@ export default function PendaftaranMagang() {
     ])
     const [kuota, setKuota] = useState(0);
 
-    useEffect(()=>{
-        axios.get("http://localhost:3000/peserta/kuota")
-        .then(res=> setKuota(res.data.sisaKuota))
-        .catch(err=>console.error(err))
+   const fetchKuotaTersisa = async()=>{
+        try{
+            let data = await axios.get("http://localhost:3000/peserta/kuota")
+            setKuota(data.data.sisaKuota)
+        }catch(error){
+            console.error(error)
+            alert("gagal fetch data")
+        }
+    }
+     useEffect(()=>{
+            fetchKuotaTersisa()
     }, [])
     // Scroll event untuk tombol scroll top
     useEffect(() => {
@@ -72,7 +79,7 @@ export default function PendaftaranMagang() {
             }])
             setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }), 100);
         }else{
-            alert(`Kuota tersisa ${kuota - sections.length}. Tidak bisa menambah anggota lagi.`);
+            alert(`Kuota tersisa ${kuota}. Tidak bisa menambah anggota lagi.`);
         }
     };
 
@@ -217,7 +224,7 @@ export default function PendaftaranMagang() {
             const response = await axios.post("http://localhost:3000/peserta/register", formDataToSend) 
             console.log("Response:", response.data);
             alert(response.data.message);
-
+            await fetchKuotaTersisa()
             setFormData([{
                 email: "",
                 password: "",
