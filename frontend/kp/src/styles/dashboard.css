@@ -813,7 +813,7 @@ tbody tr:nth-child(even) {
 
     /* Tanda centang */
     .aspek-item input[type="checkbox"]:checked::after {
-    content: "✓";
+    content: "X";
     color: white;
     font-size: 15px;
     font-weight: bold;

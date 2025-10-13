@@ -17,6 +17,19 @@ import "../../styles/datanilaiaspek.css";
 import profil1 from "../../assets/images/profil1.jpg";
 import profil2 from "../../assets/images/profil2.jpeg";
 
+const highlightText = (text, highlight) => {
+    if (!highlight) return text;
+    const regex = new RegExp(`(${highlight})`, "gi");
+    const parts = text.split(regex);
+    return parts.map((part, i) =>
+        regex.test(part) ? (
+            <span key={i} style={{ backgroundColor: "#AFD3F6" }}>{part}</span>
+        ) : (
+            part
+        )
+    );
+};
+
 function DataPenilaianAspek() {
     useEffect(() => {
         document.title = "Admin MAPTA";
@@ -102,6 +115,8 @@ function DataPenilaianAspek() {
            return saved ? JSON.parse(saved) : {};
     });
 
+    const [searchTerm, setSearchTerm] = useState("");
+
     const toggleInstansi = (instansi) => {
         setOpenInstansi((prev) => ({
             ...prev,
@@ -120,9 +135,20 @@ function DataPenilaianAspek() {
     };
 
     const instansiList = [...new Set(dataNilaiPeserta.map((item) => item.instansi))]
-    const dataFiltered = filterInstansi
-        ? groupedByInstansi(dataNilaiPeserta.filter((d) => d.instansi === filterInstansi))
-        : groupedByInstansi(dataNilaiPeserta);
+// 🔹 Filter berdasarkan kata di search bar (nama atau instansi)
+const dataFilteredSearch = dataNilaiPeserta.filter(
+  (item) =>
+    item.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.instansi.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
+// 🔹 Lanjutkan filter instansi kalau kamu punya dropdown instansi
+const dataFiltered = filterInstansi
+  ? groupedByInstansi(
+      dataFilteredSearch.filter((d) => d.instansi === filterInstansi)
+    )
+  : groupedByInstansi(dataFilteredSearch);
+
 
     useEffect(() => {
             localStorage.setItem("aspekVisibility", JSON.stringify(aspekVisibility));
@@ -241,7 +267,7 @@ function DataPenilaianAspek() {
         <div className="app-layout">
             <SidebarUsr />
             <div className="content-area">
-                <NavbarUsr />
+                <NavbarUsr onSearch={setSearchTerm} />
 
                 <section className="main">
                     <div className="submain">
@@ -274,7 +300,7 @@ function DataPenilaianAspek() {
                                     />
                                     <div className="teks-instansi">
                                         <p>Instansi</p>
-                                        <p>{instansi}</p>
+                                        <p>{highlightText(instansi, searchTerm)}</p>
                                     </div>
                                 </div>
 
@@ -286,7 +312,7 @@ function DataPenilaianAspek() {
                                     {peserta.map((p) => (
                                         <div className="dp-penilaian-card" key={p.id_peserta_magang}>
                                             <div className="dp-penilaian-header">
-                                                <span>{p.nama}</span>
+                                                <span>{highlightText(p.nama, searchTerm)}</span>
                                                 <div className="dp-penilaian-actions">
                                                     <span
                                                         onClick={() => {
