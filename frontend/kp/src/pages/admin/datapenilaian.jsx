@@ -37,31 +37,48 @@ function DataPenilaianAspek() {
                     const nilaiTeknisArr = item.nilai_teknis?item.nilai_teknis.split(", ").map(Number): []
                     const idPenilaianTeknisArr = item.id_penilaian_teknis?item.id_penilaian_teknis.split(", ").map(x=>parseInt(x.trim())): []
                     const idAspekTeknisArr = item.id_aspek_teknis?item.id_aspek_teknis.split(", ").map(x=>parseInt(x.trim())): []
+                    const bidangTeknissArr = item.bidang_teknis ? item.bidang_teknis.split(" || ") : [];
 
                     //maping non-teknis
                     const aspekNonTeknisArr = item.aspek_non_teknis?item.aspek_non_teknis.split(", "): []
                     const nilaiNonTeknisArr = item.nilai_non_teknis?item.nilai_non_teknis.split(", ").map(Number): []
                     const idPenilaianNonTeknisArr = item.id_penilaian_non_teknis?item.id_penilaian_non_teknis.split(", ").map(x=>parseInt(x.trim())):[]
                     const idAspekNonTeknisArr = item.id_aspek_non_teknis?item.id_aspek_non_teknis.split(", ").map(x=>parseInt(x.trim())): []
+                    const bidangNonTeknisArr = item.bidang_non_teknis ? item.bidang_non_teknis.split(" || ") : [];
 
                     //contructuring array
-                    const aspekTeknis = aspekTeknisArr.map((a, i)=>({
-                        id_aspek: idAspekTeknisArr[i] || null,
-                        id_penilaian: idPenilaianTeknisArr[i] || null,
-                        nama: a,
-                        nilai: nilaiTeknisArr[i] ?? null
-                    }))
-                    const aspekNonTeknis = aspekNonTeknisArr.map((a, i)=>({
-                        id_aspek: idAspekNonTeknisArr[i] || null,
-                        id_penilaian: idPenilaianNonTeknisArr[i] || null,
-                        nama: a,
-                        nilai: nilaiNonTeknisArr[i] ?? null
-                    }))
+                    const semuaData = [
+                        ...aspekTeknisArr.map((a, i)=>({
+                            id_aspek: idAspekTeknisArr[i] || null,
+                            id_penilaian: idPenilaianTeknisArr[i] || null,
+                            nama: a,
+                            nilai: nilaiTeknisArr[i] ?? null,
+                            bidang: bidangTeknissArr[i] || "-",
+                            jenis: "teknis"
+                        })),
+                        ...aspekNonTeknisArr.map((a, i)=>({
+                            id_aspek: idAspekNonTeknisArr[i] || null,
+                            id_penilaian: idPenilaianNonTeknisArr[i] || null,
+                            nama: a,
+                            nilai: nilaiNonTeknisArr[i] ?? null,
+                            bidang: bidangNonTeknisArr[i] || "-",
+                            jenis: "non-teknis"
+                        }))
+                    ]
 
+                    const groupedByBidang = semuaData.reduce((acc, curr) => {
+                        if (!acc[curr.bidang]) acc[curr.bidang] = { teknis: [], nonTeknis: [] };
+                        if (curr.jenis === "teknis") acc[curr.bidang].teknis.push(curr);
+                        else acc[curr.bidang].nonTeknis.push(curr);
+                        return acc;
+                    }, {});
+                    const aspekTeknis = semuaData.filter(a => a.jenis === "teknis");
+                    const aspekNonTeknis = semuaData.filter(a => a.jenis === "non-teknis");
                     return{
                         ...item,
-                        aspekTeknis,
-                        aspekNonTeknis
+                        groupedByBidang,
+                        aspekNonTeknis,
+                        aspekTeknis
                     }
             })
             setDataNilaPeserta(data)
@@ -80,6 +97,10 @@ function DataPenilaianAspek() {
     const [dataNilaiPeserta, setDataNilaPeserta] = useState([])
     const [isEdit, setIsEdit] = useState(false);
     const [departemenList, setDepartemenList] = useState([])
+    const [aspekVisibility, setAspekVisibility] = useState(() => {
+           const saved = localStorage.getItem("aspekVisibility");
+           return saved ? JSON.parse(saved) : {};
+    });
 
     const toggleInstansi = (instansi) => {
         setOpenInstansi((prev) => ({
@@ -104,6 +125,10 @@ function DataPenilaianAspek() {
         : groupedByInstansi(dataNilaiPeserta);
 
     useEffect(() => {
+            localStorage.setItem("aspekVisibility", JSON.stringify(aspekVisibility));
+    }, [aspekVisibility]);
+
+    useEffect(() => {
         const initState = {};
         instansiList.forEach((instansi) => (initState[instansi] = true));
         setOpenInstansi(initState);
@@ -113,6 +138,13 @@ function DataPenilaianAspek() {
         setNilaiAspek((prev) => ({
             ...prev,
             [key]: value,
+        }));
+    };
+
+    const toggleAspekVisibility = (namaAspek) => {
+        setAspekVisibility((prev) => ({
+        ...prev,
+        [namaAspek]: !prev[namaAspek],
         }));
     };
 
@@ -137,24 +169,22 @@ function DataPenilaianAspek() {
         const token = localStorage.getItem("token");
 
         try{
-            const aspekSemua = [
-            ...aspekTeknisList.map(a => {
-                    const key = a.id_penilaian ? a.id_penilaian : `${a.id_aspek}-${selectedPeserta.id_peserta_magang}`;
-                    return {
-                        id_aspek: a.id_aspek,
-                        id_penilaian: a.id_penilaian || null,
-                       nilai: nilaiAspek[key] !== undefined ? parseFloat(nilaiAspek[key]) : null,
-                    };
-                }),
-                ...aspekNonTeknisList.map(a => {
-                   const key = a.id_penilaian ? a.id_penilaian : `${a.id_aspek}-${selectedPeserta.id_peserta_magang}`;
-                    return {
-                        id_aspek: a.id_aspek,
-                        id_penilaian: a.id_penilaian || null,
-                        nilai: nilaiAspek[key] !== undefined ? parseFloat(nilaiAspek[key]) : null,
-                    };
-                })
-            ];
+             const aspekSemua = Object.values(selectedPeserta.groupedByBidang)
+            .flatMap(bidang => [...bidang.teknis, ...bidang.nonTeknis])
+            .map(a => {
+                const key = a.id_penilaian
+                ? a.id_penilaian
+                : `${a.id_aspek}-${selectedPeserta.id_peserta_magang}`;
+                return {
+                id_aspek: a.id_aspek,
+                id_penilaian: a.id_penilaian || null,
+                nilai:
+                    nilaiAspek[key] !== undefined
+                    ? parseFloat(nilaiAspek[key])
+                    : null,
+                };
+            });
+            console.log(aspekSemua)
 
             await Promise.all(
                 aspekSemua.map((a) => {
@@ -197,8 +227,12 @@ function DataPenilaianAspek() {
 
     const getRataRata = (list) => {
         if (list.length === 0) return { nilai: "-", indeks: "-" };
-        const total = list.reduce((acc, cur) => acc + cur.nilai, 0);
-        const rataNilai = (total / list.length).toFixed(2);
+         const validNilai = list
+        .map(item => parseFloat(item.nilai))
+        .filter(n => !isNaN(n));
+        if (validNilai.length === 0) return { nilai: "-", indeks: "-" };
+        const total = validNilai.reduce((acc, cur) => acc + cur, 0);
+        const rataNilai = (total / validNilai.length).toFixed(2);
         const rataIndeks = hitungIndeksHuruf(rataNilai);
         return { nilai: rataNilai, indeks: rataIndeks };
     };
@@ -258,37 +292,24 @@ function DataPenilaianAspek() {
                                                         onClick={() => {
                                                             const pesertaDetail = dataNilaiPeserta.find(d => d.id_peserta_magang === p.id_peserta_magang);
 
-                                                            const aspekTeknis = pesertaDetail.aspekTeknis?.map(a => ({
-                                                                id_aspek: parseInt(a.id_aspek),
-                                                                id_penilaian: a.id_penilaian ? parseInt(a.id_penilaian) : null,
-                                                                nilai: a.nilai ?? "",
-                                                                nama: a.nama,
-                                                            })) || [];
+                                                            const departemenList = Object.keys(pesertaDetail.groupedByBidang);
+                                                            setDepartemenList(departemenList);
 
-                                                            const aspekNonTeknis = pesertaDetail.aspekNonTeknis?.map(a => ({
-                                                                id_aspek: parseInt(a.id_aspek),
-                                                                id_penilaian: a.id_penilaian ? parseInt(a.id_penilaian) : null,
-                                                                nilai: a.nilai ?? "",
-                                                                nama: a.nama,
-                                                            })) || [];
-
-                                                            setSelectedInstansi(p.instansi);
-                                                            setSelectedPeserta({
-                                                                ...pesertaDetail,
-                                                                aspekTeknis,
-                                                                aspekNonTeknis
-                                                            });
-                                                            setAspekTeknisList(aspekTeknis);
-                                                            setAspekNonTeknisList(aspekNonTeknis);
-
+                                                            const semuaAspek = departemenList.flatMap((bidang) => [
+                                                                ...pesertaDetail.groupedByBidang[bidang].teknis,
+                                                                ...pesertaDetail.groupedByBidang[bidang].nonTeknis,
+                                                            ]);
+                                                           
                                                             const nilai = {};
-                                                             [...aspekTeknis, ...aspekNonTeknis].forEach(a => {
+                                                            semuaAspek.forEach((a) => {
                                                                 const key = a.id_penilaian || `${a.id_aspek}-${p.id_peserta_magang}`;
                                                                 nilai[key] = a.nilai;
                                                             });
                                                             setNilaiAspek(nilai);
-                                                            setIsEdit(true);
+                                                            setSelectedPeserta(pesertaDetail);
+                                                            setSelectedInstansi(p.instansi);
                                                             setShowModal(true);
+                                                            setIsEdit(true);
                                                         }}
                                                     >
                                                         <TbEdit
@@ -319,11 +340,11 @@ function DataPenilaianAspek() {
                                                                 </tr>
                                                             ) : (
                                                                 <>
-                                                                    {p.aspekTeknis.map((a, i) => (
+                                                                    {p.aspekTeknis.filter(a => a.nilai !== null && !isNaN(a.nilai)).map((a, i) => (
                                                                         <tr key={i}>
                                                                             <td>{i + 1}</td>
                                                                             <td>{a.nama}</td>
-                                                                            <td>{a.nilai}</td>
+                                                                            <td>{a.nilai !== null && !isNaN(a.nilai) ? a.nilai : "-"}</td>
                                                                             <td>{hitungIndeksHuruf(a.nilai)}</td>
                                                                         </tr>
                                                                     ))}
@@ -358,11 +379,11 @@ function DataPenilaianAspek() {
                                                                 </tr>
                                                             ) : (
                                                                 <>
-                                                                    {p.aspekNonTeknis.map((a, i) => (
+                                                                    {p.aspekNonTeknis.filter(a => a.nilai !== null && !isNaN(a.nilai)).map((a, i) => (
                                                                         <tr key={i}>
                                                                             <td>{i + 1}</td>
                                                                             <td>{a.nama}</td>
-                                                                            <td>{a.nilai}</td>
+                                                                            <td>{a.nilai !== null && !isNaN(a.nilai) ? a.nilai : "-"}</td>
                                                                             <td>{hitungIndeksHuruf(a.nilai)}</td>
                                                                         </tr>
                                                                     ))}
@@ -454,37 +475,51 @@ function DataPenilaianAspek() {
                                     </div>
                                 )}
 
-                                <p style={{ fontStyle: "italic", fontWeight: 500 }}>Aspek Teknis</p>
-                                {aspekTeknisList.map((a) => {
-                                    const uniqueKey = a.id_penilaian || `${a.id_aspek}-${selectedPeserta.id_peserta_magang}`;
-                                    return (
-                                        <div key={`teknis-${uniqueKey}`} className="dp-aspek-item">
-                                            <span>{a.nama}</span>
-                                            <input
-                                                type="number"
-                                                placeholder="Nilai"
-                                                value={nilaiAspek[uniqueKey] || ""}
-                                                onChange={(e) => handleInputChange(uniqueKey, e.target.value)}
-                                            />
-                                        </div>
-                                    );
-                                })}
+                                {departemenList.map((bidang) => (
+                                <div key={bidang}>
+                                    <h4 style={{ marginTop: "10px" }}>{bidang}</h4>
 
-                                <p style={{ fontStyle: "italic", fontWeight: 500 }}>Aspek Non Teknis</p>
-                                {aspekNonTeknisList.map((a) => {
-                                    const uniqueKey = a.id_penilaian || `${a.id_aspek}-${selectedPeserta.id_peserta_magang}`;
-                                    return (
-                                        <div key={`nonteknis-${uniqueKey}`} className="dp-aspek-item">
+                                    <p style={{ fontStyle: "italic", fontWeight: 500 }}>Aspek Teknis</p>
+                                    {selectedPeserta.groupedByBidang[bidang].teknis.length === 0 ? (
+                                    <p>Tidak ada aspek teknis</p>
+                                    ) : (
+                                    selectedPeserta.groupedByBidang[bidang].teknis.map((a) => {
+                                        const key = a.id_penilaian || `${a.id_aspek}-${selectedPeserta.id_peserta_magang}`;
+                                        return (
+                                        <div key={`teknis-${key}`} className="dp-aspek-item">
                                             <span>{a.nama}</span>
                                             <input
-                                                type="number"
-                                                placeholder="Nilai"
-                                                value={nilaiAspek[uniqueKey] || ""}
-                                                onChange={(e) => handleInputChange(uniqueKey, e.target.value)}
+                                            type="number"
+                                            placeholder="Nilai"
+                                            value={nilaiAspek[key] || ""}
+                                            onChange={(e) => handleInputChange(key, e.target.value)}
                                             />
                                         </div>
-                                    );
-                                })}
+                                        );
+                                    })
+                                    )}
+
+                                    <p style={{ fontStyle: "italic", fontWeight: 500 }}>Aspek Non Teknis</p>
+                                    {selectedPeserta.groupedByBidang[bidang].nonTeknis.length === 0 ? (
+                                    <p>Tidak ada aspek non teknis</p>
+                                    ) : (
+                                    selectedPeserta.groupedByBidang[bidang].nonTeknis.map((a) => {
+                                        const key = a.id_penilaian || `${a.id_aspek}-${selectedPeserta.id_peserta_magang}`;
+                                        return (
+                                        <div key={`nonteknis-${key}`} className="dp-aspek-item">
+                                            <span>{a.nama}</span>
+                                            <input
+                                            type="number"
+                                            placeholder="Nilai"
+                                            value={nilaiAspek[key] || ""}
+                                            onChange={(e) => handleInputChange(key, e.target.value)}
+                                            />
+                                        </div>
+                                        );
+                                    })
+                                    )}
+                                </div>
+                                ))}
 
                                 <button className="dp-btn-simpan" onClick={handleSave}>
                                     Simpan Nilai
