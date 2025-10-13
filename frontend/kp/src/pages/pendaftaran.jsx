@@ -32,7 +32,7 @@ export default function PendaftaranMagang() {
             nomor_identitas: "",
             tanggal_mulai_magang: "",
             tanggal_selesai_magang: "",
-            jenjang: "",
+            jenjang: "siswa",
             kategori: "",
             foto: null,
             dokumen: [],
@@ -40,10 +40,17 @@ export default function PendaftaranMagang() {
     ])
     const [kuota, setKuota] = useState(0);
 
-    useEffect(()=>{
-        axios.get("http://localhost:3000/peserta/kuota")
-        .then(res=> setKuota(res.data.sisaKuota))
-        .catch(err=>console.error(err))
+   const fetchKuotaTersisa = async()=>{
+        try{
+            let data = await axios.get("http://localhost:3000/peserta/kuota")
+            setKuota(data.data.sisaKuota)
+        }catch(error){
+            console.error(error)
+            alert("gagal fetch data")
+        }
+    }
+     useEffect(()=>{
+            fetchKuotaTersisa()
     }, [])
     // Scroll event untuk tombol scroll top
     useEffect(() => {
@@ -65,14 +72,14 @@ export default function PendaftaranMagang() {
                 nomor_identitas: "",
                 tanggal_mulai_magang: prev[0].tanggal_mulai_magang,
                 tanggal_selesai_magang: prev[0].tanggal_selesai_magang,
-                jenjang: "",
+                jenjang: "siswa",
                 kategori: "kelompok",
                 foto: null,
                 dokumen: [...prev[0].dokumen]
             }])
             setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }), 100);
         }else{
-            alert(`Kuota tersisa ${kuota - sections.length}. Tidak bisa menambah anggota lagi.`);
+            alert(`Kuota tersisa ${kuota}. Tidak bisa menambah anggota lagi.`);
         }
     };
 
@@ -172,6 +179,13 @@ export default function PendaftaranMagang() {
                     return;
                 }
             }
+
+            const emails = formData.map(user=> user.email.trim().toLowerCase())
+            const duplicatedEmails= emails.filter((email, index)=>emails.indexOf(email)!==index)
+            if (duplicatedEmails.length > 0) {
+                alert(`Terdapat email yang sama dalam kelompok: ${duplicatedEmails.join(", ")}`);
+                return;
+            }
         }
 
         const formDataToSend = new FormData();
@@ -210,7 +224,7 @@ export default function PendaftaranMagang() {
             const response = await axios.post("http://localhost:3000/peserta/register", formDataToSend) 
             console.log("Response:", response.data);
             alert(response.data.message);
-
+            await fetchKuotaTersisa()
             setFormData([{
                 email: "",
                 password: "",
@@ -220,7 +234,7 @@ export default function PendaftaranMagang() {
                 nomor_identitas: "",
                 tanggal_mulai_magang: "",
                 tanggal_selesai_magang: "",
-                jenjang: "",
+                jenjang: "siswa",
                 kategori: "",
                 foto: null,
                 dokumen: [],
@@ -302,10 +316,8 @@ export default function PendaftaranMagang() {
                             <input type="file" onChange={(e) => handleFotoChange(index, e)} />
                         </label>
                         <div className="samping-foto">
-                            <select value={formData[index].jenjang} onChange={(e)=>handleChange(index, "jenjang", e.target.value)}>
-                                <option value="">Pilih Jenjang</option>
+                            <select value={formData[index].jenjang} onChange={(e)=>handleChange(index, "jenjang", e.target.value)} disabled>
                                 <option value="siswa">Siswa</option>
-                                <option value="dinas">Dinas</option>
                             </select>
                             <select
                                 value={index === 0 ? kategoriPertama : "kelompok"}

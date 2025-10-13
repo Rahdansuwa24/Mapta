@@ -2,81 +2,30 @@ var express = require('express');
 var router = express.Router();
 var verifyToken = require('../../config/middleware/jwt')
 var Model_Peserta = require('../../model/Model_Peserta')
+const path = require("path")
 
 
 router.get('/', verifyToken('siswa'),async(req, res)=>{
     try{
         let id_users = req.user.id
-        const data = await Model_Peserta.getJadwalPeserta(id_users)
-        res.status(200).json({data})
-    }catch(err){
-        res.status(500).json({ status: false, error: err.message });
-    }
-})
-router.get('/peserta', verifyToken('admin'),async(req, res)=>{
-    try{
-        const data = await Model_Admin.getDataPesertaDiterimaJadwal()
-        res.status(200).json({data})
-    }catch(err){
-        res.status(500).json({ status: false, error: err.message });
-    }
-})
-router.get('/getPeriode', verifyToken('admin'),async(req, res)=>{
-    try{
-        const data = await Model_Admin.getPeriode()
-        res.status(200).json({data})
+        const data = await Model_Peserta.getSertifikatPeserta(id_users)
+        const sertifikat = data[0].sertifikat
+        res.status(200).json({sertifikat})
     }catch(err){
         res.status(500).json({ status: false, error: err.message });
     }
 })
 
-router.post('/store', verifyToken('admin'),async(req, res)=>{
-    try{
-        let {bidang, id_peserta_magang, tanggal_mulai, tanggal_selesai} = req.body
-        const data = {
-            bidang,
-            id_peserta_magang,
-            tanggal_mulai, 
-            tanggal_selesai
-        }
-        await Model_Admin.storeJadwal(data)
-        res.status(200).json({message: 'penambahan berhasil'})
-    }catch(err){
-        console.error(err)
-        res.status(500).json({ status: false, error: err.message });
-    }
-})
+router.get("/download/:filename", (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, "../../public/document-sertif", filename);
 
-router.get('/jadwal/(:id)', async(req, res)=>{
-    try{
-       let id = req.params.id
-        let data = await Model_Admin.getJadwalById(id)
-        res.status(200).json({data})
-    }catch(err){
-        res.status(500).json({ status: false, error: err.message });
+  res.download(filePath, filename, (err) => {
+    if (err) {
+      console.error("Download error:", err);
+      res.status(404).send("File tidak ditemukan.");
     }
-})
-router.patch('/update/(:id)', verifyToken('admin'),async(req, res)=>{
-    try{
-        let id = req.params.id
-        let {bidang, id_peserta_magang, tanggal_mulai, tanggal_selesai} = req.body
-        let data = {
-            bidang, id_peserta_magang, tanggal_mulai, tanggal_selesai
-        }
-        await Model_Admin.updateJadwal(id, data)
-        res.status(200).json({message: 'data berhasil diperbarui'})
-    }catch(err){
-        res.status(500).json({ status: false, error: err.message });
-    }
-})
-router.delete('/delete/(:id)', verifyToken('admin'),async(req, res)=>{
-    try{
-        let id = req.params.id
-        await Model_Admin.deleteJadwal(id)
-        res.status(200).json({message: 'data berhasil dihapus'})
-    }catch(err){
-        res.status(500).json({ status: false, error: err.message });
-    }
-})
+  });
+});
 
 module.exports = router

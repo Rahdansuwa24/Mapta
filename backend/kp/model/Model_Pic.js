@@ -51,7 +51,7 @@ class Model_Pic{
     }
     static async aspek(id_users){
         try{
-            const [result] = await db.query(`select aspek, bidang, id_aspek, subjek from aspek where bidang = (select bidang from pic where id_users = ?) or bidang = 'GLOBAL'`, [id_users])
+            const [result] = await db.query(`select aspek, bidang, id_aspek, subjek from aspek where bidang = (select bidang from pic where id_users = ?) or bidang = 'GLOBAL' ORDER BY id_aspek desc`, [id_users])
             return result
         }catch(error){
             throw(error)

@@ -8,19 +8,54 @@ import { BiSolidCalendar } from "react-icons/bi";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoDocumentText } from "react-icons/io5";
 import { FaDownload } from "react-icons/fa";
+import axios from "axios";
 
 import "../../styles/user.css";
 
 function SertifikatPeserta() {
     const [fileUrl, setFileUrl] = useState(null);
+    const [fileName, setFileName] = useState("");
 
     useEffect(() => {
         document.title = "Sertifikat Peserta";
-
+        fetchSertifikat()
         // contoh dummy file (bisa di-fetch dari backend)
-        setFileUrl("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf");
+        // setFileUrl("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf");
         // null artinya sertifikat belum tersedia
     }, []);
+
+    const fetchSertifikat = async()=>{
+        const token = localStorage.getItem("token")
+        try{
+            const res  = await axios.get("http://localhost:3000/peserta/sertifikat", {
+                headers: { Authorization: `Bearer ${token}` },
+            })
+            const sertifikat = res.data.sertifikat
+            console.log(sertifikat)
+            if(sertifikat){
+                setFileUrl(`http://localhost:3000/static/document-sertif/${sertifikat}`);
+                setFileName(sertifikat);
+            }else{
+                setFileUrl(null);
+            }
+        }catch(error){
+            console.error(error)
+            alert("gagal mendapat sertif")
+        }
+    }
+
+    const handleDownload = (e) => {
+        e.preventDefault();
+
+        if (!fileUrl) return;
+
+        const link = document.createElement("a");
+        link.href = `http://localhost:3000/peserta/sertifikat/download/${fileName}`;
+        link.setAttribute("download", fileName); // paksa browser download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     const renderPreview = () => {
         if (!fileUrl) {
@@ -110,9 +145,8 @@ function SertifikatPeserta() {
 
                         <motion.a
                             href={fileUrl || "#"}
-                            download
                             className={`jp-tmbl-download ${!fileUrl ? "disabled" : ""}`}
-                            onClick={(e) => !fileUrl && e.preventDefault()}
+                            onClick={handleDownload}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             initial={{ opacity: 0, x: 20 }}

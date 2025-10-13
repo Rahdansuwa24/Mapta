@@ -94,7 +94,7 @@ function App() {
         <Route path="/pic-penilaian" element={<Protection allowedRoles={['pic']}><PenilaianPIC /></Protection>} />
         <Route path="/peserta-nilai" element={<Protection allowedRoles={['siswa']}><NilaiPeserta /></Protection>} />
         <Route path="/peserta-jadwal" element={<Protection allowedRoles={['siswa']}><JadwalPeserta /></Protection>} />
-        <Route path="/peserta-sertifikat" element={<Protection allowedRoles={['siswa']}><JadwalPeserta /><SertifikatPeserta /></Protection>} />
+        <Route path="/peserta-sertifikat" element={<Protection allowedRoles={['siswa']}><SertifikatPeserta /></Protection>} />
       </Routes>
     </Router>
   );

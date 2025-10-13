@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Model_Peserta = require('../../model/Model_Peserta');
+const Model_Admin = require('../../model/Model_Admin');
 const Model_User = require('../../model/Model_User');
 const {upload, hapusFiles, file} = require('../../config/middleware/multer')
 
@@ -64,8 +65,11 @@ router.post('/register', upload.any(), async (req, res) => {
                     });
                 } 
                 const totalSiswa = await Model_Peserta.countPeserta();
-                const sisaKuota = 50 - totalSiswa;
-                if (parsingUser.length > sisaKuota) {
+                const kuotaDinamis = await Model_Admin.maksimalPeserta()
+                const kuota = kuotaDinamis[0].total
+                const sisaKuota = kuota - totalSiswa;
+                const jumlahAnggota = parsingUser.length
+                if (sisaKuota < jumlahAnggota) {
                     hapusFiles(req.files);
                     return res.status(400).json({message: `Kuota tersisa ${sisaKuota} peserta saja. Kurangi jumlah anggota kelompok.`});
                 }
@@ -125,8 +129,10 @@ router.post('/register', upload.any(), async (req, res) => {
         }
 
         const totalSiswa = await Model_Peserta.countPeserta();
-        const sisaKuota = 50 - totalSiswa;
-        if ((user_level === 'siswa' || user_level === 'dinas') && 1 > sisaKuota) {
+        const kuotaDinamis = await Model_Admin.maksimalPeserta()
+        const kuota = kuotaDinamis[0].total
+        const sisaKuota = kuota - totalSiswa;
+        if (sisaKuota < 1) {
             hapusFiles(req.files);
             return res.status(400).json({
                 status: false,
@@ -196,8 +202,10 @@ router.post('/register-dinas', upload.any(), async (req, res) => {
         }
 
         const totalSiswa = await Model_Peserta.countPeserta();
-        const sisaKuota = 50 - totalSiswa;
-        if ((user_level === 'siswa' || user_level === 'dinas') && 1 > sisaKuota) {
+        const kuotaDinamis = await Model_Admin.maksimalPeserta()
+        const kuota = kuotaDinamis[0].total
+        const sisaKuota = kuota - totalSiswa;
+        if (sisaKuota < 1) {
             hapusFiles(req.files);
             return res.status(400).json({
                 status: false,
@@ -248,9 +256,13 @@ router.get('/', async (req, res) => {
 router.get('/kuota', async (req, res) => {
     try {
         const totalSiswa = await Model_Peserta.countPeserta();
-        const sisaKuota = 50 - totalSiswa;
+        const kuotaDinamis = await Model_Admin.maksimalPeserta()
+        const kuota = kuotaDinamis[0].total
+        let sisaKuota = kuota - totalSiswa;
+        if(sisaKuota <= 0) sisaKuota = 0
         return res.status(200).json({ sisaKuota });
     } catch (err) {
+        console.error(err)
         return res.status(500).json({ message: 'Gagal mengambil kuota', error: err.message });
     }
 });
