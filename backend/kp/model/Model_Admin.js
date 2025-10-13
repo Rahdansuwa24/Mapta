@@ -248,30 +248,54 @@ static async storeAspek(data){
     }
     static async getNilai(){
         try{
-            const [result] = await db.query(`SELECT pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri,
+            const [result] = await db.query(`SELECT pe.id_peserta_magang, pe.nama, 
+                pe.instansi, pe.foto_diri,
+                GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' 
+                THEN COALESCE(p.id_penilaian, 'null') END 
+                ORDER BY a.id_aspek SEPARATOR ', ') AS id_penilaian_teknis,
 
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' 
-                      THEN p.id_penilaian END SEPARATOR ', ') AS id_penilaian_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis'
-                            THEN a.id_aspek END SEPARATOR ', ') AS id_aspek_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' 
-                            THEN a.subjek END SEPARATOR ', ') AS aspek_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis'
-                            THEN p.penilaian END SEPARATOR ', ') AS nilai_teknis,
+                GROUP_CONCAT(CASE WHEN a.aspek = 'teknis'
+                THEN COALESCE(a.id_aspek, 'null') END 
+                ORDER BY a.id_aspek SEPARATOR ', ') AS id_aspek_teknis,
 
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
-                            THEN p.id_penilaian END SEPARATOR ', ') AS id_penilaian_non_teknis, 
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
-                            THEN a.subjek END SEPARATOR ', ') AS aspek_non_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
-                            THEN p.penilaian END SEPARATOR ', ') AS nilai_non_teknis, 
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
-                            THEN a.id_aspek END SEPARATOR ', ') AS id_aspek_non_teknis
-            FROM peserta_magang AS pe
-            LEFT JOIN penilaian AS p ON pe.id_peserta_magang = p.id_peserta_magang
-            LEFT JOIN aspek AS a ON p.id_aspek = a.id_aspek
-            GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri
-            HAVING COUNT(p.id_penilaian) > 0;
+                GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' 
+                THEN COALESCE(a.subjek, 'null') END 
+                ORDER BY a.id_aspek SEPARATOR ', ') AS aspek_teknis,
+
+                GROUP_CONCAT(CASE WHEN a.aspek = 'teknis'
+                THEN COALESCE(p.penilaian, 'null') END 
+                ORDER BY a.id_aspek SEPARATOR ', ') AS nilai_teknis,
+
+                GROUP_CONCAT(CASE WHEN a.aspek = 'teknis'
+                THEN COALESCE(pic.bidang, 'null') END 
+                ORDER BY a.id_aspek SEPARATOR ' || ') AS bidang_teknis,
+
+                GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
+                THEN COALESCE(p.id_penilaian, 'null') END 
+                ORDER BY a.id_aspek SEPARATOR ', ') AS id_penilaian_non_teknis,
+
+                GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
+                THEN COALESCE(a.id_aspek, 'null') END 
+                ORDER BY a.id_aspek SEPARATOR ', ') AS id_aspek_non_teknis,
+
+                GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
+                THEN COALESCE(a.subjek, 'null') END 
+                ORDER BY a.id_aspek SEPARATOR ', ') AS aspek_non_teknis,
+
+                GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
+                THEN COALESCE(p.penilaian, 'null') END 
+                ORDER BY a.id_aspek SEPARATOR ', ') AS nilai_non_teknis,
+
+                GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
+                THEN COALESCE(pic.bidang, 'null') END 
+                ORDER BY a.id_aspek SEPARATOR ' || ') AS bidang_non_teknis
+
+                FROM peserta_magang AS pe
+                LEFT JOIN penilaian AS p ON pe.id_peserta_magang = p.id_peserta_magang
+                LEFT JOIN aspek AS a ON p.id_aspek = a.id_aspek
+                LEFT JOIN pic ON p.id_pic = pic.id_pic
+                GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri
+                HAVING COUNT(p.id_penilaian) > 0;
             `)
             return result
         }catch(error){
