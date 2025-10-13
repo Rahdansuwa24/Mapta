@@ -477,7 +477,9 @@ function DataPenilaianAspek() {
 
                                 {departemenList.map((bidang) => (
                                 <div key={bidang}>
-                                    <h4 style={{ marginTop: "10px" }}>{bidang}</h4>
+                                    <h2 style={{ marginTop: "15px",
+                                    marginBottom: "15px",
+                                    fontWeight: 700, }}>{bidang}</h2>
 
                                     <p style={{ fontStyle: "italic", fontWeight: 500 }}>Aspek Teknis</p>
                                     {selectedPeserta.groupedByBidang[bidang].teknis.length === 0 ? (
