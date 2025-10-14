@@ -102,8 +102,6 @@ function DataPenilaianAspek() {
     const [filterInstansi, setFilterInstansi] = useState("");
     const [openInstansi, setOpenInstansi] = useState({});
     const [showModal, setShowModal] = useState(false);
-    const [aspekTeknisList, setAspekTeknisList] = useState([])
-    const [aspekNonTeknisList, setAspekNonTeknisList] = useState([])
     const [selectedInstansi, setSelectedInstansi] = useState("");
     const [selectedPeserta, setSelectedPeserta] = useState(null);
     const [nilaiAspek, setNilaiAspek] = useState({});
@@ -238,9 +236,6 @@ const dataFiltered = filterInstansi
         setIsEdit(false);
     };
 
-    // const handleDeleteAspekDepartemen = async()=>{
-
-    // }
     const hitungIndeksHuruf = (nilai) => {
         if (!nilai && nilai !== 0) return "-";
         const n = parseFloat(nilai);
