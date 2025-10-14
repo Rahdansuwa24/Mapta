@@ -17,6 +17,18 @@ import "../../styles/dashboard.css";
 import profil1 from "../../assets/images/profil1.jpg";
 import profil2 from "../../assets/images/profil2.jpeg";
 
+const highlightText = (text, search) => {
+  if (!search) return text;
+  const parts = text.split(new RegExp(`(${search})`, "gi"));
+  return parts.map((part, i) =>
+    part.toLowerCase() === search.toLowerCase() ? (
+      <mark key={i} style={{ backgroundColor: "#AFD3F6" }}>{part}</mark>
+    ) : (
+      part
+    )
+  );
+};
+
 function Ditolak() {
     useEffect(() => {
         document.title = "Admin MAPTA";
@@ -159,15 +171,29 @@ function Ditolak() {
         }
     }
 
-  const pesertaFiltered = PesertaDitolak.filter((p) => {
-    const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
-    const nama = p.nama ? p.nama.toLowerCase() : "";
-    const instansi = p.instansi ? p.instansi.toLowerCase() : "";
-    const matchSearch =
-      nama.includes(searchTerm.toLowerCase()) ||
-      instansi.includes(searchTerm.toLowerCase());
-    return matchInstansi && matchSearch;
-  });
+const pesertaFiltered = PesertaDitolak.filter((p) => {
+  const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
+
+  const nama = p.nama ? p.nama.toLowerCase() : "";
+  const instansi = p.instansi ? p.instansi.toLowerCase() : "";
+  const tanggalMulai = p.tanggal_mulai_magang
+    ? dayjs(p.tanggal_mulai_magang).format("DD MMMM YYYY").toLowerCase()
+    : "";
+  const tanggalSelesai = p.tanggal_selesai_magang
+    ? dayjs(p.tanggal_selesai_magang).format("DD MMMM YYYY").toLowerCase()
+    : "";
+
+  const keyword = searchTerm.toLowerCase();
+
+  const matchSearch =
+    nama.includes(keyword) ||
+    instansi.includes(keyword) ||
+    tanggalMulai.includes(keyword) ||
+    tanggalSelesai.includes(keyword);
+
+  return matchInstansi && matchSearch;
+});
+
 
     const instansiList = [
         ...new Set(PesertaDitolak.map((p) => p.instansi))
@@ -272,9 +298,9 @@ function Ditolak() {
                                                         <td>{idx + 1}</td>
                                                         <td className="nama-cell">
                                                         <img src={`http://localhost:3000/static/images/${peserta.foto_diri}`} alt="Foto Profil" />
-                                                        <span>{peserta.nama}</span>
+                                                        <span>{highlightText(peserta.nama, searchTerm)}</span>
                                                         </td>
-                                                        <td>{peserta.instansi}</td>
+                                                        <td>{highlightText(peserta.instansi, searchTerm)}</td>
                                                         <td>{dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")}</td>
                                                         <td>{dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}</td>
                                                         <td>{peserta.kategori}</td>
@@ -341,9 +367,9 @@ function Ditolak() {
                                                         src={`http://localhost:3000/static/images/${peserta.foto_diri}`}
                                                         alt="Foto Profil"
                                                         />
-                                                        <span>{peserta.nama}</span>
+                                                        <span>{highlightText(peserta.nama, searchTerm)}</span>
                                                     </td>
-                                                    <td>{peserta.instansi}</td>
+                                                    <td>{highlightText(peserta.instansi, searchTerm)}</td>
                                                     <td>{dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")}</td>
                                                     <td>{dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}</td>
                                                     <td>{peserta.kategori}</td>

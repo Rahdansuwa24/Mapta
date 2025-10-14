@@ -7,6 +7,19 @@ import { FaEllipsisVertical } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 import "../../styles/dashboard.css";
 import profil1 from "../../assets/images/profil1.jpg";
+import dayjs from "dayjs";
+
+const highlightText = (text, search) => {
+  if (!search) return text;
+  const parts = text.split(new RegExp(`(${search})`, "gi"));
+  return parts.map((part, i) =>
+    part.toLowerCase() === search.toLowerCase() ? (
+      <mark key={i} style={{ backgroundColor: "#AFD3F6" }}>{part}</mark>
+    ) : (
+      part
+    )
+  );
+};
 
 function SelesaiMagang() {
     useEffect(() => {
@@ -105,13 +118,27 @@ function SelesaiMagang() {
 
 const pesertaFiltered = pesertaDummy.filter((p) => {
   const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
+
   const nama = p.nama ? p.nama.toLowerCase() : "";
   const instansi = p.instansi ? p.instansi.toLowerCase() : "";
+  const tanggalMulai = p.tglMulai
+    ? dayjs(p.tglMulai, "DD-MM-YYYY").format("DD MMMM YYYY").toLowerCase()
+    : "";
+  const tanggalSelesai = p.tglSelesai
+    ? dayjs(p.tglSelesai, "DD-MM-YYYY").format("DD MMMM YYYY").toLowerCase()
+    : "";
+
   const keyword = searchTerm.toLowerCase();
 
-  const matchSearch = nama.includes(keyword) || instansi.includes(keyword);
+  const matchSearch =
+    nama.includes(keyword) ||
+    instansi.includes(keyword) ||
+    tanggalMulai.includes(keyword) ||
+    tanggalSelesai.includes(keyword);
+
   return matchInstansi && matchSearch;
 });
+
 
     const instansiList = [...new Set(pesertaDummy.map((p) => p.instansi))];
 
@@ -200,9 +227,9 @@ const pesertaFiltered = pesertaDummy.filter((p) => {
                                 <td>{idx + 1}</td>
                                 <td className="nama-cell">
                                     <img src={peserta.profil} alt="Foto Profil" />
-                                    <span>{peserta.nama}</span>
+                                    <span>{highlightText(peserta.nama, searchTerm)}</span>
                                 </td>
-                                <td>{peserta.instansi}</td>
+                                <td>{highlightText(peserta.instansi, searchTerm)}</td>
                                 <td>{peserta.tglMulai}</td>
                                 <td>{peserta.tglSelesai}</td>
                                 <td>{peserta.kategori}</td>

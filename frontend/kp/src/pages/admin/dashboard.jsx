@@ -78,16 +78,41 @@ function Dashboard() {
         setShowModal(true);
     };
 
-const pesertaFiltered = calonPeserta.filter((p) => {
-  const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
-  const nama = p.nama ? p.nama.toLowerCase() : "";
-  const instansi = p.instansi ? p.instansi.toLowerCase() : "";
-  const matchSearch =
-    nama.includes(searchTerm.toLowerCase()) ||
-    instansi.includes(searchTerm.toLowerCase());
+  const highlightText = (text, search) => {
+    if (!search) return text;
+    const parts = text.split(new RegExp(`(${search})`, "gi"));
+    return parts.map((part, i) =>
+      part.toLowerCase() === search.toLowerCase() ? (
+        <mark key={i} style={{ backgroundColor: "#AFD3F6" }}>
+          {part}
+        </mark>
+      ) : (
+        part
+      )
+    );
+  };
 
-  return matchInstansi && matchSearch;
-});
+  const pesertaFiltered = calonPeserta.filter((p) => {
+    const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
+    const query = searchTerm.toLowerCase().trim();
+    if (!query) return matchInstansi;
+
+    const nama = p.nama?.toLowerCase() || "";
+    const instansi = p.instansi?.toLowerCase() || "";
+    const tanggalMulai = dayjs(p.tanggal_mulai_magang).format("YYYY-MM-DD");
+    const tanggalSelesai = dayjs(p.tanggal_selesai_magang).format("YYYY-MM-DD");
+
+    const matchSearch =
+      nama.includes(query) ||
+      instansi.includes(query) ||
+      tanggalMulai.includes(query) ||
+      tanggalSelesai.includes(query) ||
+      dayjs(p.tanggal_mulai_magang).format("DD MMMM YYYY").toLowerCase().includes(query) ||
+      dayjs(p.tanggal_selesai_magang).format("DD MMMM YYYY").toLowerCase().includes(query);
+
+    return matchInstansi && matchSearch;
+  });
+
 
     const instansiList = [
     ...new Set(calonPeserta.map((p) => p.instansi))
@@ -228,9 +253,9 @@ const pesertaFiltered = calonPeserta.filter((p) => {
                                             src={`http://localhost:3000/static/images/${peserta.foto_diri}`}
                                             alt="Foto Profil"
                                             />
-                                            <span>{peserta.nama}</span>
+                                            <span>{highlightText(peserta.nama, searchTerm)}</span>
                                         </td>
-                                        <td>{peserta.instansi}</td>
+                                        <td>{highlightText(peserta.instansi, searchTerm)}</td>
                                         <td>
                                             {dayjs(peserta.tanggal_mulai_magang).format(
                                             "DD MMMM YYYY"
@@ -341,9 +366,9 @@ const pesertaFiltered = calonPeserta.filter((p) => {
                                             src={`http://localhost:3000/static/images/${peserta.foto_diri}`}
                                             alt="Foto Profil"
                                             />
-                                            <span>{peserta.nama}</span>
+                                            <span>{highlightText(peserta.nama, searchTerm)}</span>
                                         </td>
-                                        <td>{peserta.instansi}</td>
+                                        <td>{highlightText(peserta.instansi, searchTerm)}</td>
                                         <td>
                                             {dayjs(peserta.tanggal_mulai_magang).format(
                                             "DD MMMM YYYY"

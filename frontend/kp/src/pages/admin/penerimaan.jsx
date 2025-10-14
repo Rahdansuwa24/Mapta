@@ -16,6 +16,18 @@ import "../../styles/dashboard.css";
 import profil1 from "../../assets/images/profil1.jpg";
 import profil2 from "../../assets/images/profil2.jpeg";
 
+const highlightText = (text, search) => {
+  if (!search) return text;
+  const parts = text.split(new RegExp(`(${search})`, "gi"));
+  return parts.map((part, i) =>
+    part.toLowerCase() === search.toLowerCase() ? (
+      <mark key={i} style={{ backgroundColor: "#AFD3F6" }}>{part}</mark>
+    ) : (
+      part
+    )
+  );
+};
+
 function Diterima() {
     useEffect(() => {
         document.title = "Admin MAPTA";
@@ -132,16 +144,29 @@ function Diterima() {
         }
     }
 
-    // ini baru penggabungan
+// fungsi search
 const filteredPeserta = PesertaDiterima.filter((p) => {
-  const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
-  const nama = p.nama ? p.nama.toLowerCase() : "";
-  const instansi = p.instansi ? p.instansi.toLowerCase() : "";
-  const matchSearch =
-    nama.includes(searchTerm.toLowerCase()) ||
-    instansi.includes(searchTerm.toLowerCase());
-  return matchInstansi && matchSearch;
+    const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
+    const query = searchTerm.toLowerCase().trim();
+
+    if (!query) return matchInstansi;
+
+    const nama = p.nama?.toLowerCase() || "";
+    const instansi = p.instansi?.toLowerCase() || "";
+    const tanggalMulai = dayjs(p.tanggal_mulai_magang).format("YYYY-MM-DD");
+    const tanggalSelesai = dayjs(p.tanggal_selesai_magang).format("YYYY-MM-DD");
+
+    const matchSearch =
+        nama.includes(query) ||
+        instansi.includes(query) ||
+        tanggalMulai.includes(query) ||
+        tanggalSelesai.includes(query) ||
+        dayjs(p.tanggal_mulai_magang).format("DD MMMM YYYY").toLowerCase().includes(query) ||
+        dayjs(p.tanggal_selesai_magang).format("DD MMMM YYYY").toLowerCase().includes(query);
+
+    return matchInstansi && matchSearch;
 });
+
 
     const instansiList = [
         ...new Set(PesertaDiterima.map((p) => p.instansi))
@@ -247,9 +272,9 @@ const filteredPeserta = PesertaDiterima.filter((p) => {
                                                         <td>{idx + 1}</td>
                                                         <td className="nama-cell">
                                                         <img src={`http://localhost:3000/static/images/${peserta.foto_diri}`} alt="Foto Profil" />
-                                                        <span>{peserta.nama}</span>
+                                                        <span>{highlightText(peserta.nama, searchTerm)}</span>
                                                         </td>
-                                                        <td>{peserta.instansi}</td>
+                                                        <td>{highlightText(peserta.instansi, searchTerm)}</td>
                                                         <td>{dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")}</td>
                                                         <td>{dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}</td>
                                                         <td>{peserta.kategori}</td>
