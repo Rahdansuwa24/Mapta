@@ -45,21 +45,18 @@ function DataPenilaianAspek() {
                 }
             }) 
             const data = res.data.data.map((item)=>{
-                    //mapping teknis
                     const aspekTeknisArr = item.aspek_teknis?item.aspek_teknis.split(", "): []
                     const nilaiTeknisArr = item.nilai_teknis?item.nilai_teknis.split(", ").map(Number): []
                     const idPenilaianTeknisArr = item.id_penilaian_teknis?item.id_penilaian_teknis.split(", ").map(x=>parseInt(x.trim())): []
                     const idAspekTeknisArr = item.id_aspek_teknis?item.id_aspek_teknis.split(", ").map(x=>parseInt(x.trim())): []
                     const bidangTeknissArr = item.bidang_teknis ? item.bidang_teknis.split(" || ") : [];
 
-                    //maping non-teknis
                     const aspekNonTeknisArr = item.aspek_non_teknis?item.aspek_non_teknis.split(", "): []
                     const nilaiNonTeknisArr = item.nilai_non_teknis?item.nilai_non_teknis.split(", ").map(Number): []
                     const idPenilaianNonTeknisArr = item.id_penilaian_non_teknis?item.id_penilaian_non_teknis.split(", ").map(x=>parseInt(x.trim())):[]
                     const idAspekNonTeknisArr = item.id_aspek_non_teknis?item.id_aspek_non_teknis.split(", ").map(x=>parseInt(x.trim())): []
                     const bidangNonTeknisArr = item.bidang_non_teknis ? item.bidang_non_teknis.split(" || ") : [];
 
-                    //contructuring array
                     const semuaData = [
                         ...aspekTeknisArr.map((a, i)=>({
                             id_aspek: idAspekTeknisArr[i] || null,
