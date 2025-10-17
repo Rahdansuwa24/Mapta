@@ -338,6 +338,33 @@ static async storeAspek(data){
             throw(error)
         }
     }
+    static async getFinalization(){
+        try{
+            const [result] = await db.query(`SELECT pe.*, u.email,
+            GROUP_CONCAT(DISTINCT j.bidang ORDER BY j.bidang SEPARATOR ' || ') AS bidang_jadwal, 
+            GROUP_CONCAT(DISTINCT CONCAT(j.bidang, '::', j.tanggal_mulai, '::', j.tanggal_selesai)
+            ORDER BY j.bidang SEPARATOR ' || ') AS jadwal_per_bidang,
+
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND j.bidang = pic.bidang THEN CONCAT(j.bidang, '::', a.subjek, '::', COALESCE(p.penilaian,'null'))END ORDER BY a.id_aspek SEPARATOR ' || ') AS teknis_entries,
+
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND j.bidang = pic.bidang THEN CONCAT(j.bidang, '::', a.subjek, '::', COALESCE(p.penilaian,'null'))END ORDER BY a.id_aspek SEPARATOR ' || ') AS nonteknis_entries
+
+            FROM peserta_magang pe
+            LEFT JOIN users u ON u.id_users = pe.id_users
+            LEFT JOIN jadwal j ON j.id_peserta_magang = pe.id_peserta_magang
+            LEFT JOIN penilaian p ON p.id_peserta_magang = pe.id_peserta_magang
+            LEFT JOIN aspek a ON p.id_aspek = a.id_aspek
+            LEFT JOIN pic ON p.id_pic = pic.id_pic
+            WHERE j.bidang = pic.bidang
+            AND pe.status_penerimaan = 'final'
+            GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri
+            HAVING COUNT(p.id_penilaian) > 0;
+            `)
+            return result
+        }catch(error){
+            throw(error)
+        }
+    }
     static async getDownloadSertif(id){
         try{
             const [result] = await db.query(`SELECT p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan, p.sertifikat,

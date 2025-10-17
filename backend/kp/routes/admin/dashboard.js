@@ -100,6 +100,14 @@ router.get('/penolakan', verifyToken('admin'), async(req, res)=>{
         res.status(500).json({ status: false, error: err.message });
     }
 })
+router.get('/final', verifyToken('admin'), async(req, res)=>{
+    try{
+        const data = await Model_Admin.getFinalization()
+        res.status(200).json({data})
+    }catch(err){
+        res.status(500).json({ status: false, error: err.message });
+    }
+})
 router.patch('/update/profile/(:id)', verifyToken('admin'), async(req, res)=>{
     try{
         let id = req.params.id
