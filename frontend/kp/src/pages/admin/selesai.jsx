@@ -323,6 +323,73 @@ function SelesaiMagang() {
                   <p><span className="status-label selesai">{selectedPeserta.status_penerimaan}</span></p>
                 </div>
 
+                {/* Dokumen */}
+                    <div className="detail-item">
+                    <b>Dokumen :</b>
+                    <div className="dokumen-list">
+                        {selectedPeserta.dokumen_pendukung && JSON.parse(selectedPeserta.dokumen_pendukung).length > 0 ? (
+                       JSON.parse(selectedPeserta.dokumen_pendukung).map((doc, index) => (
+                            <div className="dokumen-item" key={index}>
+                            <span>{doc}</span>
+                            <div className="dokumen-actions">
+                              <button className="btn-download" onClick={()=>{
+                                  window.open(`http://localhost:3000/static/document/${doc}`,"_blank", "noopener,noreferrer")
+                              }}>Download</button>
+                            </div>
+                            </div>
+                        ))
+                        ) : (
+                        <p>Tidak ada dokumen</p>
+                        )}
+                    </div>
+                    </div>
+
+                    {/* Surat */}
+                    <div className="detail-item">
+                    <b>Surat Penerimaan/Penolakan :</b>
+                    <div className="dokumen-list">
+                        {selectedPeserta.surat_balasan ? (
+                        <div className="dokumen-item">
+                          <span>{selectedPeserta.surat_balasan}</span>
+                          <div className="dokumen-actions">
+                            <button className="btn-download"
+                              onClick={()=>{
+                                  window.open(`http://localhost:3000/public/document-admin/diterima/${selectedPeserta.surat_balasan}`,"_blank", "noopener,noreferrer")
+                              }}
+                            >
+                              Download
+                            </button>
+                          </div>
+                        </div>
+                        ) : (
+                        <p>Tidak ada surat</p>
+                        )}
+                    </div>
+                    </div>
+
+                    {/* Sertifikat */}
+                    <div className="detail-item">
+                    <b>Sertifikat :</b>
+                    <div className="dokumen-list">
+                        {selectedPeserta.sertifikat ? (
+                        <div className="dokumen-item">
+                          <span>{selectedPeserta.sertifikat}</span>
+                          <div className="dokumen-actions">
+                            <button
+                               onClick={()=>{
+                                  window.open(`http://localhost:3000/static/document-sertif/${selectedPeserta.sertifikat}`,"_blank", "noopener,noreferrer")
+                              }}
+                              className="btn-download"
+                            >
+                              Download
+                            </button>
+                          </div>
+                        </div>
+                        ) : (
+                        <p>Tidak ada sertifikat</p>
+                        )}
+                    </div>
+                </div>
                 <div className="nilai-modal-body">
                   <span>Nilai Per Departemen:</span>
                   {Object.entries(selectedPeserta.groupedByBidang || {}).map(([bidang, dataBidang], i) => {
