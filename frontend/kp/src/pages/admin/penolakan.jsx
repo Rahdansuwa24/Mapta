@@ -14,19 +14,16 @@ dayjs.locale('id');
 
 import "../../styles/dashboard.css";
 
-import profil1 from "../../assets/images/profil1.jpg";
-import profil2 from "../../assets/images/profil2.jpeg";
-
 const highlightText = (text, search) => {
-  if (!search) return text;
-  const parts = text.split(new RegExp(`(${search})`, "gi"));
-  return parts.map((part, i) =>
-    part.toLowerCase() === search.toLowerCase() ? (
-      <mark key={i} style={{ backgroundColor: "#AFD3F6" }}>{part}</mark>
-    ) : (
-      part
-    )
-  );
+    if (!search) return text;
+    const parts = text.split(new RegExp(`(${search})`, "gi"));
+    return parts.map((part, i) =>
+        part.toLowerCase() === search.toLowerCase() ? (
+        <mark key={i} style={{ backgroundColor: "#AFD3F6" }}>{part}</mark>
+        ) : (
+        part
+        )
+    );
 };
 
 function Ditolak() {
@@ -38,7 +35,7 @@ function Ditolak() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     
-     useEffect(()=>{
+    useEffect(()=>{
             fetchPesertaDitolak()
         }, [])
     
@@ -64,7 +61,7 @@ function Ditolak() {
             setUploadedStatus(statusMap);
             setUploadedFiles(filesMap)
         }catch(error){
-           setError("gagal mengambil data")
+            setError("gagal mengambil data")
         }finally{
             setLoading(false)
         }
@@ -172,26 +169,26 @@ function Ditolak() {
     }
 
 const pesertaFiltered = PesertaDitolak.filter((p) => {
-  const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
+const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
 
-  const nama = p.nama ? p.nama.toLowerCase() : "";
-  const instansi = p.instansi ? p.instansi.toLowerCase() : "";
-  const tanggalMulai = p.tanggal_mulai_magang
+const nama = p.nama ? p.nama.toLowerCase() : "";
+const instansi = p.instansi ? p.instansi.toLowerCase() : "";
+const tanggalMulai = p.tanggal_mulai_magang
     ? dayjs(p.tanggal_mulai_magang).format("DD MMMM YYYY").toLowerCase()
     : "";
-  const tanggalSelesai = p.tanggal_selesai_magang
+const tanggalSelesai = p.tanggal_selesai_magang
     ? dayjs(p.tanggal_selesai_magang).format("DD MMMM YYYY").toLowerCase()
     : "";
 
-  const keyword = searchTerm.toLowerCase();
+const keyword = searchTerm.toLowerCase();
 
-  const matchSearch =
+const matchSearch =
     nama.includes(keyword) ||
     instansi.includes(keyword) ||
     tanggalMulai.includes(keyword) ||
     tanggalSelesai.includes(keyword);
 
-  return matchInstansi && matchSearch;
+    return matchInstansi && matchSearch;
 });
 
 
@@ -247,7 +244,7 @@ const pesertaFiltered = PesertaDitolak.filter((p) => {
                         const pesertaInstansi = pesertaPerInstansi[instansi];
                         const individu = pesertaInstansi.filter((p) => p.kategori === "individu");
                         const kelompok = pesertaInstansi.filter((p) => p.kategori === "kelompok");
-                         const kelompokByInstansi = kelompok.reduce((acc, p) => {
+                        const kelompokByInstansi = kelompok.reduce((acc, p) => {
                             const key = `${p.instansi}-${p.id_kelompok}`;
                             if (!acc[key]) acc[key] = [];
                             acc[key].push(p);
@@ -273,7 +270,7 @@ const pesertaFiltered = PesertaDitolak.filter((p) => {
                                     } ${!openInstansi[instansi] ? "with-gap" : ""}`}
                                 >
                                     <div className="contain-table">
-                                        {/* TABEL INDIVIDU */}
+
                                         {individu.length > 0 && (
                                             <>
                                             <h4>Individu</h4>
@@ -339,7 +336,6 @@ const pesertaFiltered = PesertaDitolak.filter((p) => {
                                             </>
                                         )}
 
-                                        {/* TABEL KELOMPOK */}
                                         {Object.keys(kelompokByInstansi).map((kelKey, idx) => (
                                         <div key={kelKey}>
                                             <h4>Kelompok {idx + 1} ({kelompokByInstansi[kelKey][0].instansi})</h4>
@@ -420,12 +416,10 @@ const pesertaFiltered = PesertaDitolak.filter((p) => {
                     })}
                 </section>
 
-                {/* MODAL DETAIL PESERTA */}
                 {showModal && selectedPeserta && (
                     <div className="peserta-overlay" onClick={() => setShowModal(false)}>
                         <div className="peserta-modal" onClick={(e) => e.stopPropagation()}>
-                            
-                            {/* Header */}
+
                             <div className="peserta-modal-header">
                                 <span>Detail Peserta {selectedPeserta.nama}</span>
                                 <div className="peserta-close-btn" onClick={() => setShowModal(false)}>
@@ -433,10 +427,8 @@ const pesertaFiltered = PesertaDitolak.filter((p) => {
                                 </div>
                             </div>
 
-                            {/* Body */}
                             <div className="peserta-modal-body">
 
-                                {/* Foto Profil + Tombol Edit/Save */}
                                 <div className="peserta-top-section">
                                     <div className="peserta-profile-pic">
                                         <img
@@ -458,7 +450,6 @@ const pesertaFiltered = PesertaDitolak.filter((p) => {
                                     </div>
                                 </div>
 
-                                {/* Input data peserta */}
                                 <div className="peserta-detail-grid">
                                     <div className="peserta-detail-item">
                                         <b>Nama :</b>
@@ -480,11 +471,6 @@ const pesertaFiltered = PesertaDitolak.filter((p) => {
                                         <input className="peserta-input" type="text" value={selectedPeserta.email} disabled/>
                                     </div>
 
-                                    {/* <div className="peserta-detail-item">
-                                        <b>Password :</b>
-                                        <input className="peserta-input" type="text" value={selectedPeserta.password} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, password: e.target.value})} />
-                                    </div> */}
-
                                     <div className="peserta-detail-item">
                                         <b>Tanggal Mulai - Selesai :</b>
                                         <input className="peserta-input" type="text" value={`${dayjs(selectedPeserta.tanggal_mulai_magang).format("DD MMMM YYYY")} hingga ${dayjs(selectedPeserta.tanggal_selesai_magang).format("DD MMMM YYYY")}`} disabled />
@@ -500,7 +486,7 @@ const pesertaFiltered = PesertaDitolak.filter((p) => {
                                         <input className="peserta-input" type="text" value={selectedPeserta.status_penerimaan || "Belum ada"} disabled />
                                     </div>
 
-                                     <div className="peserta-detail-item">
+                                    <div className="peserta-detail-item">
                                         <b>Status Upload Surat Balasan:</b>{" "}
                                         {uploadedStatus[selectedPeserta.id_peserta_magang] ? (
                                             <>
@@ -515,11 +501,10 @@ const pesertaFiltered = PesertaDitolak.filter((p) => {
                                     </div>
                                 </div>
 
-                                {/* Dokumen tetap */}
-                                 <div className="peserta-detail-item">
+                                <div className="peserta-detail-item">
                                     <b>Dokumen :</b>
-                                     <div className="dokumen-list">
-                                       {selectedPeserta.dokumen_pendukung &&
+                                    <div className="dokumen-list">
+                                        {selectedPeserta.dokumen_pendukung &&
                                         JSON.parse(selectedPeserta.dokumen_pendukung).map((doc, index)=> (
                                             <div className="dokumen-item" key={doc}>
                                                 <span>{doc}</span>

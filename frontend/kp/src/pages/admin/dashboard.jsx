@@ -14,9 +14,6 @@ dayjs.locale('id');
 
 import "../../styles/dashboard.css";
 
-import profil1 from "../../assets/images/profil1.jpg";
-import profil2 from "../../assets/images/profil2.jpeg";
-
 function Dashboard() {
     useEffect(() => {
         document.title = "Admin MAPTA";
@@ -67,7 +64,7 @@ function Dashboard() {
     const [showModal, setShowModal] = useState(false);
     const [selectedPeserta, setSelectedPeserta] = useState(null);
     const [filterInstansi, setFilterInstansi] = useState("");
-    const [openInstansi, setOpenInstansi] = useState({}); // state untuk toggle tabel per instansi
+    const [openInstansi, setOpenInstansi] = useState({}); 
     const [showKuotaModal, setShowKuotaModal] = useState(false);
     const [kuota, setKuota] = useState(null);
 
@@ -78,21 +75,21 @@ function Dashboard() {
         setShowModal(true);
     };
 
-  const highlightText = (text, search) => {
-    if (!search) return text;
-    const parts = text.split(new RegExp(`(${search})`, "gi"));
-    return parts.map((part, i) =>
-      part.toLowerCase() === search.toLowerCase() ? (
-        <mark key={i} style={{ backgroundColor: "#AFD3F6" }}>
-          {part}
-        </mark>
-      ) : (
-        part
-      )
-    );
-  };
+    const highlightText = (text, search) => {
+        if (!search) return text;
+        const parts = text.split(new RegExp(`(${search})`, "gi"));
+        return parts.map((part, i) =>
+        part.toLowerCase() === search.toLowerCase() ? (
+            <mark key={i} style={{ backgroundColor: "#AFD3F6" }}>
+            {part}
+            </mark>
+        ) : (
+            part
+        )
+        );
+    };
 
-  const pesertaFiltered = calonPeserta.filter((p) => {
+    const pesertaFiltered = calonPeserta.filter((p) => {
     const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
     const query = searchTerm.toLowerCase().trim();
     if (!query) return matchInstansi;
@@ -103,15 +100,15 @@ function Dashboard() {
     const tanggalSelesai = dayjs(p.tanggal_selesai_magang).format("YYYY-MM-DD");
 
     const matchSearch =
-      nama.includes(query) ||
-      instansi.includes(query) ||
-      tanggalMulai.includes(query) ||
-      tanggalSelesai.includes(query) ||
-      dayjs(p.tanggal_mulai_magang).format("DD MMMM YYYY").toLowerCase().includes(query) ||
-      dayjs(p.tanggal_selesai_magang).format("DD MMMM YYYY").toLowerCase().includes(query);
+        nama.includes(query) ||
+        instansi.includes(query) ||
+        tanggalMulai.includes(query) ||
+        tanggalSelesai.includes(query) ||
+        dayjs(p.tanggal_mulai_magang).format("DD MMMM YYYY").toLowerCase().includes(query) ||
+        dayjs(p.tanggal_selesai_magang).format("DD MMMM YYYY").toLowerCase().includes(query);
 
     return matchInstansi && matchSearch;
-  });
+    });
 
 
     const instansiList = [
@@ -142,11 +139,11 @@ function Dashboard() {
     }, [calonPeserta, filterInstansi]);
 
     // handler kuota
-  const incrementKuota = () => setKuota((prev) => prev + 1);
-  const decrementKuota = () => setKuota((prev) => (prev > 0 ? prev - 1 : 0));
-  const handleInputKuota = (e) => setKuota(Number(e.target.value));
+    const incrementKuota = () => setKuota((prev) => prev + 1);
+    const decrementKuota = () => setKuota((prev) => (prev > 0 ? prev - 1 : 0));
+    const handleInputKuota = (e) => setKuota(Number(e.target.value));
 
-  const handleSaveKuota = async() => {
+    const handleSaveKuota = async() => {
     const token = localStorage.getItem("token")
     try{
         await axios.patch("http://localhost:3000/admin/dasbor/update-max-peserta", {
@@ -161,7 +158,7 @@ function Dashboard() {
         console.log(error)
         alert("gagal memperbarui data")
     }
-  };
+    };
 
     return (
         <div className="app-layout">
@@ -172,8 +169,7 @@ function Dashboard() {
                 <section className="main">
                     <div className="submain">
                         <p className="judul-submain">Peserta Magang yang Mendaftar</p>
-                        
-                        {/* tombol ubah kuota */}
+
                         <button
                             className="btn-kuota"
                             onClick={() => setShowKuotaModal(true)}
@@ -220,14 +216,13 @@ function Dashboard() {
                         </div>
                         </div>
 
-                        {/* contain-table muncul kalau openInstansi[instansi] true */}
                         <div
                         className={`contain-table-wrapper ${
                             openInstansi[instansi] ? "open" : "closed"
                         } ${!openInstansi[instansi] ? "with-gap" : ""}`}
                         >
                         <div className="contain-table">
-                            {/* TABEL INDIVIDU */}
+
                             {individu.length > 0 && (
                             <>
                                 <h4>Individu</h4>
@@ -340,7 +335,6 @@ function Dashboard() {
                             </>
                             )}
 
-                            {/* TABEL KELOMPOK */}
                             {kelompok.length > 0 && (
                             <>
                                 <h4>Kelompok</h4>
@@ -460,7 +454,6 @@ function Dashboard() {
                 )}
                 </section>
 
-                {/* MODAL */}
                 {showModal && selectedPeserta && (
                     <div className="overlay" onClick={() => setShowModal(false)}>
                         <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -504,10 +497,6 @@ function Dashboard() {
                                     <b>Email :</b>
                                     <p>{selectedPeserta.email}</p>
                                 </div>
-                                {/* <div className="detail-item">
-                                    <b>Password :</b>
-                                    <p>{selectedPeserta.password}</p>
-                                </div> */}
 
                                 <div className="detail-item">
                                     <b>Dokumen :</b>
@@ -529,12 +518,12 @@ function Dashboard() {
                         </div>
                     </div>
                 )}
-                {/* MODAL UBAH KUOTA */}
+
                 {showKuotaModal && (
                 <div className="kuota-overlay" onClick={() => setShowKuotaModal(false)}>
                     <div
-                    className="input-group" // class utama tetap input-group sesuai style lama
-                    onClick={(e) => e.stopPropagation()} // klik di dalam tidak menutup
+                    className="input-group" 
+                    onClick={(e) => e.stopPropagation()} 
                     >
                     <div className="kuota-header">
                         <button

@@ -14,7 +14,6 @@ const ChooseRoleSection = () => {
 
     return (
         <section className="gradient-bg">
-        {/* Tombol back */}
         <button
             onClick={() => navigate(-1)}
             className="back-button"
@@ -31,7 +30,6 @@ const ChooseRoleSection = () => {
             <span className="choose-title">Pilih Peran Pendaftaran</span>
 
             <div className="choose-wrapper">
-            {/* Kolom kiri: siswa/mahasiswa */}
             <motion.div
                 className="choose-text"
                 initial={{ opacity: 0, x: -50 }}
@@ -53,7 +51,6 @@ const ChooseRoleSection = () => {
                 </Link>
             </motion.div>
 
-            {/* Gambar di tengah */}
             <motion.div
                 className="choose-image"
                 initial={{ scale: 0.8, opacity: 0 }}
@@ -63,7 +60,6 @@ const ChooseRoleSection = () => {
                 <img src={chooseImage} alt="Image Illustration" />
             </motion.div>
 
-            {/* Kolom kanan: dinas */}
             <motion.div
                 className="choose-text"
                 initial={{ opacity: 0, x: 50 }}

@@ -286,7 +286,6 @@ function SelesaiMagang() {
           })}
         </section>
 
-        {/* === MODAL DETAIL PESERTA === */}
         {showModal && selectedPeserta && (
           <div className="overlay" onClick={() => setShowModal(false)}>
             <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -298,7 +297,7 @@ function SelesaiMagang() {
               </div>
 
               <div className="modal-body">
-                {/* --- Detail Profil --- */}
+
                 <div className="profile-pic">
                   <img
                     src={`http://localhost:3000/static/images/${selectedPeserta.foto_diri}`}
@@ -324,22 +323,23 @@ function SelesaiMagang() {
                   <p><span className="status-label selesai">{selectedPeserta.status_penerimaan}</span></p>
                 </div>
 
-                {/* === NILAI PER DEPARTEMEN === */}
                 <div className="nilai-modal-body">
-                  <h4>Nilai Per Departemen</h4>
+                  <span>Nilai Per Departemen:</span>
                   {Object.entries(selectedPeserta.groupedByBidang || {}).map(([bidang, dataBidang], i) => {
                     const rataTeknis = getRataRata(dataBidang.teknis);
                     const rataNonTeknis = getRataRata(dataBidang.nonTeknis);
                     return (
                       <div key={i} className="nilai-section-group">
-                        <h4>Departemen: {bidang}</h4>
-                        <p>
+                    <div className="nilai-subjudul">
+                        <h4 style={{fontWeight: "600"}}>Departemen: {bidang}</h4>
+                        <h4>
                           ({dayjs(dataBidang.tanggal_mulai).format("DD MMMM YYYY")} hingga{" "}
                           {dayjs(dataBidang.tanggal_selesai).format("DD MMMM YYYY")})
-                        </p>
+                        </h4>
+                    </div>
 
                         <div className="nilai-section">
-                          <h5>Aspek Teknis</h5>
+                          <h4>Aspek Teknis</h4>
                           <table className="nilai-table">
                             <thead>
                               <tr>
@@ -376,7 +376,7 @@ function SelesaiMagang() {
                         </div>
 
                         <div className="nilai-section">
-                          <h5>Aspek Non Teknis</h5>
+                          <h4>Aspek Non Teknis</h4>
                           <table className="nilai-table">
                             <thead>
                               <tr>

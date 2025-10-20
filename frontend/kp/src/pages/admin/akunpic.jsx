@@ -11,16 +11,16 @@ import axios from 'axios'
 import "../../styles/dashboard.css";
 
 const highlightText = (text, highlight) => {
-  if (!highlight) return text;
-  const regex = new RegExp(`(${highlight})`, "gi");
-  const parts = text.split(regex);
-  return parts.map((part, i) =>
-    regex.test(part) ? (
-      <span key={i} style={{ backgroundColor: "#AFD3F6" }}>{part}</span>
-    ) : (
-      part
-    )
-  );
+    if (!highlight) return text;
+    const regex = new RegExp(`(${highlight})`, "gi");
+    const parts = text.split(regex);
+    return parts.map((part, i) =>
+        regex.test(part) ? (
+        <span key={i} style={{ backgroundColor: "#AFD3F6" }}>{part}</span>
+        ) : (
+        part
+        )
+    );
 };
 
 function AkunPIC() {
@@ -42,7 +42,7 @@ function AkunPIC() {
     }, [])
 
     const filteredAkun = akunList.filter(
-  (akun) =>
+    (akun) =>
     akun.bidang.toLowerCase().includes(searchTerm.toLowerCase()) ||
     akun.email.toLowerCase().includes(searchTerm.toLowerCase())
 );
@@ -63,7 +63,7 @@ function AkunPIC() {
                 console.error(error)
             }
     }
-    // Tambah / Update akun PIC
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem("token");
@@ -85,7 +85,7 @@ function AkunPIC() {
 
         try{
             if (editingIndex !== null) {
-            // mode edit
+
             const akunId = akunList[editingIndex].id_pic;
             await axios.patch(`http://localhost:3000/admin/pic/update/${akunId}`, data, {
                 headers: {
@@ -95,7 +95,7 @@ function AkunPIC() {
             })
                 alert("data akun berhasil diperbarui")
             } else {
-            // mode tambah
+
             await axios.post(`http://localhost:3000/admin/pic/store`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -124,7 +124,6 @@ function AkunPIC() {
 
     };
 
-    // Hapus akun
     const handleDelete = async (index) => {
         const akun = akunList[index]
         const akunId = akun.id_users
@@ -145,7 +144,6 @@ function AkunPIC() {
         }
     };
 
-    // Edit akun
     const handleEdit = (index) => {
         const akun = akunList[index];
         setDepartemen(akun.bidang);
@@ -167,7 +165,6 @@ function AkunPIC() {
             </div>
 
             <div className="container-instansi">
-                {/* HEADER */}
                 <div className="penilaian-header">
                 <button
                     className="btn-buat-aspek"
@@ -183,7 +180,6 @@ function AkunPIC() {
                 </button>
                 </div>
 
-                {/* TABEL DATA AKUN */}
                 <div className="tabel-wrapper" style={{ marginTop: "5rem" }}>
                 <table className="table-wrapper">
                     <thead>
@@ -191,7 +187,6 @@ function AkunPIC() {
                         <th>No</th>
                         <th>Nama Departemen</th>
                         <th>Email</th>
-                        {/* <th>Password</th> */}
                         <th>Aksi</th>
                     </tr>
                     </thead>
@@ -201,7 +196,6 @@ function AkunPIC() {
                         <td>{idx + 1}</td>
                         <td>{highlightText(akun.bidang, searchTerm)}</td>
                         <td>{highlightText(akun.email, searchTerm)}</td>
-                        {/* <td>{akun.password}</td> */}
                         <td className="aksi-cell">
                             <div className="aksi-wrapper">
                             <TbEdit
@@ -224,14 +218,12 @@ function AkunPIC() {
             </div>
             </section>
 
-            {/* MODAL INPUT AKUN PIC */}
             {showModal && (
             <div className="peserta-overlay" onClick={() => setShowModal(false)}>
                 <div
                 className="peserta-modal"
                 onClick={(e) => e.stopPropagation()}
                 >
-                {/* Header */}
                 <div className="peserta-modal-header">
                     <span>{editingIndex !== null ? "Edit Akun PIC" : "Tambah Akun PIC"}</span>
                     <div
@@ -242,10 +234,8 @@ function AkunPIC() {
                     </div>
                 </div>
 
-                {/* Body */}
                 <div className="peserta-modal-body">
                     <form className="form-penilaian" onSubmit={handleSubmit}>
-                    {/* Dropdown Departemen */}
                     <div className="form-group">
                         <label>Nama Departemen</label>
                         <select
@@ -272,7 +262,6 @@ function AkunPIC() {
                         </select>
                     </div>
 
-                    {/* Input Email */}
                     <div className="form-group">
                         <label>Email</label>
                         <input
@@ -283,7 +272,6 @@ function AkunPIC() {
                         />
                     </div>
 
-                    {/* Input Password */}
                     <div className="form-group">
                         <label>Password</label>
                         <input
@@ -294,7 +282,6 @@ function AkunPIC() {
                         />
                     </div>
 
-                    {/* Tombol Simpan */}
                     <div className="form-actions">
                         <button type="submit" className="btn-save">
                         {editingIndex !== null ? "Update" : "Simpan"}

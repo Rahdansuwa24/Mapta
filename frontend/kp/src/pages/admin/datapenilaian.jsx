@@ -14,8 +14,6 @@ dayjs.locale('id');
 import "../../styles/dashboard.css";
 import "../../styles/datanilaiaspek.css";
 
-import profil1 from "../../assets/images/profil1.jpg";
-import profil2 from "../../assets/images/profil2.jpeg";
 
 const highlightText = (text, highlight) => {
     if (!highlight) return text;
@@ -106,8 +104,8 @@ function DataPenilaianAspek() {
     const [isEdit, setIsEdit] = useState(false);
     const [departemenList, setDepartemenList] = useState([])
     const [aspekVisibility, setAspekVisibility] = useState(() => {
-           const saved = localStorage.getItem("aspekVisibility");
-           return saved ? JSON.parse(saved) : {};
+            const saved = localStorage.getItem("aspekVisibility");
+            return saved ? JSON.parse(saved) : {};
     });
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -130,14 +128,14 @@ function DataPenilaianAspek() {
     };
 
     const instansiList = [...new Set(dataNilaiPeserta.map((item) => item.instansi))]
-// 🔹 Filter berdasarkan kata di search bar (nama atau instansi)
+// Filter berdasarkan kata di search bar (nama atau instansi)
 const dataFilteredSearch = dataNilaiPeserta.filter(
   (item) =>
     item.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.instansi.toLowerCase().includes(searchTerm.toLowerCase())
 );
 
-// 🔹 Lanjutkan filter instansi kalau kamu punya dropdown instansi
+// Lanjutkan filter instansi kalau kamu punya dropdown instansi
 const dataFiltered = filterInstansi
   ? groupedByInstansi(
       dataFilteredSearch.filter((d) => d.instansi === filterInstansi)
@@ -190,7 +188,7 @@ const dataFiltered = filterInstansi
         const token = localStorage.getItem("token");
 
         try{
-             const aspekSemua = Object.values(selectedPeserta.groupedByBidang)
+            const aspekSemua = Object.values(selectedPeserta.groupedByBidang)
             .flatMap(bidang => [...bidang.teknis, ...bidang.nonTeknis])
             .map(a => {
                 const key = a.id_penilaian
@@ -245,7 +243,7 @@ const dataFiltered = filterInstansi
 
     const getRataRata = (list) => {
         if (list.length === 0) return { nilai: "-", indeks: "-" };
-         const validNilai = list
+        const validNilai = list
         .map(item => parseFloat(item.nilai))
         .filter(n => !isNaN(n));
         if (validNilai.length === 0) return { nilai: "-", indeks: "-" };
@@ -317,7 +315,7 @@ const dataFiltered = filterInstansi
                                                                 ...pesertaDetail.groupedByBidang[bidang].teknis,
                                                                 ...pesertaDetail.groupedByBidang[bidang].nonTeknis,
                                                             ]);
-                                                           
+                                                            
                                                             const nilai = {};
                                                             semuaAspek.forEach((a) => {
                                                                 const key = a.id_penilaian || `${a.id_aspek}-${p.id_peserta_magang}`;

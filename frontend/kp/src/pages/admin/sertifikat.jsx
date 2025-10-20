@@ -12,9 +12,6 @@ dayjs.locale('id');
 
 import "../../styles/dashboard.css";
 
-import profil1 from "../../assets/images/profil1.jpg";
-import profil2 from "../../assets/images/profil2.jpeg";
-
 const highlightText = (text, highlight) => {
     if (!highlight) return text;
     const regex = new RegExp(`(${highlight})`, "gi");
@@ -66,7 +63,6 @@ function Sertifikat() {
     const [fileUploads, setFileUploads] = useState({});
     const [uploadedStatus, setUploadedStatus] = useState({});
     const [showModal, setShowModal] = useState(false);
-    // const [showNilai, setShowNilai] = useState(false);
     const [dataPeserta, setDataPeserta] = useState([])
     const [selectedPeserta, setSelectedPeserta] = useState(null);
     const [uploadedFiles, setUploadedFiles] = useState({});
@@ -111,7 +107,7 @@ function Sertifikat() {
     };
 
     const handleDownload = (peserta) => {
-         window.open(`http://localhost:3000/admin/sertifikat/download-sertifikat/${peserta.id_peserta_magang}`, "_blank");
+        window.open(`http://localhost:3000/admin/sertifikat/download-sertifikat/${peserta.id_peserta_magang}`, "_blank");
     };
 
     const handleOpenModal = (peserta) => {
@@ -123,11 +119,6 @@ function Sertifikat() {
     p.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.instansi.toLowerCase().includes(searchTerm.toLowerCase())
 );
-
-    // const handleOpenNilai = (peserta) => {
-    //     setSelectedPeserta(peserta);
-    //     setShowNilai(true);
-    // };
 
     return (
         <div className="app-layout">
@@ -152,7 +143,6 @@ function Sertifikat() {
                     <th>Status Magang</th>
                     <th>Download Sertifikat</th>
                     <th>Upload Sertifikat</th>
-                    {/* <th>Detail Nilai</th> */}
                     <th>Aksi</th>
                     </tr>
                 </thead>
@@ -173,7 +163,6 @@ function Sertifikat() {
                         </span>
                         </td>
 
-                        {/* Download Sertifikat */}
                         <td>
                         <span
                             className="label-action download"
@@ -183,7 +172,6 @@ function Sertifikat() {
                         </span>
                         </td>
 
-                        {/* Upload Sertifikat */}
                         <td>
                         <div className="upload-container">
                             <input
@@ -202,17 +190,6 @@ function Sertifikat() {
                         </div>
                         </td>
 
-                        {/* Detail Nilai */}
-                        {/* <td>
-                        <span
-                            className="label-action nilai"
-                            onClick={() => handleOpenNilai(peserta)}
-                        >
-                            Lihat Nilai
-                        </span>
-                        </td> */}
-
-                        {/* Aksi */}
                         <td className="aksi-cell">
                         <FaEllipsisVertical
                             style={{ cursor: "pointer" }}
@@ -227,7 +204,6 @@ function Sertifikat() {
             </div>
             </section>
 
-            {/* MODAL DETAIL PESERTA */}
             {showModal && selectedPeserta && (
             <div className="peserta-overlay" onClick={() => setShowModal(false)}>
                 <div
@@ -280,72 +256,6 @@ function Sertifikat() {
                 </div>
             </div>
             )}
-
-            {/* MODAL DETAIL NILAI */}
-            {/* {showNilai && selectedPeserta && (
-            <div className="nilai-overlay" onClick={() => setShowNilai(false)}>
-                <div className="nilai-modal" onClick={(e) => e.stopPropagation()}>
-                <div className="nilai-modal-header">
-                    <span>Detail Nilai Peserta {selectedPeserta.nama}</span>
-                    <div className="nilai-close-btn" onClick={() => setShowNilai(false)}>
-                    <FaTimes />
-                    </div>
-                </div> */}
-
-                {/* <div className="nilai-modal-body"> */}
-                    {/* ASPEK TEKNIS */}
-                    {/* <div className="nilai-section">
-                    <h4>Aspek Teknis</h4>
-                    <table className="nilai-table">
-                        <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Aspek Yang Dinilai</th>
-                            <th>Nilai Angka</th>
-                            <th>Nilai Huruf</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {selectedPeserta.nilaiTeknis.map((item, i) => (
-                            <tr key={i}>
-                            <td>{i + 1}</td>
-                            <td>{item.aspek}</td>
-                            <td>{item.skor}</td>
-                            <td>{item.huruf}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                    </div> */}
-
-                    {/* ASPEK NON TEKNIS */}
-                    {/* <div className="nilai-section">
-                    <h4>Aspek Non Teknis</h4>
-                    <table className="nilai-table">
-                        <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Aspek Yang Dinilai</th>
-                            <th>Nilai Angka</th>
-                            <th>Nilai Huruf</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {selectedPeserta.nilaiNonTeknis.map((item, i) => (
-                            <tr key={i}>
-                            <td>{i + 1}</td>
-                            <td>{item.aspek}</td>
-                            <td>{item.skor}</td>
-                            <td>{item.huruf}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                    </div>
-                </div>
-                </div>
-            </div>
-            )} */}
         </div>
         </div>
     );

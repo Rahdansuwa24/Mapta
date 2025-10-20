@@ -14,8 +14,6 @@ dayjs.locale('id');
 
 import "../../styles/user.css";
 
-import profil1 from "../../assets/images/profil1.jpg";
-
 function NilaiPeserta() {
     useEffect(() => {
         document.title = "Nilai Peserta";
@@ -74,7 +72,6 @@ function NilaiPeserta() {
     const [openDepartemen, setOpenDepartemen] = useState({});
     const [nilaiPeserta, setNilaiPeserta] = useState([])
 
-    // toggle departemen buka/tutup
     const toggleDepartemen = (departemen) => {
         setOpenDepartemen((prev) => ({
             ...prev,
@@ -170,7 +167,6 @@ function NilaiPeserta() {
                                         </div>
 
                                         <div className="jp-aspek-container">
-                                            {/* Aspek Teknis */}
                                             <div className="jp-aspek-box">
                                                 <h5>Aspek Teknis</h5>
                                                 <table className="jp-table-aspek">
@@ -210,7 +206,6 @@ function NilaiPeserta() {
                                                 </table>
                                             </div>
 
-                                            {/* Aspek Non Teknis */}
                                             <div className="jp-aspek-box">
                                                 <h5>Aspek Non Teknis</h5>
                                                 <table className="jp-table-aspek">
