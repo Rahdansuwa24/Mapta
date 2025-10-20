@@ -1,5 +1,4 @@
 // PAGE JADWAL ADMIN 
-
 import React, { useEffect, useState } from "react";
 import SidebarAdmJd from "../../components/sidebar-adm";
 import NavbarAdmJd from "../../components/navbar-adm";
@@ -11,7 +10,6 @@ import axios from 'axios'
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 dayjs.locale('id');
-//fer iki buatkan kaya warning diatas kayak yang pendftaran.
 
 import "../../styles/dashboard.css";
 
@@ -94,7 +92,7 @@ function Jadwal() {
                 await axios.post(`http://localhost:3000/admin/jadwal/store`,{
                             
                     bidang: formJadwal.departemen,
-                    id_peserta_magang: formJadwal.id_peserta_magang, // harus id
+                    id_peserta_magang: formJadwal.id_peserta_magang,
                     tanggal_mulai: formJadwal.tanggal_mulai,
                     tanggal_selesai: formJadwal.tanggal_selesai,
                 }, {
@@ -132,48 +130,12 @@ function Jadwal() {
         }
     }
 
-    // Dummy data
-    const pesertaDummy = [
-        { id: 1, nama: "Budi Santoso", instansi: "Politeknik Elektronika Negeri Surabaya" },
-        { id: 2, nama: "Danang Cosmos", instansi: "Politeknik Elektronika Negeri Surabaya" },
-        { id: 3, nama: "Siti Aisyah", instansi: "Politeknik Elektronika Negeri Surabaya" },
-        { id: 4, nama: "Ahmad Ifcel", instansi: "Universitas Airlangga" },
-    ];
-
-        // Dummy jadwal
-    const jadwalDummy = [
-        {
-        id: 1,
-        nama: "Budi Santoso",
-        instansi: "Politeknik Elektronika Negeri Surabaya",
-        departemen: "Kesekretariatan",
-        tglMulai: "01-09-2025",
-        tglSelesai: "30-11-2025",
-        },
-        {
-        id: 2,
-        nama: "Danang Cosmos",
-        instansi: "Politeknik Elektronika Negeri Surabaya",
-        departemen: "Pengembangan Sumber Daya",
-        tglMulai: "01-09-2025",
-        tglSelesai: "30-11-2025",
-        },
-        {
-        id: 3,
-        nama: "Lexy Pikachu",
-        instansi: "Politeknik Elektronika Negeri Surabaya",
-        departemen: "Deposit, Akuisisi, Pelestarian dan Pengolahan Bahan Perpustakaan",
-        tglMulai: "01-09-2025",
-        tglSelesai: "30-11-2025",
-        },
-    ];
-
     const [filterDepartemen, setFilterDepartemen] = useState("");
     const [openDepartemen, setOpenDepartemen] = useState({});
     const [showModal, setShowModal] = useState(false);
     const [editingJadwal, setEditingJadwal] = useState(null);
     const [jadwalData, setJadwalData] = useState([]);
-    const [periodeKosong, setPeriodeKosong] = useState("") // simpan jadwal dalam state
+    const [periodeKosong, setPeriodeKosong] = useState("")
     const [dataPeserta, setDataPeserta] = useState([])
     const [selectedPesertaId, setSelectedPesertaId] = useState("");
 
@@ -262,7 +224,7 @@ const jadwalFiltered = jadwalData.filter((j) => {
                             tanggal_selesai: "",
                             departemen: "",
                             });
-                            setEditingJadwal(null); // reset mode edit
+                            setEditingJadwal(null); 
                             setShowModal(true);
                         }}
                         >
@@ -341,14 +303,14 @@ const jadwalFiltered = jadwalData.filter((j) => {
                                             tanggal_selesai: dayjs(item.tanggal_selesai).format("YYYY-MM-DD"),
                                             departemen: item.bidang,
                                         });
-                                        setEditingJadwal(item); // simpan data sedang diedit
+                                        setEditingJadwal(item); 
                                         setShowModal(true);
                                     }}
                                     />
                                     <MdDeleteOutline
                                     style={{ cursor: "pointer", color: "red", fontSize: "22px" }}
                                     title="Hapus Jadwal"
-                                     onClick={() => handleDelete(item.id_jadwal)}
+                                    onClick={() => handleDelete(item.id_jadwal)}
                                     />
                                 </div>
                                 </td>
@@ -364,7 +326,6 @@ const jadwalFiltered = jadwalData.filter((j) => {
             })}
             </section>
 
-            {/* MODAL FORM BUAT JADWAL */}
             {showModal && (
             <div className="jadwal-overlay" onClick={() => setShowModal(false)}>
                 <div
@@ -382,7 +343,6 @@ const jadwalFiltered = jadwalData.filter((j) => {
                 </div>
 
                 <div className="jadwal-modal-body">
-                    {/* Instansi */}
                     <div className="jadwal-detail-item">
                     <b>Instansi :</b>
                     <select
@@ -403,7 +363,6 @@ const jadwalFiltered = jadwalData.filter((j) => {
                     </select>
                     </div>
 
-                    {/* Peserta */}
                     <div className="jadwal-detail-item">
                     <b>Peserta :</b>
                     <select
@@ -423,7 +382,6 @@ const jadwalFiltered = jadwalData.filter((j) => {
                     </select>
                     </div>
 
-                    {/* tampilkan periode tanggal magang peserta*/}
                     <div className="jadwal-detail-item">
                     <b>Periode Magang :</b>
                         <input
@@ -437,7 +395,6 @@ const jadwalFiltered = jadwalData.filter((j) => {
                         />
                     </div>
 
-                    {/* Tanggal Mulai */}
                     <div className="jadwal-detail-item">
                     <b>Tanggal Mulai Magang :</b>
                     <input
@@ -450,7 +407,6 @@ const jadwalFiltered = jadwalData.filter((j) => {
                     />
                     </div>
 
-                    {/* Tanggal Selesai */}
                     <div className="jadwal-detail-item">
                     <b>Tanggal Selesai Magang :</b>
                     <input
@@ -463,7 +419,6 @@ const jadwalFiltered = jadwalData.filter((j) => {
                     />
                     </div>
 
-                    {/* Departemen */}
                     <div className="jadwal-detail-item">
                     <b>Departemen :</b>
                     <select

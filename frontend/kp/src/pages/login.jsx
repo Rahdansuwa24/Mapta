@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa"; // ikon panah
+import { FaArrowLeft } from "react-icons/fa";
 import { motion } from "framer-motion"; 
 import { ImEye, ImEyeBlocked } from "react-icons/im";
 import "../styles/login.css";

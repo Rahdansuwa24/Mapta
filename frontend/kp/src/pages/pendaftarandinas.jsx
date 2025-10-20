@@ -20,7 +20,6 @@ export default function PendaftaranDinas() {
     const [dokumenLabels, setDokumenLabels] = useState(["Dokumen:"]);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    // const [kategoriPertama, setKategoriPertama] = useState("individu");
     const [showScrollTop, setShowScrollTop] = useState(false);
     const [formData, setFormData] = useState([
         {
@@ -52,7 +51,6 @@ export default function PendaftaranDinas() {
     useEffect(()=>{
         fetchKuotaTersisa()
     }, [])
-    // Scroll event untuk tombol scroll top
     useEffect(() => {
         const handleScroll = () => setShowScrollTop(window.scrollY > 300);
         window.addEventListener("scroll", handleScroll);
@@ -149,7 +147,7 @@ export default function PendaftaranDinas() {
             console.log("Response:", response.data);
             alert(response.data.message);
 
-           await fetchKuotaTersisa()
+        await fetchKuotaTersisa()
 
             setFormData([{
                 email: "",
@@ -185,18 +183,6 @@ export default function PendaftaranDinas() {
         >
             {withTopInfo && (
                 <div className="top-info">
-                    {/* <button
-                        type="button"
-                        onClick={addSection}
-                        disabled={kategoriPertama !== "kelompok"}
-                        style={{
-                            opacity: kategoriPertama === "kelompok" ? 1 : 0.5,
-                            cursor:
-                                kategoriPertama === "kelompok" ? "pointer" : "not-allowed",
-                        }}
-                    >
-                        Tambah
-                    </button> */}
                     <b>Note:</b> Peserta Instansi/Dinas wajib mengunggah foto berseragam dinas, sedangkan dokumen bersifat opsional (dapat dikirim saat pendaftaran atau menyusul).
                 </div>
             )}
@@ -225,7 +211,6 @@ export default function PendaftaranDinas() {
             )}
 
             <div className="form-section">
-                {/* KOLOM KIRI */}
                 <div className="kolom">
                     <div className="foto-jenjang">
                         <label className="upload-box">
@@ -247,7 +232,6 @@ export default function PendaftaranDinas() {
                         </div>
                     </div>
                     <input type="email" placeholder="Email Aktif" value={formData[index].email} onChange={(e)=>handleChange(index, "email", e.target.value)} />
-                    {/* password */}
                     <div className="password-input">
                     <input
                         type={showPassword ? "text" : "password"}
@@ -265,7 +249,6 @@ export default function PendaftaranDinas() {
                     </span>
                     </div>
 
-                    {/* konfirmasi password */}
                     <div className="password-input">
                     <input
                         type={showConfirmPassword ? "text" : "password"}
@@ -287,7 +270,6 @@ export default function PendaftaranDinas() {
 
                 </div>
 
-                {/* KOLOM KANAN */}
                 <div className="kolom">
                     <input type="text" placeholder="Nama Lengkap" value={formData[index].nama} onChange={(e)=>handleChange(index, "nama", e.target.value)} />
                     <input type="text" placeholder="Instansi" value={formData[index].instansi} onChange={(e)=>handleChange(index, "instansi", e.target.value)} />
@@ -315,7 +297,6 @@ export default function PendaftaranDinas() {
                             onChange={(e)=>handleChange(index, "tanggal_selesai_magang", e.target.value)}
                         />
                     </div>
-                    {/* Label dan Input */}
                     <label className="input-file-wrap">
                         <div className="placeholder-text">
                             Upload Dokumen Pendukung
@@ -329,7 +310,6 @@ export default function PendaftaranDinas() {
                     </label>
                 </div>
 
-                    {/* Preview file */}
                     {formData[index].dokumen.length > 0 && (
                     <div className="custom-file-list">
                         {formData[index].dokumen.map((f, i) => (
@@ -346,10 +326,6 @@ export default function PendaftaranDinas() {
                         ))}
                     </div>
                     )}
-
-                {/* <p>
-
-                </p> */}
             </div>
         </motion.div>
     );

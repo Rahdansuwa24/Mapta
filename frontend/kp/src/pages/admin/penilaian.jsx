@@ -20,7 +20,6 @@ function Penilaian() {
     const [kategoriAspek, setKategoriAspek] = useState("");
     const [checked, setChecked] = useState({});
 
-    // Data dummy awal
     const [aspekList, setAspekList] = useState([]);
 
     useEffect(()=>{
@@ -181,7 +180,6 @@ function Penilaian() {
                             </motion.button>
                         </div>
 
-                        {/* Aspek Teknis */}
                         {Object.keys(aspekTeknis).length > 0 && (
                             <motion.div 
                                 className="aspek-section"
@@ -220,7 +218,6 @@ function Penilaian() {
                             </motion.div>
                         )}
 
-                        {/* Aspek Non Teknis */}
                         {(aspekNonTeknisGlobal.length > 0 || Object.keys(aspekNonTeknisCustom).length > 0) && (
                             <motion.div 
                                 className="aspek-section"
@@ -231,7 +228,6 @@ function Penilaian() {
                             >
                                 <h3>Aspek Non Teknis</h3>
 
-                                {/* Global */}
                                 {aspekNonTeknisGlobal.length > 0 && (
                                     <div className="departemen-group">
                                         <span style={{ fontStyle: "italic", fontWeight: 500, fontSize: "14.5px" }}>
@@ -259,7 +255,6 @@ function Penilaian() {
                                     </div>
                                 )}
 
-                                {/* Custom per Departemen */}
                                 {Object.keys(aspekNonTeknisCustom).map((dept, i) => (
                                     <div key={i} className="departemen-group" style={{ marginTop: "15px" }}>
                                         <span style={{ fontStyle: "italic", fontWeight: 500, fontSize: "14.5px" }}>
@@ -291,7 +286,6 @@ function Penilaian() {
                     </div>
                 </section>
 
-                {/* MODAL INPUT PENILAIAN */}
                 <AnimatePresence>
                     {showModal && (
                         <motion.div 
@@ -309,7 +303,6 @@ function Penilaian() {
                                 exit={{ scale: 0.8, opacity: 0 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                {/* Header */}
                                 <div className="peserta-modal-header">
                                     <span>Tambah Aspek Penilaian</span>
                                     <div className="peserta-close-btn" onClick={() => setShowModal(false)}>
@@ -317,7 +310,6 @@ function Penilaian() {
                                     </div>
                                 </div>
 
-                                {/* Body */}
                                 <div className="peserta-modal-body">
                                     <form className="form-penilaian" onSubmit={handleSubmit}>
                                         <div className="form-group">

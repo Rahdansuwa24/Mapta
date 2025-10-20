@@ -20,23 +20,6 @@ function JadwalPeserta() {
         fetchDataJadwal()
     }, []);
 
-    // Contoh data jadwal (dummy)
-    const jadwalDummy = {
-        periode: [
-            "10 Juli 2025 s.d. 15 Agustus 2025",
-            "10 Juli 2025 s.d. 15 Agustus 2025",
-            "10 Juli 2025 s.d. 15 Agustus 2025",
-            "10 Juli 2025 s.d. 15 Agustus 2025",
-            "10 Juli 2025 s.d. 15 Agustus 2025",
-        ],
-        departemen: [
-            { nama: "Pelayanan", jadwal: ["Budi Santoso", "-", "-", "-", "-"] },
-            { nama: "Kearsipan", jadwal: ["-", "-", "Budi Santoso", "-", "-"] },
-            { nama: "Penyelamatan Arsip", jadwal: ["-", "Budi Santoso", "-", "-", "-"] },
-            { nama: "Deposit Buku", jadwal: ["-", "-", "-", "Budi Santoso", "-"] },
-            { nama: "Kesekretariatan", jadwal: ["-", "-", "-", "-", "Budi Santoso"] },
-        ],
-    };
     const fetchDataJadwal = async()=>{
         const token = localStorage.getItem("token")
         try{
@@ -120,7 +103,7 @@ function JadwalPeserta() {
                                 <tr>
                                     <th>Tempat Departemen</th>
                                     {jadwalPeserta.periode?.map((p, idx) => (
-                                         <th key={idx}>{p}</th>
+                                        <th key={idx}>{p}</th>
                                     ))}
                                 </tr>
                             </thead>

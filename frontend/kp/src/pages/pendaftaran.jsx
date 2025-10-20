@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BsArrowUpCircle } from "react-icons/bs";
 import { ImEye, ImEyeBlocked } from "react-icons/im";
 import { useNavigate } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa"; // ikon panah
+import { FaArrowLeft } from "react-icons/fa"; 
 import axios from 'axios'
 
 import "../styles/pendaftaran.css";
@@ -40,7 +40,7 @@ export default function PendaftaranMagang() {
     ])
     const [kuota, setKuota] = useState(0);
 
-   const fetchKuotaTersisa = async()=>{
+const fetchKuotaTersisa = async()=>{
         try{
             let data = await axios.get("http://localhost:3000/peserta/kuota")
             setKuota(data.data.sisaKuota)
@@ -49,10 +49,9 @@ export default function PendaftaranMagang() {
             alert("gagal fetch data")
         }
     }
-     useEffect(()=>{
+    useEffect(()=>{
             fetchKuotaTersisa()
     }, [])
-    // Scroll event untuk tombol scroll top
     useEffect(() => {
         const handleScroll = () => setShowScrollTop(window.scrollY > 300);
         window.addEventListener("scroll", handleScroll);
@@ -97,7 +96,7 @@ export default function PendaftaranMagang() {
         const validFiles = files.filter(file => allowedTypes.includes(file.type));
         if (validFiles.length !== files.length) {
             alert("Hanya boleh upload file PDF dan Document!");
-            e.target.value = ""; // reset input file agar bisa pilih ulang
+            e.target.value = ""; 
             return;
         }
         setFormData((prev) => {
@@ -211,8 +210,8 @@ export default function PendaftaranMagang() {
                 if (user.dokumen) {
                     user.dokumen.forEach(file => formDataToSend.append(`dokumen_pendukung_${index}`, file));
                 }
-                 console.log("Isi dokumen untuk user", index, user.dokumen);
-                 console.log("Isi foto untuk user", index, user.foto);
+                console.log("Isi dokumen untuk user", index, user.dokumen);
+                console.log("Isi foto untuk user", index, user.foto);
             });
 
         }
@@ -303,7 +302,6 @@ export default function PendaftaranMagang() {
             )}
 
             <div className="form-section">
-                {/* KOLOM KIRI */}
                 <div className="kolom">
                     <div className="foto-jenjang">
                         <label className="upload-box">
@@ -352,7 +350,6 @@ export default function PendaftaranMagang() {
                         </div>
                     </div>
                     <input type="email" placeholder="Email Aktif" value={formData[index].email} onChange={(e)=>handleChange(index, "email", e.target.value)} />
-                    {/* password */}
                     <div className="password-input">
                     <input
                         type={showPassword ? "text" : "password"}
@@ -370,7 +367,6 @@ export default function PendaftaranMagang() {
                     </span>
                     </div>
 
-                    {/* konfirmasi password */}
                     <div className="password-input">
                     <input
                         type={showConfirmPassword ? "text" : "password"}
@@ -392,7 +388,6 @@ export default function PendaftaranMagang() {
 
                 </div>
 
-                {/* KOLOM KANAN */}
                 <div className="kolom">
                     <input type="text" placeholder="Nama Lengkap" value={formData[index].nama} onChange={(e)=>handleChange(index, "nama", e.target.value)} />
                     <input type="text" placeholder="Instansi" value={formData[index].instansi} onChange={(e)=>handleChange(index, "instansi", e.target.value)} />
@@ -420,7 +415,7 @@ export default function PendaftaranMagang() {
                             onChange={(e)=>handleChange(index, "tanggal_selesai_magang", e.target.value)}
                         />
                     </div>
-                    {/* Label dan Input */}
+
                     <label className="input-file-wrap">
                         <div className="placeholder-text">
                             Upload Dokumen Pendukung
@@ -434,7 +429,6 @@ export default function PendaftaranMagang() {
                     </label>
                 </div>
 
-                    {/* Preview file */}
                     {formData[index].dokumen.length > 0 && (
                     <div className="custom-file-list">
                         {formData[index].dokumen.map((f, i) => (

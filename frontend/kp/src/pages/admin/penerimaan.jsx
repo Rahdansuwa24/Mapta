@@ -13,19 +13,16 @@ dayjs.locale('id');
 
 import "../../styles/dashboard.css";
 
-import profil1 from "../../assets/images/profil1.jpg";
-import profil2 from "../../assets/images/profil2.jpeg";
-
 const highlightText = (text, search) => {
-  if (!search) return text;
-  const parts = text.split(new RegExp(`(${search})`, "gi"));
-  return parts.map((part, i) =>
-    part.toLowerCase() === search.toLowerCase() ? (
-      <mark key={i} style={{ backgroundColor: "#AFD3F6" }}>{part}</mark>
-    ) : (
-      part
-    )
-  );
+    if (!search) return text;
+    const parts = text.split(new RegExp(`(${search})`, "gi"));
+    return parts.map((part, i) =>
+        part.toLowerCase() === search.toLowerCase() ? (
+        <mark key={i} style={{ backgroundColor: "#AFD3F6" }}>{part}</mark>
+        ) : (
+        part
+        )
+    );
 };
 
 function Diterima() {
@@ -62,7 +59,7 @@ function Diterima() {
             setUploadedStatus(statusMap);
             setUploadedFiles(filesMap)
         }catch(error){
-           setError("gagal mengambil data")
+            setError("gagal mengambil data")
         }finally{
             setLoading(false)
         }
@@ -247,7 +244,7 @@ const filteredPeserta = PesertaDiterima.filter((p) => {
                                     } ${!openInstansi[instansi] ? "with-gap" : ""}`}
                                 >
                                     <div className="contain-table">
-                                        {/* TABEL INDIVIDU */}
+
                                         {individu.length > 0 && (
                                             <>
                                             <h4>Individu</h4>
@@ -307,7 +304,6 @@ const filteredPeserta = PesertaDiterima.filter((p) => {
                                             </>
                                         )}
 
-                                        {/* TABEL KELOMPOK */}
                                         {Object.keys(kelompokByInstansi).map((kelKey, idx) => (
                                         <div key={kelKey}>
                                             <h4>Kelompok {idx + 1} ({kelompokByInstansi[kelKey][0].instansi})</h4>
@@ -382,12 +378,10 @@ const filteredPeserta = PesertaDiterima.filter((p) => {
                     })}
                 </section>
 
-                {/* MODAL DETAIL PESERTA */}
                 {showModal && selectedPeserta && (
                     <div className="peserta-overlay" onClick={() => setShowModal(false)}>
                         <div className="peserta-modal" onClick={(e) => e.stopPropagation()}>
                             
-                            {/* Header */}
                             <div className="peserta-modal-header">
                                 <span>Detail Peserta {selectedPeserta.nama}</span>
                                 <div className="peserta-close-btn" onClick={() => setShowModal(false)}>
@@ -395,10 +389,8 @@ const filteredPeserta = PesertaDiterima.filter((p) => {
                                 </div>
                             </div>
 
-                            {/* Body */}
                             <div className="peserta-modal-body">
 
-                                {/* Foto Profil + Tombol Edit/Save di samping */}
                                 <div className="peserta-top-section">
                                     <div className="peserta-profile-pic">
                                         <img
@@ -420,7 +412,6 @@ const filteredPeserta = PesertaDiterima.filter((p) => {
                                     </div>
                                 </div>
 
-                                {/* Input data peserta dua kolom */}
                                 <div className="peserta-detail-grid">
                                     <div className="peserta-detail-item">
                                         <b>Nama :</b>
@@ -441,11 +432,6 @@ const filteredPeserta = PesertaDiterima.filter((p) => {
                                         <b>Email :</b>
                                         <input className="peserta-input" type="text" value={selectedPeserta.email} disabled/>
                                     </div>
-
-                                    {/* <div className="peserta-detail-item">
-                                        <b>Password :</b>
-                                        <input className="peserta-input" type="text" value={selectedPeserta.password} disabled={!selectedPeserta.isEditing} onChange={(e) => setSelectedPeserta({...selectedPeserta, password: e.target.value})} />
-                                    </div> */}
 
                                     <div className="peserta-detail-item">
                                         <b>Tanggal Mulai - Selesai :</b>
@@ -475,11 +461,11 @@ const filteredPeserta = PesertaDiterima.filter((p) => {
                                         )}
                                     </div>
                                 </div>
-                                {/* Dokumen tetap */}
+
                                 <div className="peserta-detail-item">
                                     <b>Dokumen :</b>
-                                     <div className="dokumen-list">
-                                       {selectedPeserta.dokumen_pendukung &&
+                                    <div className="dokumen-list">
+                                        {selectedPeserta.dokumen_pendukung &&
                                         JSON.parse(selectedPeserta.dokumen_pendukung).map((doc, index)=> (
                                             <div className="dokumen-item" key={doc}>
                                                 <span>{doc}</span>

@@ -19,9 +19,6 @@ function SertifikatPeserta() {
     useEffect(() => {
         document.title = "Sertifikat Peserta";
         fetchSertifikat()
-        // contoh dummy file (bisa di-fetch dari backend)
-        // setFileUrl("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf");
-        // null artinya sertifikat belum tersedia
     }, []);
 
     const fetchSertifikat = async()=>{
@@ -51,7 +48,7 @@ function SertifikatPeserta() {
 
         const link = document.createElement("a");
         link.href = `http://localhost:3000/peserta/sertifikat/download/${fileName}`;
-        link.setAttribute("download", fileName); // paksa browser download
+        link.setAttribute("download", fileName);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
