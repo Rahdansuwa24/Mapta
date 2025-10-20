@@ -8,15 +8,14 @@ const {upload, hapusFiles, file} = require('../../config/middleware/multer')
 //router untuk pendaftaran peserta magang
 router.post('/register', upload.any(), async (req, res) => {
     try {
-        console.log("req.body:", req.body);
-        console.log("req.files:", req.files.map(f => ({ fieldname: f.fieldname, originalname: f.originalname })));
-
         const { kategori } = req.body;
         console.log(kategori)
         const user_level = 'siswa';
         const validatePass = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
         const now = new Date();
         const tanggal_daftar = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+        const io = req.app.get('io');
 
         if (kategori === 'kelompok') {
                 console.log("Masuk kelompok");
@@ -94,6 +93,12 @@ router.post('/register', upload.any(), async (req, res) => {
                     };
                     await Model_Peserta.registerUser(pesertaData);
                     insertedUserNames.push(user.nama);
+
+                    io.emit('notifikasi', {
+                        title: 'Pendaftaran Kelompok Baru',
+                        pesan : `${insertedUserNames.join(', ')} baru saja mendaftar.`,
+                        tanggal: tanggal_daftar
+                    })
                 }
                 return res.status(201).json({ message: 'Registrasi kelompok berhasil', data: insertedUserNames });
         }
@@ -161,6 +166,11 @@ router.post('/register', upload.any(), async (req, res) => {
         };
 
         await Model_Peserta.registerUser(pesertaData);
+        io.emit('notifikasi', {
+            title: 'Pendaftaran Individu Baru ',
+            pesan: `${nama} baru saja mendaftar.`,
+            tanggal: tanggal_daftar
+        });
         return res.status(201).json({ message: 'Registrasi individu berhasil' });
 
     } catch (err) {

@@ -4,7 +4,7 @@ class Model_Admin{
 
     static async getDataCalonPeserta(){
         try{
-            const [result] = await db.query(`SELECT distinct u.*, p.* FROM users u LEFT JOIN peserta_magang p ON u.id_users = p.id_users where p.status_penerimaan = 'dipending' ORDER BY p.kategori, p.id_peserta_magang desc`)
+            const [result] = await db.query(`SELECT distinct u.*, p.* FROM users u LEFT JOIN peserta_magang p ON u.id_users = p.id_users where p.status_penerimaan = 'dipending' ORDER BY p.id_peserta_magang desc`)
             return result
         }catch(error){
             throw(error)

@@ -4,6 +4,12 @@ import { FaBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // untuk navigasi
 import "../styles/navbar-adm.css";
 import {jwtDecode} from "jwt-decode";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:3000", {
+    transports: ["websocket"],
+    reconnection: true,
+});
 
 export default function NavbarAdm({ onSearch }) {
     const navigate = useNavigate();
@@ -14,7 +20,7 @@ export default function NavbarAdm({ onSearch }) {
     const daftarPeserta = ["Budi Santoso", "Siti Aisyah", "Ahmad Ifcel"];
 
     // state notif
-    const notifCount = daftarPeserta.length;
+    const [notifList, setNotifList] = useState([]); // daftar pesan
     const [showNotif, setShowNotif] = useState(false);
     const [notifRead, setNotifRead] = useState(false);
 
@@ -41,6 +47,32 @@ export default function NavbarAdm({ onSearch }) {
         }
         fetchUser()
     },[])
+
+    useEffect(()=>{
+        socket.on("connect", ()=>{
+            console.log("Terhubung ke WebSocket Server");
+        })
+
+        socket.on("notifikasi", (data)=>{
+            console.log("Notifikasi baru:", data);
+
+            setNotifList((prev)=>{
+                const updated = [...prev, data]
+                console.log("notifList (update):", updated);
+                return updated.slice(-6)
+            })
+            setShowNotif(true);
+            setNotifRead(false);
+        })
+
+        //clean-up
+        return () => {
+            socket.off("notifikasi");
+        };
+    }, [])
+
+    //hitung jumlah notif yang belum dibaca
+    const notifCount = notifRead ? 0 : notifList.length;
     //handle logout
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -64,6 +96,7 @@ export default function NavbarAdm({ onSearch }) {
             className="icon-btn"
             style={{ position: "relative", cursor: "pointer" }}
             onClick={() => {
+                console.log("Bell diklik!");
                 setShowNotif(!showNotif);
                 setNotifRead(true); // tandai notif sudah dibaca
             }}
@@ -75,20 +108,27 @@ export default function NavbarAdm({ onSearch }) {
             </div>
 
             {/* Popup Notifikasi */}
-            {showNotif && (
+            {showNotif && notifList.length > 0 &&(
             <div className="notif-popup">
-                <p>Ada {notifCount} peserta baru mendaftar!</p>
+                <p>Ada {notifList.length} notifikasi baru!</p>
                 <ul>
-                {daftarPeserta.map((nama, i) => (
+                {notifList.slice().reverse().map((item, i) => (
                     <li
                     key={i}
                     style={{ cursor: "pointer", color: "#1A3359" }}
                     onClick={() => navigate("/admin-dashboard")} // arahkan ke dashboard
                     >
-                    {nama} mendaftar
+                    <strong>{item.title}</strong> — {item.pesan}
+                    <br />
+                    <small>{item.tanggal}</small>
                     </li>
                 ))}
                 </ul>
+                {notifList.length >= 5 && (
+                    <p style={{ fontSize: "12px", color: "gray" }}>
+                        Menampilkan 5 notifikasi terbaru
+                    </p>
+                )}
             </div>
             )}
             
