@@ -328,7 +328,7 @@ function SelesaiMagang() {
                     <b>Dokumen :</b>
                     <div className="dokumen-list">
                         {selectedPeserta.dokumen_pendukung && JSON.parse(selectedPeserta.dokumen_pendukung).length > 0 ? (
-                       JSON.parse(selectedPeserta.dokumen_pendukung).map((doc, index) => (
+                        JSON.parse(selectedPeserta.dokumen_pendukung).map((doc, index) => (
                             <div className="dokumen-item" key={index}>
                             <span>{doc}</span>
                             <div className="dokumen-actions">
@@ -376,7 +376,7 @@ function SelesaiMagang() {
                           <span>{selectedPeserta.sertifikat}</span>
                           <div className="dokumen-actions">
                             <button
-                               onClick={()=>{
+                                onClick={()=>{
                                   window.open(`http://localhost:3000/static/document-sertif/${selectedPeserta.sertifikat}`,"_blank", "noopener,noreferrer")
                               }}
                               className="btn-download"

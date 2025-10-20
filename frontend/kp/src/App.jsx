@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-
 import "./index.css";
 import LandingMapta from "./pages/landingpage.jsx";
 import LoginPage from "./pages/login";
+import ResetLogin from "./pages/resetlogin";
 import FormPendaftaran from "./pages/pendaftaran";
 import FormPendaftaranDinas from "./pages/pendaftarandinas.jsx";
 import ChooseRole from "./pages/chooserole.jsx";
@@ -78,6 +79,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingMapta />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/reset" element={<ResetLogin />} />
         <Route path="/pendaftaran" element={<FormPendaftaran />} />
         <Route path="/pendaftarandinas" element={<FormPendaftaranDinas />} />
         <Route path="/choose-role" element={<ChooseRole />} />

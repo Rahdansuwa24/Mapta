@@ -110,9 +110,23 @@ export default function LoginPage() {
                         {showPassword ? <ImEyeBlocked /> : <ImEye />}
                     </span>
                     </div>
-                    <button onClick={handleLogin}>
+                    <motion.button 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.7 }}
+                    onClick={handleLogin}>
                         Masuk
-                    </button>
+                    </motion.button>
+                    <motion.div
+                        className="forgot-container"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.9 }}
+                    >
+                        <Link to="/reset" className="forgot-link">
+                            Lupa kata sandi?
+                        </Link>
+                    </motion.div>
                 </motion.div>
 
                 {/* RIGHT: DESKRIPSI */}

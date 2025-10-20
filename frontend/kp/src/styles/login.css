@@ -10,7 +10,20 @@
         position: relative;
         overflow: hidden;
     }
-
+    .reset-cont{
+        width: 500px;
+    }
+    .forgot-container {
+    margin-top: 12px;
+    text-align: center;
+    }
+    .forgot-link {
+        color: #365ea7;
+        font-size: 14px;
+        text-decoration: none;
+        transition: color 0.3s ease, text-decoration 0.3s ease;
+        font-weight: 500;
+    }
     .container {
         display: flex;
         align-items: center;
