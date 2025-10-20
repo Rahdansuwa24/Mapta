@@ -362,8 +362,8 @@ function SelesaiMagang() {
                                   ))}
                                   <tr>
                                     <td colSpan="2" style={{ fontWeight: 600 }}>Rata-rata</td>
-                                    <td className="p-2">{rataNonTeknis.nilai}</td>
-                                    <td className="p-2">{rataNonTeknis.indeks}</td>
+                                    <td className="p-2">{rataTeknis.nilai}</td>
+                                    <td className="p-2">{rataTeknis.indeks}</td>
                                   </tr>
                                 </>
                               ) : (
