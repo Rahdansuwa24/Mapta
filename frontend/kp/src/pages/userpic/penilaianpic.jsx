@@ -113,11 +113,13 @@ function PenilaianPic() {
     const [selectedInstansi, setSelectedInstansi] = useState("");
     const [selectedPeserta, setSelectedPeserta] = useState(null);
     const [nilaiAspek, setNilaiAspek] = useState({});
-    const [isEdit, setIsEdit] = useState(false); // 🔑 mode tambah/edit
+    const [isEdit, setIsEdit] = useState(false); 
     const [fetchDataPeserta, setFetcDataPeserta] = useState([])
     const [aspekTeknisList, setAspekTeknisList] = useState([])
     const [aspekNonTeknisList, setAspekNonTeknisList] = useState([])
     const [DataPesertaHome, setDataPesertaHome] = useState([])
+
+    const [searchTerm, setSearchTerm] = useState("");
 
     // toggle instansi buka/tutup
     const toggleInstansi = (instansi) => {
@@ -139,9 +141,23 @@ function PenilaianPic() {
 
     const instansiList = [...new Set(DataPesertaHome.map((item) => item.instansi))]
 
-    const dataFiltered = filterInstansi
-        ? groupedByInstansi(DataPesertaHome.filter((d) => d.instansi === filterInstansi))
-        : groupedByInstansi(DataPesertaHome);
+    const dataFiltered = (filterInstansi ? 
+        groupedByInstansi(DataPesertaHome.filter((d) => d.instansi === filterInstansi)) :
+        groupedByInstansi(DataPesertaHome)
+    );
+
+    const filteredData = Object.entries(dataFiltered).reduce((acc, [instansi, pesertaList]) => {
+        const matchInstansi = instansi.toLowerCase().includes(searchTerm.toLowerCase());
+        const pesertaFiltered = pesertaList.filter((p) =>
+            p.nama.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        if (matchInstansi || pesertaFiltered.length > 0) {
+            acc[instansi] = pesertaFiltered.length > 0 ? pesertaFiltered : pesertaList;
+        }
+
+        return acc;
+    }, {});
 
     useEffect(() => {
         const initState = {};
@@ -302,7 +318,7 @@ function PenilaianPic() {
                 ]}
                 />
             <div className="jp-content-area">
-                <NavbarUsr />
+                <NavbarUsr onSearch={setSearchTerm} />
 
                 <section className="jp-main">
                     <div className="jp-submain">
@@ -347,7 +363,12 @@ function PenilaianPic() {
                                     />
                                     <div className="jp-teks-instansi">
                                         <p>Instansi</p>
-                                        <p>{instansi}</p>
+                                        <p dangerouslySetInnerHTML={{
+                                            __html: instansi.replace(
+                                            new RegExp(searchTerm, "gi"),
+                                            (match) => `<mark style="background:#ffeb3b">${match}</mark>`
+                                            ),
+                                        }}></p>
                                     </div>
                                 </div>
 
@@ -359,11 +380,17 @@ function PenilaianPic() {
                                     {peserta.map((p) => (
                                         <div className="jp-penilaian-card" key={p.id_peserta_magang}>
                                             <div className="jp-penilaian-header">
-                                                <span>{p.nama}</span>
+                                                <span
+                                                dangerouslySetInnerHTML={{
+                                                    __html: p.nama.replace(
+                                                    new RegExp(searchTerm, "gi"),
+                                                    (match) => `<mark style="background:#ffeb3b">${match}</mark>`
+                                                    ),
+                                                }}
+                                                ></span>
                                                 <div className="jp-penilaian-actions">
                                                     <span
-                                                      onClick={() => {
-                                                            // Ambil peserta dari DataPesertaHome
+                                                        onClick={() => {
                                                             const pesertaDetail = DataPesertaHome.find(d => d.id_peserta_magang === p.id_peserta_magang);
 
                                                             const aspekTeknis = pesertaDetail.aspekTeknis?.map(a => ({
@@ -388,7 +415,7 @@ function PenilaianPic() {
                                                             });
 
                                                             const nilai = {};
-                                                             [...aspekTeknis, ...aspekNonTeknis].forEach(a => {
+                                                            [...aspekTeknis, ...aspekNonTeknis].forEach(a => {
                                                                 nilai[parseInt(a.id_aspek)] = a.nilai;
                                                             });
                                                             setNilaiAspek(nilai);
@@ -517,10 +544,10 @@ function PenilaianPic() {
                                         setSelectedPeserta(null);
                                         setNilaiAspek({});
                                     }}
-                                    disabled={isEdit} /* INI DISABLE DROPDOWN INSTANSI JIKA DIEDIT */
+                                    disabled={isEdit} 
                                 >
                                     <option value="">Pilih Instansi</option>
-                                   {[...new Set(fetchDataPeserta.map((item) => item.instansi))].map(
+                                    {[...new Set(fetchDataPeserta.map((item) => item.instansi))].map(
                                         (instansi, idx) => (
                                         <option key={idx} value={instansi}>
                                             {instansi}
@@ -547,7 +574,7 @@ function PenilaianPic() {
                                             setNilaiAspek({});
                                         }
                                     }}
-                                    disabled={!selectedInstansi || isEdit} /* INI DISABLE DROPDOWN NAMA PESERTA JIKA DIEDIT */
+                                    disabled={!selectedInstansi || isEdit} 
                                 >
                                     <option value="">Pilih Peserta</option>
                                     {filteredPesertaList.map((p) => (

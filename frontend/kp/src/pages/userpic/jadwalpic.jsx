@@ -14,21 +14,17 @@ dayjs.locale('id');
 
 import "../../styles/user.css";
 
-import profil1 from "../../assets/images/profil1.jpg";
-import profil2 from "../../assets/images/profil2.jpeg";
-
 function JadwalPic() {
     useEffect(() => {
         document.title = "Jadwal PIC";
         fetchJadwalPic()
     }, []);
 
-
     const fetchJadwalPic = async()=>{
         const token = localStorage.getItem("token")
         try{
             let res = await axios.get("http://localhost:3000/pic/jadwal", {
-                 headers:{
+                    headers:{
                     Authorization: `Bearer ${token}`
                 }
             })
@@ -61,152 +57,6 @@ function JadwalPic() {
             alert("Gagal mengambil data")
         }
     }
-    // contoh data jadwal per instansi
-    const jadwalDummy = [
-    {
-        instansi: "Politeknik Elektronika Negeri Surabaya",
-        jadwal: [
-        {
-            tanggal: "10 Juli s.d. 10 Agustus 2025",
-            peserta: [
-            {
-                id: 1,
-                nama: "Budi Santoso",
-                nim: "1234567890",
-                instansi: "Politeknik Elektronika Negeri Surabaya",
-                profil: profil1,
-            },
-            {
-                id: 2,
-                nama: "Ahmad Ifcel",
-                nim: "1122334455",
-                instansi: "Politeknik Elektronika Negeri Surabaya",
-                profil: profil2,
-            },
-            ],
-        },
-        {
-            tanggal: "15 Desember 2025 s.d. 15 Januari 2026",
-            peserta: [
-            {
-                id: 3,
-                nama: "Ahmad Lexy",
-                nim: "9988776655",
-                instansi: "Politeknik Elektronika Negeri Surabaya",
-                profil: profil2,
-            },
-            ],
-        },
-        {
-            tanggal: "20 Juli s.d. 20 Agustus 2025",
-            peserta: [],
-        },
-        {
-            tanggal: "25 Juli s.d. 25 Agustus 2025",
-            peserta: [
-            {
-                id: 4,
-                nama: "Danang",
-                nim: "8877665544",
-                instansi: "Politeknik Elektronika Negeri Surabaya",
-                profil: profil1,
-            },
-            {
-                id: 5,
-                nama: "Vernanda",
-                nim: "7766554433",
-                instansi: "Politeknik Elektronika Negeri Surabaya",
-                profil: profil1,
-            },
-            ],
-        },
-        {
-            tanggal: "30 Juli s.d. 30 Agustus 2025",
-            peserta: [
-            {
-                id: 6,
-                nama: "Haidar",
-                nim: "6655443322",
-                instansi: "Politeknik Elektronika Negeri Surabaya",
-                profil: profil1,
-            },
-            ],
-        },
-        {
-            tanggal: "5 Agustus s.d. 5 September 2025",
-            peserta: [
-            {
-                id: 7,
-                nama: "Aqil",
-                nim: "5544332211",
-                instansi: "Politeknik Elektronika Negeri Surabaya",
-                profil: profil2,
-            },
-            ],
-        },
-        ],
-    },
-    {
-        instansi: "Universitas Indonesia",
-        jadwal: [
-        {
-            tanggal: "10 Juli s.d. 10 Agustus 2025",
-            peserta: [
-            {
-                id: 8,
-                nama: "Budi Santoso",
-                nim: "1234567890",
-                instansi: "Universitas Indonesia",
-                profil: profil1,
-            },
-            {
-                id: 9,
-                nama: "Ahmad Ifcel",
-                nim: "1122334455",
-                instansi: "Universitas Indonesia",
-                profil: profil2,
-            },
-            ],
-        },
-        ],
-    },
-    {
-        instansi: "Institut Teknologi Sepuluh Nopember",
-        jadwal: [
-        {
-            tanggal: "01 September s.d. 30 November 2025",
-            peserta: [
-            {
-                id: 10,
-                nama: "Dewi Lestari",
-                nim: "5678901234",
-                instansi: "Institut Teknologi Sepuluh Nopember",
-                profil: profil1,
-            },
-            {
-                id: 11,
-                nama: "Rizky Maulana",
-                nim: "2233445566",
-                instansi: "Institut Teknologi Sepuluh Nopember",
-                profil: profil2,
-            },
-            ],
-        },
-        {
-            tanggal: "05 Januari s.d. 05 Maret 2026",
-            peserta: [
-            {
-                id: 12,
-                nama: "Siti Aminah",
-                nim: "4455667788",
-                instansi: "Institut Teknologi Sepuluh Nopember",
-                profil: profil1,
-            },
-            ],
-        },
-        ],
-    },
-    ];
 
     const [filterInstansi, setFilterInstansi] = useState("");
     const [openInstansi, setOpenInstansi] = useState({});
@@ -214,6 +64,14 @@ function JadwalPic() {
     const [selectedPeserta, setSelectedPeserta] = useState(null);
     const [dataJadwalPic, setDataJadwalPic] = useState([])
     const [dataJadwalPicBidang, setDataJadwalPicBidang] = useState([])
+    const [searchTerm, setSearchTerm] = useState("");
+
+    // fungsi untuk highlight hasil pencarian
+    const highlightText = (text) => {
+    if (!searchTerm) return text;
+    const regex = new RegExp(`(${searchTerm})`, "gi");
+    return text.replace(regex, "<mark style='background-color: #ffe49c'>$1</mark>");
+    };
 
     const handleOpenModal = (peserta) => {
         setSelectedPeserta(peserta);
@@ -228,9 +86,26 @@ function JadwalPic() {
     const instansiList = dataJadwalPic.map((item) => item.instansi);
 
     // filter instansi
-    const jadwalFiltered = filterInstansi
-        ? dataJadwalPic.filter((j) => j.instansi === filterInstansi)
-        : dataJadwalPic;
+const jadwalFiltered = dataJadwalPic
+    .filter((j) => (filterInstansi ? j.instansi === filterInstansi : true))
+    .map((j) => {
+        const matchInstansi = j.instansi.toLowerCase().includes(searchTerm.toLowerCase());
+        const filteredJadwal = j.jadwal
+        .map((jadwal) => {
+            const matchTanggal = jadwal.tanggal.toLowerCase().includes(searchTerm.toLowerCase());
+            const pesertaFiltered = jadwal.peserta.filter((p) =>
+            p.nama.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            // jika nama, instansi, atau tanggal cocok maka tampilkan
+            if (matchTanggal || pesertaFiltered.length > 0 || matchInstansi)
+            return { ...jadwal, peserta: pesertaFiltered.length > 0 ? pesertaFiltered : jadwal.peserta };
+            return null;
+        })
+        .filter(Boolean);
+
+        return { ...j, jadwal: filteredJadwal };
+    })
+    .filter((j) => j.jadwal.length > 0);
 
     // toggle instansi buka/tutup
     const toggleInstansi = (instansi) => {
@@ -257,7 +132,7 @@ function JadwalPic() {
             ]}
         />
         <div className="jp-content-area">
-            <NavbarUsr />
+            <NavbarUsr onSearch={setSearchTerm} />
 
             <section className="jp-main">
             <div className="jp-submain">
@@ -290,7 +165,7 @@ function JadwalPic() {
                     />
                     <div className="jp-teks-instansi">
                         <p>Instansi</p>
-                        <p>{data.instansi}</p>
+                        <p dangerouslySetInnerHTML={{ __html: highlightText(data.instansi) }}></p>
                     </div>
                     </div>
 
@@ -304,7 +179,10 @@ function JadwalPic() {
                         <div key={rowIndex} className="jp-row">
                         {row.map((jadwal, idx) => (
                             <div key={idx} className="jp-col">
-                            <div className="jp-col-header">{jadwal.tanggal}</div>
+                            <div
+                            className="jp-col-header"
+                            dangerouslySetInnerHTML={{ __html: highlightText(jadwal.tanggal) }}
+                            ></div>
                             <div className="jp-col-body">
                                 {jadwal.peserta.length === 0 ? (
                                 <p>-</p>
@@ -320,7 +198,7 @@ function JadwalPic() {
                                         alt="profil"
                                         className="jp-peserta-foto"
                                     />
-                                    <span>{p.nama}</span>
+                                    <span dangerouslySetInnerHTML={{ __html: highlightText(p.nama) }}></span>
                                     </div>
                                 ))
                                 )}

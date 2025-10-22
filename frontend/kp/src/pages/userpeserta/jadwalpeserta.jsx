@@ -76,7 +76,7 @@ function JadwalPeserta() {
                 ]}
             />
             <div className="jp-content-area">
-                <NavbarUsr />
+                <NavbarUsr showSearch={false} />
 
                 <motion.section 
                     className="jp-main"
