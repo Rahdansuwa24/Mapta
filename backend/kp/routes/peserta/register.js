@@ -3,6 +3,10 @@ var router = express.Router();
 const Model_Peserta = require('../../model/Model_Peserta');
 const Model_Admin = require('../../model/Model_Admin');
 const Model_User = require('../../model/Model_User');
+const nodemailer = require('nodemailer');
+const crypto = require("crypto");
+const  limiter = require("../../config/middleware/rateLimiter")
+const {pushNotifikasi} = require('../../config/middleware/pushNotifikasi')
 const {upload, hapusFiles, file} = require('../../config/middleware/multer')
 
 //router untuk pendaftaran peserta magang
@@ -15,10 +19,7 @@ router.post('/register', upload.any(), async (req, res) => {
         const now = new Date();
         const tanggal_daftar = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
 
-        const io = req.app.get('io');
-
         if (kategori === 'kelompok') {
-                console.log("Masuk kelompok");
                 const parsingUser = [];
                 if (!req.body.users || !Array.isArray(req.body.users) || req.body.users.length === 0) {
                     hapusFiles(req.files);
@@ -93,13 +94,14 @@ router.post('/register', upload.any(), async (req, res) => {
                     };
                     await Model_Peserta.registerUser(pesertaData);
                     insertedUserNames.push(user.nama);
-
-                    io.emit('notifikasi', {
-                        title: 'Pendaftaran Kelompok Baru',
-                        pesan : `${insertedUserNames.join(', ')} baru saja mendaftar.`,
-                        tanggal: tanggal_daftar
-                    })
                 }
+                const namaInstansi = parsingUser[0].instansi;
+                await pushNotifikasi({
+                    title: 'Pendaftaran Kelompok Baru',
+                    pesan: `${insertedUserNames.join(', ')} dari ${namaInstansi}.`,
+                    tanggal: tanggal_daftar,
+                    kategori: 'kelompok'
+                })
                 return res.status(201).json({ message: 'Registrasi kelompok berhasil', data: insertedUserNames });
         }
         
@@ -166,11 +168,12 @@ router.post('/register', upload.any(), async (req, res) => {
         };
 
         await Model_Peserta.registerUser(pesertaData);
-        io.emit('notifikasi', {
-            title: 'Pendaftaran Individu Baru ',
-            pesan: `${nama} baru saja mendaftar.`,
-            tanggal: tanggal_daftar
-        });
+        await pushNotifikasi({
+            title: 'Pendaftaran Individu Baru',
+            pesan: `${nama} dari ${instansi}`,
+            tanggal: tanggal_daftar,
+            kategori: 'individu'
+        })
         return res.status(201).json({ message: 'Registrasi individu berhasil' });
 
     } catch (err) {
@@ -276,6 +279,39 @@ router.get('/kuota', async (req, res) => {
         return res.status(500).json({ message: 'Gagal mengambil kuota', error: err.message });
     }
 });
+
+router.patch('/update-password', limiter,async(req, res)=>{
+    try{
+        let {email} = req.body
+        let setEmail = await Model_User.getEmailForResetPasssword(email)
+        if(setEmail.length===0){
+            return res.status(400).json({message: 'Akun anda tidak terdaftar atau belum disetujui oleh admin, silahkan registrasi atau hubungi admin'})
+        }
+        const newPassword = crypto.randomBytes(5).toString('base64');
+        await Model_User.resetPassword(newPassword, email)
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_APP_PASSWORD,
+            },
+        });
+        const mailOptions = {
+            from: `"MAPTA Support" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: 'Reset Password — MAPTA',
+            text: `Halo,\n\nPassword baru Anda adalah: ${newPassword}\n\nSilakan login dengan password anda yang baru.\n\nSalam,\nTim MAPTA`,
+        };
+        await transporter.sendMail(mailOptions);
+        return res.status(200).json({message: 'Password Berhasil Diperbarui'})
+    }catch(error){
+        console.error(error)
+        if (error.status === 429) {
+            return res.status(429).json({ message: error.message });
+        }
+        return res.status(500).json({message: 'terjadi kesalahan pada server'})
+    }
+})
 
 
 module.exports = router;

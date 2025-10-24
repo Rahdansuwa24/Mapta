@@ -3,7 +3,7 @@ const db = require('../config/database')
 class Model_Pic{
     static async getJadwal(id){
         try{
-            const [result] = await db.query(`select j.tanggal_mulai, j.tanggal_selesai, j.bidang, p.nama, p.instansi, p.nomor_identitas, p.id_peserta_magang, p.id_kelompok, p.foto_diri from jadwal j left join peserta_magang p on j.id_peserta_magang = p.id_peserta_magang where j.bidang = (select bidang from pic where id_users = ?)`, [id])
+            const [result] = await db.query(`select j.tanggal_mulai, j.tanggal_selesai, j.bidang, p.nama, p.instansi, p.nomor_identitas, p.id_peserta_magang, p.id_kelompok, p.foto_diri from jadwal j left join peserta_magang p on j.id_peserta_magang = p.id_peserta_magang where j.bidang = (select bidang from pic where id_users = ?) order by j.tanggal_mulai`, [id])
             return result
         }catch(error){
             throw(error)
@@ -12,15 +12,15 @@ class Model_Pic{
     static async getNilai(id){
         try{
             const [result] = await db.query(`SELECT pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.id_pic = ? THEN p.id_penilaian END SEPARATOR ', ') AS id_penilaian_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.id_pic = ? THEN a.id_aspek END SEPARATOR ', ') AS id_aspek_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.id_pic = ? THEN a.subjek END SEPARATOR ', ') AS aspek_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.id_pic = ? THEN p.penilaian END SEPARATOR ', ') AS nilai_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.id_pic = ? THEN p.id_penilaian END ORDER BY a.id_aspek ASC SEPARATOR ', ') AS id_penilaian_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.id_pic = ? THEN a.id_aspek END ORDER BY a.id_aspek ASC SEPARATOR ', ') AS id_aspek_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.id_pic = ? THEN a.subjek END ORDER BY a.id_aspek ASC SEPARATOR ', ') AS aspek_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' AND p.id_pic = ? THEN p.penilaian END ORDER BY a.id_aspek ASC SEPARATOR ', ') AS nilai_teknis,
                 
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN p.id_penilaian END SEPARATOR ', ') AS id_penilaian_non_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN a.id_aspek END SEPARATOR ', ') AS id_aspek_non_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN a.subjek END SEPARATOR ', ') AS aspek_non_teknis,
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN p.penilaian END SEPARATOR ', ') AS nilai_non_teknis
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN p.id_penilaian END ORDER BY a.id_aspek ASC SEPARATOR ', ') AS id_penilaian_non_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN a.id_aspek END ORDER BY a.id_aspek ASC SEPARATOR ', ') AS id_aspek_non_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN a.subjek END ORDER BY a.id_aspek ASC SEPARATOR ', ') AS aspek_non_teknis,
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN p.penilaian END ORDER BY a.id_aspek ASC SEPARATOR ', ') AS nilai_non_teknis
 
             FROM peserta_magang AS pe
             LEFT JOIN penilaian AS p ON pe.id_peserta_magang = p.id_peserta_magang
@@ -51,7 +51,7 @@ class Model_Pic{
     }
     static async aspek(id_users){
         try{
-            const [result] = await db.query(`select aspek, bidang, id_aspek, subjek from aspek where bidang = (select bidang from pic where id_users = ?) or bidang = 'GLOBAL' ORDER BY id_aspek desc`, [id_users])
+            const [result] = await db.query(`select aspek, bidang, id_aspek, subjek from aspek where bidang = (select bidang from pic where id_users = ?) or bidang = 'GLOBAL' ORDER BY id_aspek ASC`, [id_users])
             return result
         }catch(error){
             throw(error)
