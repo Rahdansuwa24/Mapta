@@ -29,7 +29,7 @@ class Model_Admin{
     static async getDataCalonPesertaDiterima(){
         try{
             const [result] = await db.query(`SELECT distinct u.*, p.*, k.id_kelompok FROM users u LEFT JOIN peserta_magang p ON u.id_users = p.id_users
-            left join kelompok k on k.id_kelompok = p.id_kelompok where p.status_penerimaan = 'diterima' ORDER BY p.kategori, p.id_peserta_magang desc, p.id_kelompok`)
+            left join kelompok k on k.id_kelompok = p.id_kelompok where p.status_penerimaan = 'diterima' ORDER BY p.id_peserta_magang desc`)
             return result
         }catch(error){
             throw(error)
@@ -38,7 +38,7 @@ class Model_Admin{
     static async getDataCalonPesertaDitolak(){
         try{
             const [result] = await db.query(`SELECT distinct u.*, p.*, k.id_kelompok FROM users u LEFT JOIN peserta_magang p ON u.id_users = p.id_users
-            left join kelompok k on k.id_kelompok = p.id_kelompok where p.status_penerimaan = 'ditolak' ORDER BY p.instansi, p.kategori, p.id_kelompok`)
+            left join kelompok k on k.id_kelompok = p.id_kelompok where p.status_penerimaan = 'ditolak' ORDER BY p.id_peserta_magang desc`)
             return result
         }catch(error){
             throw(error)
@@ -102,7 +102,7 @@ class Model_Admin{
     }
     static async getJadwal(){
         try{
-            const [result] = await db.query(`SELECT p.id_peserta_magang, p.nama, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, j.* FROM peserta_magang p LEFT JOIN jadwal j ON p.id_peserta_magang = j.id_peserta_magang where j.id_jadwal is not null ORDER BY p.instansi, p.kategori`)
+            const [result] = await db.query(`SELECT p.id_peserta_magang, p.nama, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, j.* FROM peserta_magang p LEFT JOIN jadwal j ON p.id_peserta_magang = j.id_peserta_magang where j.id_jadwal is not null ORDER BY j.bidang, j.id_jadwal desc`)
             return result
         }catch(error){
             throw(error)
@@ -331,7 +331,7 @@ static async storeAspek(data){
             LEFT JOIN aspek a 
             ON a.id_aspek = pe.id_aspek
             WHERE p.status_penerimaan = 'selesai'
-            GROUP BY p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan;
+            GROUP BY p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan order by p.tanggal_selesai_magang;
             `)
             return result
         }catch(error){

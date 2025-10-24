@@ -63,6 +63,16 @@ class Model_User{
         }
     }
 
+    static async resetPassword(password, email){
+        try{
+            const hashedPassword = await bcrypt.hash(password, 10)
+           const [result] = await db.query('update users set password = ? where email = ?', [hashedPassword, email])
+           return result
+        }catch(error){
+            throw(error)
+        }
+    }
+
     static async getAllWithUsers() {
     const query = `SELECT u.id_users, u.email, u.user_level, p.id_peserta_magang, p.nama, p.nomor_identitas, p.instansi, p.foto_diri, p.dokumen_pendukung, p.tanggal_mulai_magang, p.tanggal_selesai_magang,p.jenjang, p.kategori FROM users AS u LEFT JOIN peserta_magang AS p ON u.id_users = p.id_users`;
         try {
@@ -89,6 +99,14 @@ class Model_User{
     static async getEmail(email){
         try{
             const [result] = await db.query('select * from users where email = ?', [email])
+            return result
+        }catch(err){
+            throw err
+        }
+    }
+    static async getEmailForResetPasssword(email){
+        try{
+            const [result] = await db.query(`select u.email from peserta_magang p left JOIN users u on u.id_users = p.id_users where email = ? and p.status_penerimaan = 'Diterima'`, [email])
             return result
         }catch(err){
             throw err

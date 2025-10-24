@@ -60,6 +60,14 @@
     max-width: 500px; /* samakan dengan input email */
     width: 100%;
     }
+    
+.password-1 {
+  margin-bottom: 15px; /* hanya untuk input pertama */
+}
+
+.password-2 {
+  margin-bottom: 0; /* input kedua menempel ke tombol */
+}
 
     .left input {
         width: 100%;

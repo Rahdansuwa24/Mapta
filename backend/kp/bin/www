@@ -7,8 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('kp:server');
 var http = require('http');
-
-const { Server } = require('socket.io'); // <-- tambahkan
+ // <-- tambahkan
 
 /**
  * Get port from environment and store in Express.
@@ -22,22 +21,6 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:5000", // atau spesifik ke domain frontend kamu, ntar diuubah
-    methods: ["GET", "POST"]
-  }
-})
-app.set('io', io)
-
-io.on('connection', (socket)=>{
-  console.log('Socket connected:', socket.id);
-
-  socket.on('disconnect', () => {
-    console.log('Socket disconnected:', socket.id);
-  });
-})
-
 /**
  * Listen on provided port, on all network interfaces.
  */

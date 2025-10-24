@@ -79,7 +79,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingMapta />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/reset" element={<ResetLogin />} />
+        <Route path="/change-password" element={<ResetLogin />} />
         <Route path="/pendaftaran" element={<FormPendaftaran />} />
         <Route path="/pendaftarandinas" element={<FormPendaftaranDinas />} />
         <Route path="/choose-role" element={<ChooseRole />} />

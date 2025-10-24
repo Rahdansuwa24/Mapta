@@ -13,11 +13,14 @@ router.post('/', async (req, res) => {
         const cekStatus = await Model_Users.getStatusPenerimaan(email)
         if(cekStatus.length > 0){
             const status_penerimaan = cekStatus[0].status_penerimaan
-            if(status_penerimaan === "dipending"){
+            if(status_penerimaan === "Dipending"){
                 return res.status(400).json({message: "Admin Sedang Memproses Pendaftaran Anda"})
             }
-            if(status_penerimaan === "ditolak"){
+            if(status_penerimaan === "Ditolak"){
                 return res.status(400).json({message: "Anda Ditolak Magang"})
+            }
+            if(status_penerimaan === "Final"){
+                return res.status(400).json({message: "Periode Magang Anda Sudah Selesai"})
             }
         }
         const result = await Model_Users.login(email, password);
