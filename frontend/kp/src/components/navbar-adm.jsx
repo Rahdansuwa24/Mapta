@@ -89,7 +89,7 @@ export default function NavbarAdm({ onSearch }) {
 
   useEffect(() => {
     if (showNotif) {
-      const timer = setTimeout(() => setShowNotif(false), 5000);
+      const timer = setTimeout(() => setShowNotif(false), 15000);
       return () => clearTimeout(timer);
     }
   }, [showNotif]);
