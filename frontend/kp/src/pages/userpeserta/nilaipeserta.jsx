@@ -119,7 +119,7 @@ function NilaiPeserta() {
                 ]}
             />
             <div className="jp-content-area">
-                <NavbarUsr />
+                <NavbarUsr showSearch={false} />
 
                 <section className="jp-main">
                     <div className="jp-submain">
