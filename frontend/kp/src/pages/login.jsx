@@ -23,7 +23,6 @@ export default function LoginPage() {
             email: "",
             password: ""
     })
-    const [statusPeserta, setStatusPeserta] = useState({status: ""})
 
     const handleChange = (e)=>{
         setFormData({
@@ -51,7 +50,6 @@ export default function LoginPage() {
                 
             }
         }catch(error){
-            console.error("Login error:", error);
             if (error.response) {
             const errorMessage = error.response.data.message;
             if (errorMessage) {
@@ -123,7 +121,7 @@ export default function LoginPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.9 }}
                     >
-                        <Link to="/reset" className="forgot-link">
+                        <Link to="/change-password" className="forgot-link">
                             Lupa kata sandi?
                         </Link>
                     </motion.div>
