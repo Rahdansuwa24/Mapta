@@ -7,17 +7,13 @@ import {jwtDecode} from "jwt-decode";
 import { collection, query, orderBy, limit, onSnapshot } from "firebase/firestore";
 import { db } from "../config/firebase";
 
-export default function NavbarAdm({ onSearch }) {
+export default function NavbarAdm({ onSearch, onNewNotif }) {
   const navigate = useNavigate();
 
   const [users, setUsers] = useState({ email: "", user_level: "" });
   const [loading, setLoading] = useState(true);
-
-  // state notif
   const [notifList, setNotifList] = useState([]);
   const [showNotif, setShowNotif] = useState(false);
-
-  // simpan ID notif yang sudah dibaca
   const [notifReadIds, setNotifReadIds] = useState(() => {
     try {
       const saved = localStorage.getItem("notifReadIds");
@@ -63,14 +59,21 @@ export default function NavbarAdm({ onSearch }) {
           : "-",
       }));
 
-      const newNotifs = latestNotif.filter((n) => !notifReadIds.includes(n.id));
-      if (newNotifs.length > 0) setShowNotif(true);
-
       setNotifList(latestNotif);
+
+      const lastPopupId = localStorage.getItem("lastPopupId")
+      const newestDoc = latestNotif[latestNotif.length - 1];
+
+      if (newestDoc && newestDoc.id !== lastPopupId) {
+        setShowNotif(true);
+        localStorage.setItem("lastPopupId", newestDoc.id);
+        if (onNewNotif) onNewNotif(newestDoc);
+      }
+
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [onNewNotif]);
 
   const notifCount = notifList.filter((n) => !notifReadIds.includes(n.id)).length;
 

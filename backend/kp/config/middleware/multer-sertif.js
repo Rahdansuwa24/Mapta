@@ -43,7 +43,7 @@ function hapusFiles(files) {
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 20 * 1024 * 1024 },
+    limits: { fileSize: 5 * 1024 * 1024 },
     fileFilter: fileFilter
 });
 

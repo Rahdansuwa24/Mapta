@@ -124,7 +124,7 @@ function Ditolak() {
         setUploadedStatus(prev=>({ ...prev, [pesertaId]: true }));
         setUploadedFiles((prev) => ({ ...prev, [pesertaId]: file.name }));
         setFileUploads(prev=>({ ...prev, [pesertaId]: null }));
-        alert(`File "${file.name}" berhasil diupload untuk peserta ID ${pesertaId}`);
+        alert(`File "${file.name}" berhasil diupload sebagai surat balasan ditolak`);
         fetchPesertaDitolak()
     }catch (error) {
             console.error(error);

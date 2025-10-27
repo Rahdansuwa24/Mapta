@@ -11,7 +11,8 @@ import axios from 'axios'
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 dayjs.locale('id');
-
+import { collection, query, orderBy, limit, onSnapshot } from "firebase/firestore";
+import { db } from "../../config/firebase";
 import "../../styles/dashboard.css";
 
 function Dashboard() {
@@ -138,33 +139,36 @@ function Dashboard() {
         setOpenInstansi(initialState);
     }, [calonPeserta, filterInstansi]);
 
-    // handler kuota
     const incrementKuota = () => setKuota((prev) => prev + 1);
     const decrementKuota = () => setKuota((prev) => (prev > 0 ? prev - 1 : 0));
     const handleInputKuota = (e) => setKuota(Number(e.target.value));
 
+    const handleNewNotif = (notif) => {
+        console.log("Notifikasi baru diterima:", notif);
+        fetchPeserta();
+    };
     const handleSaveKuota = async() => {
-    const token = localStorage.getItem("token")
-    try{
-        await axios.patch("http://localhost:3000/admin/dasbor/update-max-peserta", {
-            total: kuota
-        }, {
-            headers: { Authorization: `Bearer ${token}` },
+        const token = localStorage.getItem("token")
+        try{
+            await axios.patch("http://localhost:3000/admin/dasbor/update-max-peserta", {
+                total: kuota
+            }, {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        )
+            alert("Nilai kuota disimpan: " + kuota);
+            setShowKuotaModal(false);
+        }catch(error){
+            console.log(error)
+            alert("gagal memperbarui data")
         }
-    )
-    alert("Nilai kuota disimpan: " + kuota);
-    setShowKuotaModal(false);
-    }catch(error){
-        console.log(error)
-        alert("gagal memperbarui data")
-    }
     };
 
     return (
         <div className="app-layout">
             <SidebarAdm />
             <div className="content-area">
-                <NavbarAdm onSearch={setSearchTerm}/>
+                <NavbarAdm onSearch={setSearchTerm} onNewNotif={handleNewNotif}/>
 
                 <section className="main">
                     <div className="submain">

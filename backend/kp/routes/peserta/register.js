@@ -147,9 +147,6 @@ router.post('/register', upload.any(), async (req, res) => {
             });
         }
         
-        const kelompok = await Model_Peserta.registerTabelKelompok({tanggal_daftar});
-        const idKelompok = kelompok.insertId;
-
         const akunPeserta = await Model_User.registerAkun(email, password, user_level);
         const idAkun = akunPeserta.insertId;
 
@@ -164,7 +161,6 @@ router.post('/register', upload.any(), async (req, res) => {
             dokumen_pendukung: JSON.stringify(dokumenPendukungIndividu.map(f => f.filename)),
             jenjang,
             id_users: idAkun,
-            id_kelompok: idKelompok
         };
 
         await Model_Peserta.registerUser(pesertaData);
@@ -226,9 +222,6 @@ router.post('/register-dinas', upload.any(), async (req, res) => {
             });
         }
         
-        const kelompok = await Model_Peserta.registerTabelKelompok({tanggal_daftar});
-        const idKelompok = kelompok.insertId;
-
         const akunPeserta = await Model_User.registerAkun(email, password, user_level);
         const idAkun = akunPeserta.insertId;
 
@@ -243,10 +236,15 @@ router.post('/register-dinas', upload.any(), async (req, res) => {
             dokumen_pendukung: JSON.stringify(dokumenPendukungIndividu.map(f => f.filename)),
             jenjang,
             id_users: idAkun,
-            id_kelompok: idKelompok
         };
 
         await Model_Peserta.registerUser(pesertaData);
+        await pushNotifikasi({
+            title: 'Pendaftaran Dinas Baru',
+            pesan: `${nama} dari ${instansi}`,
+            tanggal: tanggal_daftar,
+            kategori: 'individu'
+        })
         return res.status(201).json({ message: 'Registrasi dinas berhasil' });
 
     } catch (err) {
@@ -303,7 +301,7 @@ router.patch('/update-password', limiter,async(req, res)=>{
             text: `Halo,\n\nPassword baru Anda adalah: ${newPassword}\n\nSilakan login dengan password anda yang baru.\n\nSalam,\nTim MAPTA`,
         };
         await transporter.sendMail(mailOptions);
-        return res.status(200).json({message: 'Password Berhasil Diperbarui'})
+        return res.status(200).json({message: 'Password Berhasil Diperbarui, Silahkan Cek Email Anda'})
     }catch(error){
         console.error(error)
         if (error.status === 429) {
