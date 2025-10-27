@@ -43,8 +43,20 @@ export default function LoginPage() {
         <FaArrowLeft size={18} />
       </button>
 
-      <div className="reset-cont">
-        {/* LEFT: FORM LOGIN */}
+      <div className="container">
+      <motion.div
+        className="right"
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
+      >
+        <b>Halaman lupa sandi ini hanya diperuntukkan bagi Peserta 
+        Magang</b>. PIC maupun Admin tidak diperbolehkan 
+        menggunakan formulir ini. Jika Anda adalah PIC dan lupa 
+        kata sandi, harap segera menghubungi pihak Admin untuk 
+        proses pemulihan akun.
+      </motion.div>
+
         <motion.div
           className="left"
           initial={{ opacity: 0, x: -50 }}
