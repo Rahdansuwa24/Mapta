@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors')
 const multer = require('multer')
+const scheduler = require('./cron/weeklyCheck');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -24,8 +25,8 @@ var sertifikatPeserta = require('./routes/peserta/sertifikat')
 const {backendDomain} = require('./config/middleware/cors')
 
 var app = express();
-var dotenv = require('dotenv')
-dotenv.config()
+var dotenv = require('dotenv');
+dotenv.config();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
