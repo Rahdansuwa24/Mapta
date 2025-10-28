@@ -509,7 +509,7 @@ const dataFiltered = filterInstansi
                                             <input
                                             type="number"
                                             placeholder="Nilai"
-                                            value={nilaiAspek[key] || ""}
+                                            value={nilaiAspek[key] ?? ""}
                                             onChange={(e) => handleInputChange(key, e.target.value)}
                                             />
                                         </div>
@@ -529,7 +529,7 @@ const dataFiltered = filterInstansi
                                             <input
                                             type="number"
                                             placeholder="Nilai"
-                                            value={nilaiAspek[key] || ""}
+                                            value={nilaiAspek[key] ?? ""}
                                             onChange={(e) => handleInputChange(key, e.target.value)}
                                             />
                                         </div>
