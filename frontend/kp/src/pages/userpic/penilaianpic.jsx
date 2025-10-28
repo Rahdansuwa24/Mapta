@@ -302,9 +302,10 @@ function PenilaianPic() {
     };
 
     const getRataRata = (list) => {
-        if (list.length === 0) return { nilai: "-", indeks: "-" };
-        const total = list.reduce((acc, cur) => acc + cur.nilai, 0);
-        const rataNilai = (total / list.length).toFixed(2);
+        const validList = list.filter(item => typeof item.nilai === "number" && !isNaN(item.nilai));
+        if (validList.length === 0) return { nilai: "-", indeks: "-" };
+        const total = validList.reduce((acc, cur) => acc + cur.nilai, 0);
+        const rataNilai = (total / validList.length).toFixed(2);
         const rataIndeks = hitungIndeksHuruf(rataNilai);
         return { nilai: rataNilai, indeks: rataIndeks };
     };
@@ -459,7 +460,7 @@ function PenilaianPic() {
                                                                         <tr key={i}>
                                                                             <td>{i + 1}</td>
                                                                             <td>{a.nama}</td>
-                                                                            <td>{a.nilai}</td>
+                                                                            <td>{a.nilai === null || a.nilai === undefined || isNaN(a.nilai) ? "-" : a.nilai}</td>
                                                                             <td>{hitungIndeksHuruf(a.nilai)}</td>
                                                                         </tr>
                                                                     ))}
@@ -499,7 +500,7 @@ function PenilaianPic() {
                                                                         <tr key={i}>
                                                                             <td>{i + 1}</td>
                                                                             <td>{a.nama}</td>
-                                                                            <td>{a.nilai}</td>
+                                                                            <td>{a.nilai === null || a.nilai === undefined || isNaN(a.nilai) ? "-" : a.nilai}</td>
                                                                             <td>{hitungIndeksHuruf(a.nilai)}</td>
                                                                         </tr>
                                                                     ))}
@@ -599,7 +600,7 @@ function PenilaianPic() {
                                         <input
                                             type="number"
                                             placeholder="Nilai"
-                                            value={nilaiAspek[a.id_aspek] || ""}
+                                            value={nilaiAspek[a.id_aspek] ?? ""}
                                             onChange={(e) => handleInputChange(a.id_aspek, e.target.value)}
                                         />
                                     </div>
@@ -613,7 +614,7 @@ function PenilaianPic() {
                                         <input
                                             type="number"
                                             placeholder="Nilai"
-                                            value={nilaiAspek[a.id_aspek] || ""}
+                                            value={nilaiAspek[a.id_aspek] ?? ""}
                                             onChange={(e) => handleInputChange(a.id_aspek, e.target.value)}
                                         />
                                     </div>
