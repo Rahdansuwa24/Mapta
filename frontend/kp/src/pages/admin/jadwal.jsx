@@ -396,7 +396,7 @@ const jadwalFiltered = jadwalData.filter((j) => {
                     </div>
 
                     <div className="jadwal-detail-item">
-                    <b>Tanggal Mulai Magang :</b>
+                    <b>Tanggal Mulai Penempatan :</b>
                     <input
                         type="date"
                         className="jadwal-input"
@@ -408,7 +408,7 @@ const jadwalFiltered = jadwalData.filter((j) => {
                     </div>
 
                     <div className="jadwal-detail-item">
-                    <b>Tanggal Selesai Magang :</b>
+                    <b>Tanggal Selesai Penempatan :</b>
                     <input
                         type="date"
                         className="jadwal-input"
@@ -420,7 +420,7 @@ const jadwalFiltered = jadwalData.filter((j) => {
                     </div>
 
                     <div className="jadwal-detail-item">
-                    <b>Departemen :</b>
+                    <b>Departemen Penempatan:</b>
                     <select
                         className="jadwal-input"
                         value={formJadwal.departemen}

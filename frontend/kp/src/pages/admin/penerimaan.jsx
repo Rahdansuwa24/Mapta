@@ -233,7 +233,6 @@ const filteredPeserta = PesertaDiterima.filter((p) => {
                                         onClick={() => toggleInstansi(instansi)}
                                     />
                                     <div className="teks-instansi">
-                                        <p>Instansi</p>
                                         <p>{instansi}</p>
                                     </div>
                                 </div>
@@ -442,10 +441,22 @@ const filteredPeserta = PesertaDiterima.filter((p) => {
                                         <b>Kategori :</b>
                                         <input className="peserta-input" type="text" value={selectedPeserta.kategori} disabled />
                                     </div>
-
                                     <div className="peserta-detail-item">
                                         <b>Status :</b>
-                                        <input className="peserta-input" type="text" value={selectedPeserta.status_penerimaan || "Belum ada"} disabled />
+                                        <select
+                                            className="peserta-input"
+                                            value={selectedPeserta.status_penerimaan}
+                                            disabled={!selectedPeserta.isEditing}
+                                            onChange={(e) =>
+                                            setSelectedPeserta({
+                                                ...selectedPeserta,
+                                                status_penerimaan: e.target.value,
+                                            })
+                                            }
+                                        >
+                                            <option value="Diterima">Diterima</option>
+                                            <option value="Ditolak">Ditolak</option>
+                                        </select>
                                     </div>
                                     <div className="peserta-detail-item">
                                         <b>Status Upload Surat Balasan:</b>{" "}

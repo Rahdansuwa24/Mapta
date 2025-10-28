@@ -289,7 +289,6 @@ const dataFiltered = filterInstansi
                                         onClick={() => toggleInstansi(instansi)}
                                     />
                                     <div className="teks-instansi">
-                                        <p>Instansi</p>
                                         <p>{highlightText(instansi, searchTerm)}</p>
                                     </div>
                                 </div>

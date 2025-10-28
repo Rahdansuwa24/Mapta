@@ -259,7 +259,6 @@ const matchSearch =
                                         onClick={() => toggleInstansi(instansi)}
                                     />
                                     <div className="teks-instansi">
-                                        <p>Instansi</p>
                                         <p>{instansi}</p>
                                     </div>
                                 </div>
