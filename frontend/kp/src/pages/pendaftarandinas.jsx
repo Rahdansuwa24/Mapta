@@ -183,7 +183,7 @@ export default function PendaftaranDinas() {
         >
             {withTopInfo && (
                 <div className="top-info">
-                    <b>Note:</b> Peserta Instansi/Dinas wajib mengunggah foto berseragam dinas, sedangkan dokumen bersifat opsional (dapat dikirim saat pendaftaran atau menyusul).
+                    <b>Note:</b> Peserta Instansi/Dinas wajib mengunggah Foto Formal berseragam dinas, sedangkan dokumen bersifat opsional (dapat dikirim saat pendaftaran atau menyusul).
                 </div>
             )}
 

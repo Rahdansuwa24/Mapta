@@ -447,10 +447,10 @@ const fetchKuotaTersisa = async()=>{
                     )}
 
                 <p>
-                    Note: Tulis nama instansi lengkap, misal{" "}
+                    <b>Note:</b> Tulis nama instansi lengkap, misal{" "}
                     <b>SMK Negeri 1 Surabaya</b> (bukan SMKN 1 SBY) atau{" "}
                     <b>Universitas Airlangga</b> (bukan UNAIR).
-                    Peserta Siswa/Mahasiswa diwajibkan mengunggah foto dengan mengenakan seragam sekolah/almamater universitas.
+                    Peserta Siswa/Mahasiswa diwajibkan mengunggah <b>Foto Formal</b> dengan mengenakan seragam sekolah/almamater universitas.
                 </p>
             </div>
         </motion.div>
