@@ -11,8 +11,6 @@ import axios from 'axios'
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 dayjs.locale('id');
-import { collection, query, orderBy, limit, onSnapshot } from "firebase/firestore";
-import { db } from "../../config/firebase";
 import "../../styles/dashboard.css";
 
 function Dashboard() {
@@ -23,6 +21,12 @@ function Dashboard() {
     const [calonPeserta, setCalonPeserta] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedPeserta, setSelectedPeserta] = useState(null);
+    const [filterInstansi, setFilterInstansi] = useState("");
+    const [openInstansi, setOpenInstansi] = useState({}); 
+    const [showKuotaModal, setShowKuotaModal] = useState(false);
+    const [kuota, setKuota] = useState(null);
     
     useEffect(()=>{
         fetchPeserta()
@@ -62,12 +66,6 @@ function Dashboard() {
                 setLoading(false)
             }
     }
-    const [showModal, setShowModal] = useState(false);
-    const [selectedPeserta, setSelectedPeserta] = useState(null);
-    const [filterInstansi, setFilterInstansi] = useState("");
-    const [openInstansi, setOpenInstansi] = useState({}); 
-    const [showKuotaModal, setShowKuotaModal] = useState(false);
-    const [kuota, setKuota] = useState(null);
 
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -196,7 +194,7 @@ function Dashboard() {
                     </div>
 
 
-                    {pesertaFiltered.length === 0 ? (
+                {pesertaFiltered.length === 0 ? (
                 <div className="no-data">
                     <p>Belum ada peserta magang yang mendaftar</p>
                 </div>
