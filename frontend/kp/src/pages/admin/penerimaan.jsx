@@ -129,12 +129,15 @@ function Diterima() {
                 nama: selectedPeserta.nama,
                 nomor_identitas: selectedPeserta.nomor_identitas, 
                 instansi: selectedPeserta.instansi,
+                // email: selectedPeserta.email,
+                status_penerimaan: selectedPeserta.status_penerimaan
             },{
                 headers: { Authorization: `Bearer ${token}` },
             })
             alert("Profil berhasil diperbarui!");
             setSelectedPeserta({ ...selectedPeserta, isEditing: false });
             fetchPesertaDiterima();
+            setShowModal(false);
         }catch(error){
             console.error(error);
             alert("Gagal memperbarui profil!");

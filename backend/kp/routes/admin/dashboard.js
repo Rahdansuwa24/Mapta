@@ -111,15 +111,17 @@ router.get('/final', verifyToken('admin'), async(req, res)=>{
 router.patch('/update/profile/(:id)', verifyToken('admin'), async(req, res)=>{
     try{
         let id = req.params.id
-        let {nama, nomor_identitas, instansi} = req.body
+        let {nama, nomor_identitas, instansi, status_penerimaan} = req.body
         let data = {
             nama,
             nomor_identitas,
-            instansi
+            instansi,
+            status_penerimaan
         }
         await Model_Admin.updateStatus(id, data)
         res.status(200).json({message: "data berhasil diperbarui"})
     }catch(err){
+        console.log(err)
         res.status(500).json({ status: false, error: err.message });
     }
 })

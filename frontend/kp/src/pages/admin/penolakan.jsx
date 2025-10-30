@@ -139,12 +139,14 @@ function Ditolak() {
                 nama: selectedPeserta.nama,
                 nomor_identitas: selectedPeserta.nomor_identitas, 
                 instansi: selectedPeserta.instansi,
+                status_penerimaan: selectedPeserta.status_penerimaan
             }, {
                 headers: { Authorization: `Bearer ${token}` },
             })
             alert("Profil berhasil diperbarui!");
             setSelectedPeserta({ ...selectedPeserta, isEditing: false });
             fetchPesertaDitolak();
+            setShowModal(false);
         }catch(error){
             console.error(error);
             alert("Gagal memperbarui profil!");
@@ -482,7 +484,20 @@ const matchSearch =
 
                                     <div className="peserta-detail-item">
                                         <b>Status :</b>
-                                        <input className="peserta-input" type="text" value={selectedPeserta.status_penerimaan || "Belum ada"} disabled />
+                                        <select
+                                            className="peserta-input"
+                                            value={selectedPeserta.status_penerimaan}
+                                            disabled={!selectedPeserta.isEditing}
+                                            onChange={(e) =>
+                                            setSelectedPeserta({
+                                                ...selectedPeserta,
+                                                status_penerimaan: e.target.value,
+                                            })
+                                            }
+                                        >
+                                            <option value="Diterima">Diterima</option>
+                                            <option value="Ditolak">Ditolak</option>
+                                        </select>
                                     </div>
 
                                     <div className="peserta-detail-item">

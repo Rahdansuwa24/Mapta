@@ -431,7 +431,7 @@ const jadwalFiltered = jadwalData.filter((j) => {
                         <option value="">-- Pilih Departemen --</option>
                         {departemenStatic.filter((dept)=>{
                             const sudahAda = jadwalData.some((j)=>j.id_peserta_magang === parseInt(formJadwal.id_peserta_magang)&&j.bidang === dept)
-                            return !sudahAda
+                            return !sudahAda || dept === formJadwal.departemen;
                         }).map((dept, idx) => (
                         <option key={idx} value={dept}>
                             {dept}

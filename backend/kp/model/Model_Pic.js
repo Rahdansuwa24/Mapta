@@ -29,11 +29,11 @@ class Model_Pic{
             GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN COALESCE(p.penilaian, 'null') END ORDER BY a.id_aspek ASC SEPARATOR ', ') AS nilai_non_teknis
 
             FROM peserta_magang AS pe
-            LEFT JOIN penilaian AS p ON pe.id_peserta_magang = p.id_peserta_magang
+            LEFT JOIN penilaian AS p ON pe.id_peserta_magang = p.id_peserta_magang AND p.status_penilaian = 'draft' AND p.id_pic = ? 
             LEFT JOIN aspek AS a ON p.id_aspek = a.id_aspek
-            WHERE EXISTS (SELECT 1 FROM penilaian p_sub WHERE p_sub.id_peserta_magang = pe.id_peserta_magang AND p_sub.id_pic = ?
+            WHERE EXISTS (SELECT 1 FROM penilaian p_sub WHERE p_sub.id_peserta_magang = pe.id_peserta_magang AND p_sub.id_pic = ?  AND p_sub.status_penilaian = 'draft'
             )GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri;
-            `,[id, id, id, id, id, id, id, id, id])
+            `,[id, id, id, id, id, id, id, id, id, id])
             return result
         }catch(error){
             throw(error)

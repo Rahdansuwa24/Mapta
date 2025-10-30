@@ -25,7 +25,7 @@ router.patch('/update/(:id)', verifyToken("admin"),async(req, res)=>{
         if(penilaian === undefined){
             return res.status(400).json({ message: "Nilai harus diisi" });
         }
-        await Model_Admin.updateNilai(id, {penilaian})
+        await Model_Admin.updateNilai(id, {penilaian, status_penilaian: 'Final'})
         res.status(200).json({message: 'data berhasil diperbarui'})
     }catch(err){
         console.log(err)

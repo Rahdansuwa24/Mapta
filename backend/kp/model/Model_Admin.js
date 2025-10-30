@@ -102,7 +102,7 @@ class Model_Admin{
     }
     static async getJadwal(){
         try{
-            const [result] = await db.query(`SELECT p.id_peserta_magang, p.nama, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, j.* FROM peserta_magang p LEFT JOIN jadwal j ON p.id_peserta_magang = j.id_peserta_magang where j.id_jadwal is not null ORDER BY j.bidang, j.id_jadwal desc`)
+            const [result] = await db.query(`SELECT p.id_peserta_magang, p.nama, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, j.* FROM peserta_magang p LEFT JOIN jadwal j ON p.id_peserta_magang = j.id_peserta_magang where j.id_jadwal is not null and p.status_penerimaan = 'Diterima' ORDER BY j.bidang, j.id_jadwal desc`)
             return result
         }catch(error){
             throw(error)
@@ -331,7 +331,7 @@ static async storeAspek(data){
             LEFT JOIN aspek a 
             ON a.id_aspek = pe.id_aspek
             WHERE p.status_penerimaan = 'selesai'
-            GROUP BY p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan order by p.tanggal_selesai_magang;
+            GROUP BY p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan order by p.tanggal_selesai_magang desc;
             `)
             return result
         }catch(error){
@@ -356,7 +356,7 @@ static async storeAspek(data){
             LEFT JOIN aspek a ON p.id_aspek = a.id_aspek
             LEFT JOIN pic ON p.id_pic = pic.id_pic
             WHERE j.bidang = pic.bidang
-            AND pe.status_penerimaan = 'final'
+            AND pe.status_penerimaan = 'Final'
             GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri
             HAVING COUNT(p.id_penilaian) > 0;
             `)
