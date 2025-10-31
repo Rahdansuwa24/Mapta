@@ -8,6 +8,7 @@ import { FaEllipsisVertical } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import axios from 'axios'
+import { toast } from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 dayjs.locale('id');
@@ -32,8 +33,6 @@ function Ditolak() {
     }, []);
 
     const [PesertaDitolak, setPesertaDitolak] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
     
     useEffect(()=>{
             fetchPesertaDitolak()
@@ -61,9 +60,7 @@ function Ditolak() {
             setUploadedStatus(statusMap);
             setUploadedFiles(filesMap)
         }catch(error){
-            setError("gagal mengambil data")
-        }finally{
-            setLoading(false)
+            toast.error(`Gagal dalam mengambil data peserta`);
         }
     }
 
@@ -88,7 +85,7 @@ function Ditolak() {
             'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         ];
         if (!allowedTypes.includes(file.type)) {
-            alert("Hanya boleh upload dalam format dokumen dan pdf");
+            toast.error("Hanya boleh upload dalam format dokumen dan pdf");
             e.target.value = ""; 
             return;
         }
@@ -99,57 +96,56 @@ function Ditolak() {
     };
 
     const handleUpload = async (pesertaId) => {
-    const file = fileUploads[pesertaId];
-    if (!file) {
-        alert("Pilih file terlebih dahulu!");
-        return;
-    }
-
-    const token = localStorage.getItem("token");
-    const formData = new FormData();
-    formData.append("surat_balasan", file);
-
-    try {
-        await axios.patch(
-        `http://localhost:3000/admin/dasbor/update-surat-balasan/${pesertaId}`,
-        formData,
-        {
-            headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-            },
+        const file = fileUploads[pesertaId];
+        if (!file) {
+            alert("Pilih file terlebih dahulu!");
+            return;
         }
-        );
 
-        setUploadedStatus(prev=>({ ...prev, [pesertaId]: true }));
-        setUploadedFiles((prev) => ({ ...prev, [pesertaId]: file.name }));
-        setFileUploads(prev=>({ ...prev, [pesertaId]: null }));
-        alert(`File "${file.name}" berhasil diupload sebagai surat balasan ditolak`);
-        fetchPesertaDitolak()
-    }catch (error) {
-            console.error(error);
-            alert("Upload gagal!");
-        }
-    };
+        const token = localStorage.getItem("token");
+        const formData = new FormData();
+        formData.append("surat_balasan", file);
 
-    const handleSaveProfile = async()=>{
-        const token = localStorage.getItem("token")
-        try{
-            await axios.patch(`http://localhost:3000/admin/dasbor/update/profile/${selectedPeserta.id_peserta_magang}`, {
-                nama: selectedPeserta.nama,
-                nomor_identitas: selectedPeserta.nomor_identitas, 
-                instansi: selectedPeserta.instansi,
-                status_penerimaan: selectedPeserta.status_penerimaan
-            }, {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            alert("Profil berhasil diperbarui!");
-            setSelectedPeserta({ ...selectedPeserta, isEditing: false });
-            fetchPesertaDitolak();
-            setShowModal(false);
+        try {
+            await axios.patch(
+            `http://localhost:3000/admin/dasbor/update-surat-balasan/${pesertaId}`,
+            formData,
+                {
+                    headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+                setUploadedStatus(prev=>({ ...prev, [pesertaId]: true }));
+                setUploadedFiles((prev) => ({ ...prev, [pesertaId]: file.name }));
+                setFileUploads(prev=>({ ...prev, [pesertaId]: null }));
+                alert(`File "${file.name}" berhasil diupload sebagai surat balasan ditolak`);
+                fetchPesertaDitolak()
+        }catch(error) {
+                console.error(error);
+                toast.error(`Upload surat balasan gagal`);
+            }
+        };
+
+        const handleSaveProfile = async()=>{
+            const token = localStorage.getItem("token")
+            try{
+                await axios.patch(`http://localhost:3000/admin/dasbor/update/profile/${selectedPeserta.id_peserta_magang}`, {
+                    nama: selectedPeserta.nama,
+                    nomor_identitas: selectedPeserta.nomor_identitas, 
+                    instansi: selectedPeserta.instansi,
+                    status_penerimaan: selectedPeserta.status_penerimaan
+                }, {
+                    headers: { Authorization: `Bearer ${token}` },
+                })
+                alert("Profil berhasil diperbarui!");
+                setSelectedPeserta({ ...selectedPeserta, isEditing: false });
+                fetchPesertaDitolak();
+                setShowModal(false);
         }catch(error){
             console.error(error);
-            alert("Gagal memperbarui profil!");
+            toast.error(`Gagal dalam memperbarui data peserta`);
         }
     }
 
@@ -166,32 +162,32 @@ function Ditolak() {
             fetchPesertaDitolak()
         }catch(error){
             console.error(error)
-            alert("gagal menghapus data")
+            toast.error("Gagal menghapus data peserta")
         }
     }
 
-const pesertaFiltered = PesertaDitolak.filter((p) => {
-const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
+    const pesertaFiltered = PesertaDitolak.filter((p) => {
+    const matchInstansi = filterInstansi ? p.instansi === filterInstansi : true;
 
-const nama = p.nama ? p.nama.toLowerCase() : "";
-const instansi = p.instansi ? p.instansi.toLowerCase() : "";
-const tanggalMulai = p.tanggal_mulai_magang
-    ? dayjs(p.tanggal_mulai_magang).format("DD MMMM YYYY").toLowerCase()
-    : "";
-const tanggalSelesai = p.tanggal_selesai_magang
-    ? dayjs(p.tanggal_selesai_magang).format("DD MMMM YYYY").toLowerCase()
-    : "";
+    const nama = p.nama ? p.nama.toLowerCase() : "";
+    const instansi = p.instansi ? p.instansi.toLowerCase() : "";
+    const tanggalMulai = p.tanggal_mulai_magang
+        ? dayjs(p.tanggal_mulai_magang).format("DD MMMM YYYY").toLowerCase()
+        : "";
+    const tanggalSelesai = p.tanggal_selesai_magang
+        ? dayjs(p.tanggal_selesai_magang).format("DD MMMM YYYY").toLowerCase()
+        : "";
 
-const keyword = searchTerm.toLowerCase();
+    const keyword = searchTerm.toLowerCase();
 
-const matchSearch =
-    nama.includes(keyword) ||
-    instansi.includes(keyword) ||
-    tanggalMulai.includes(keyword) ||
-    tanggalSelesai.includes(keyword);
+    const matchSearch =
+        nama.includes(keyword) ||
+        instansi.includes(keyword) ||
+        tanggalMulai.includes(keyword) ||
+        tanggalSelesai.includes(keyword);
 
-    return matchInstansi && matchSearch;
-});
+        return matchInstansi && matchSearch;
+    });
 
 
     const instansiList = [

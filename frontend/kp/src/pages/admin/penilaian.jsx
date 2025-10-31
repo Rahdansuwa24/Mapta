@@ -6,6 +6,7 @@ import NavbarAdmTm from "../../components/navbar-adm";
 import { FaTimes, FaTrash } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from 'axios'
+import { toast } from "react-toastify";
 
 import "../../styles/dashboard.css";
 
@@ -38,7 +39,7 @@ function Penilaian() {
             setAspekList(dataAspek)
         }catch(error){
             console.error(error)
-            alert("gagal mengambil data")
+            toast.error("Gagal mengambil data aspek")
         }
     }
     // Tambah aspek
@@ -46,17 +47,17 @@ function Penilaian() {
         e.preventDefault();
         const token = localStorage.getItem("token")
         if (!namaAspek || !kategoriAspek) {
-            alert("Harap lengkapi semua field!");
+            toast.error("Harap lengkapi semua field!");
             return;
         }
 
         if (kategoriAspek === "teknis" && !departemen) {
-            alert("Departemen wajib dipilih untuk aspek teknis!");
+            toast.error("Departemen wajib dipilih untuk aspek teknis!");
             return;
         }
 
         if (kategoriAspek === "non-teknis" && !departemen) {
-            alert("Pilih penerapan untuk aspek non teknis (GLOBAL / Departemen tertentu)!");
+            toast.error("Pilih penerapan untuk aspek non teknis (GLOBAL / Departemen tertentu)!");
             return;
         }
 
@@ -71,7 +72,7 @@ function Penilaian() {
                     Authorization: `Bearer ${token}`,
                 },
             })
-            alert("data aspek berhasil ditambahkan")
+            toast.success("data aspek berhasil ditambahkan")
             fetchAspek()
             setShowModal(false);
             setNamaAspek("");
@@ -79,7 +80,7 @@ function Penilaian() {
             setKategoriAspek("");
         }catch(error){
         console.error(error);
-        alert("Gagal menyimpan aspek!");
+        toast.error("Gagal menyimpan aspek!");
         }
     };
 
@@ -108,9 +109,10 @@ function Penilaian() {
                 })
                 fetchAspek();
                 setChecked({});
+                toast.success("Aspek berhasil dihapus")
             }catch(err){
                 console.error(err);
-                alert("Gagal menghapus aspek!");
+                toast.error("Gagal menghapus aspek!");
             }
         }
     };

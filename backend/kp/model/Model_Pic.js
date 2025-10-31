@@ -3,7 +3,8 @@ const db = require('../config/database')
 class Model_Pic{
     static async getJadwal(id){
         try{
-            const [result] = await db.query(`select j.tanggal_mulai, j.tanggal_selesai, j.bidang, p.nama, p.instansi, p.nomor_identitas, p.id_peserta_magang, p.id_kelompok, p.foto_diri from jadwal j left join peserta_magang p on j.id_peserta_magang = p.id_peserta_magang where j.bidang = (select bidang from pic where id_users = ?) order by j.tanggal_mulai`, [id])
+            const [result] = await db.query(`select j.tanggal_mulai, j.tanggal_selesai, j.bidang, p.nama, p.instansi, p.nomor_identitas, p.id_peserta_magang, p.id_kelompok, p.foto_diri from jadwal j left join peserta_magang p on j.id_peserta_magang = p.id_peserta_magang where j.bidang = (select bidang from pic where id_users = ?) 
+            and p.status_penerimaan = 'Diterima' order by j.tanggal_mulai`, [id])
             return result
         }catch(error){
             throw(error)
@@ -26,13 +27,16 @@ class Model_Pic{
 
             GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN COALESCE(a.subjek, 'null') END ORDER BY a.id_aspek ASC SEPARATOR ', ') AS aspek_non_teknis,
 
-            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN COALESCE(p.penilaian, 'null') END ORDER BY a.id_aspek ASC SEPARATOR ', ') AS nilai_non_teknis
+            GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis' AND p.id_pic = ? THEN COALESCE(p.penilaian, 'null') END ORDER BY a.id_aspek ASC SEPARATOR ', ') AS nilai_non_teknis,
+
+            MAX(p.id_penilaian) AS penilaian_terbaru
 
             FROM peserta_magang AS pe
             LEFT JOIN penilaian AS p ON pe.id_peserta_magang = p.id_peserta_magang AND p.status_penilaian = 'draft' AND p.id_pic = ? 
             LEFT JOIN aspek AS a ON p.id_aspek = a.id_aspek
             WHERE EXISTS (SELECT 1 FROM penilaian p_sub WHERE p_sub.id_peserta_magang = pe.id_peserta_magang AND p_sub.id_pic = ?  AND p_sub.status_penilaian = 'draft'
-            )GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri;
+            )GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri
+            ORDER BY penilaian_terbaru DESC;
             `,[id, id, id, id, id, id, id, id, id, id])
             return result
         }catch(error){
@@ -49,7 +53,7 @@ class Model_Pic{
     }
     static async getDataCalonPesertaDiterima(id_users){
         try{
-            const [result] = await db.query(`select p.instansi, p.nama, p.foto_diri, p.id_peserta_magang, j.id_jadwal from peserta_magang p left join jadwal j on p.id_peserta_magang = j.id_peserta_magang where j.bidang = (select bidang from pic where id_users = ?)`, [id_users])
+            const [result] = await db.query(`select p.instansi, p.nama, p.foto_diri, p.id_peserta_magang, j.id_jadwal from peserta_magang p left join jadwal j on p.id_peserta_magang = j.id_peserta_magang where j.bidang = (select bidang from pic where id_users = ?) and p.status_penerimaan = 'Diterima'`, [id_users])
             return result
         }catch(error){
             throw(error)

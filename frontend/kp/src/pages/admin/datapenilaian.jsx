@@ -7,6 +7,7 @@ import { LuAlignJustify } from "react-icons/lu";
 import { FaTimes, FaTrash } from "react-icons/fa";
 import { TbEdit } from "react-icons/tb";
 import axios from 'axios'
+import { toast } from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 dayjs.locale('id');
@@ -91,7 +92,7 @@ function DataPenilaianAspek() {
             })
             setDataNilaPeserta(data)
         }catch(err){
-            alert("gagal fetch data")
+            toast.error(`Gagal dalam mengambil data`);
         }
     }
     const [filterInstansi, setFilterInstansi] = useState("");
@@ -217,11 +218,11 @@ const dataFiltered = filterInstansi
                     return null;
                 })
             );
-            alert("Nilai berhasil diperbarui");
+            toast.success("Nilai berhasil diperbarui");
             fetchNilaiAdmin();
         }catch(error){
             console.error(error);
-            alert("Gagal update nilai");
+            toast.error("Gagal memperbarui nilai");
         }
 
         setShowModal(false);

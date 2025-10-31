@@ -158,7 +158,7 @@ class Model_Admin{
     }
     static async getPIC(){
         try{
-            const [result] = await db.query(`SELECT p.bidang, p.id_pic, u.id_users, u.email, u.user_level from pic p left join users u on p.id_users = u.id_users`)
+            const [result] = await db.query(`SELECT p.bidang, p.id_pic, u.id_users, u.email, u.user_level from pic p left join users u on p.id_users = u.id_users order by p.id_pic desc`)
             return result
         }catch(error){
             throw(error)
@@ -248,54 +248,68 @@ static async storeAspek(data){
     }
     static async getNilai(){
         try{
-            const [result] = await db.query(`SELECT pe.id_peserta_magang, pe.nama, 
-                pe.instansi, pe.foto_diri,
-                GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' 
-                THEN COALESCE(p.id_penilaian, 'null') END 
-                ORDER BY a.id_aspek SEPARATOR ', ') AS id_penilaian_teknis,
+            const [result] = await db.query(`SELECT pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri,
+            GROUP_CONCAT(
+            CASE WHEN a.aspek = 'teknis' 
+            THEN COALESCE(p.id_penilaian, 'null') END 
+            ORDER BY a.id_aspek SEPARATOR ', '
+            ) AS id_penilaian_teknis,
 
-                GROUP_CONCAT(CASE WHEN a.aspek = 'teknis'
-                THEN COALESCE(a.id_aspek, 'null') END 
-                ORDER BY a.id_aspek SEPARATOR ', ') AS id_aspek_teknis,
+            GROUP_CONCAT(
+            CASE WHEN a.aspek = 'teknis'
+            THEN COALESCE(a.id_aspek, 'null') END 
+            ORDER BY a.id_aspek SEPARATOR ', ') AS id_aspek_teknis,
 
-                GROUP_CONCAT(CASE WHEN a.aspek = 'teknis' 
-                THEN COALESCE(a.subjek, 'null') END 
-                ORDER BY a.id_aspek SEPARATOR ', ') AS aspek_teknis,
+            GROUP_CONCAT(
+            CASE WHEN a.aspek = 'teknis'
+            THEN COALESCE(a.subjek, 'null') END 
+            ORDER BY a.id_aspek SEPARATOR ', ') AS aspek_teknis,
 
-                GROUP_CONCAT(CASE WHEN a.aspek = 'teknis'
-                THEN COALESCE(p.penilaian, 'null') END 
-                ORDER BY a.id_aspek SEPARATOR ', ') AS nilai_teknis,
+            GROUP_CONCAT(
+            CASE WHEN a.aspek = 'teknis'
+            THEN COALESCE(p.penilaian, 'null') END 
+            ORDER BY a.id_aspek SEPARATOR ', ') AS nilai_teknis,
 
-                GROUP_CONCAT(CASE WHEN a.aspek = 'teknis'
-                THEN COALESCE(pic.bidang, 'null') END 
-                ORDER BY a.id_aspek SEPARATOR ' || ') AS bidang_teknis,
+            GROUP_CONCAT(
+            CASE WHEN a.aspek = 'teknis'
+            THEN COALESCE(pic.bidang, 'null') END 
+            ORDER BY a.id_aspek SEPARATOR ' || ') AS bidang_teknis,
+                
+            GROUP_CONCAT(
+            CASE WHEN a.aspek = 'non-teknis'
+            THEN COALESCE(p.id_penilaian, 'null') END 
+            ORDER BY a.id_aspek SEPARATOR ', ') AS id_penilaian_non_teknis,
 
-                GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
-                THEN COALESCE(p.id_penilaian, 'null') END 
-                ORDER BY a.id_aspek SEPARATOR ', ') AS id_penilaian_non_teknis,
+            GROUP_CONCAT(
+            CASE WHEN a.aspek = 'non-teknis'
+            THEN COALESCE(a.id_aspek, 'null') END 
+            ORDER BY a.id_aspek SEPARATOR ', ') AS id_aspek_non_teknis,
 
-                GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
-                THEN COALESCE(a.id_aspek, 'null') END 
-                ORDER BY a.id_aspek SEPARATOR ', ') AS id_aspek_non_teknis,
+            GROUP_CONCAT(
+            CASE WHEN a.aspek = 'non-teknis'
+            THEN COALESCE(a.subjek, 'null') END 
+            ORDER BY a.id_aspek SEPARATOR ', ') AS aspek_non_teknis,
 
-                GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
-                THEN COALESCE(a.subjek, 'null') END 
-                ORDER BY a.id_aspek SEPARATOR ', ') AS aspek_non_teknis,
+            GROUP_CONCAT(
+            CASE WHEN a.aspek = 'non-teknis'
+            THEN COALESCE(p.penilaian, 'null') END 
+            ORDER BY a.id_aspek SEPARATOR ', ') AS nilai_non_teknis,
 
-                GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
-                THEN COALESCE(p.penilaian, 'null') END 
-                ORDER BY a.id_aspek SEPARATOR ', ') AS nilai_non_teknis,
+            GROUP_CONCAT(
+            CASE WHEN a.aspek = 'non-teknis' 
+            THEN COALESCE(pic.bidang, 'null') END ORDER BY a.id_aspek SEPARATOR ' || ') 
+            AS bidang_non_teknis,
+            
+            MAX(p.id_penilaian) AS penilaian_terbaru
 
-                GROUP_CONCAT(CASE WHEN a.aspek = 'non-teknis'
-                THEN COALESCE(pic.bidang, 'null') END 
-                ORDER BY a.id_aspek SEPARATOR ' || ') AS bidang_non_teknis
+            FROM peserta_magang AS pe
+            LEFT JOIN penilaian AS p ON pe.id_peserta_magang = p.id_peserta_magang
+            LEFT JOIN aspek AS a ON p.id_aspek = a.id_aspek
+            LEFT JOIN pic ON p.id_pic = pic.id_pic
 
-                FROM peserta_magang AS pe
-                LEFT JOIN penilaian AS p ON pe.id_peserta_magang = p.id_peserta_magang
-                LEFT JOIN aspek AS a ON p.id_aspek = a.id_aspek
-                LEFT JOIN pic ON p.id_pic = pic.id_pic
-                GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri
-                HAVING COUNT(p.id_penilaian) > 0;
+            GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri
+            HAVING COUNT(p.id_penilaian) > 0
+            ORDER BY penilaian_terbaru DESC;
             `)
             return result
         }catch(error){

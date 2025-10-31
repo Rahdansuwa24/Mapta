@@ -14,7 +14,7 @@ router.get('/', verifyToken('admin'),async(req, res)=>{
 })
 router.get('/peserta', verifyToken('admin'),async(req, res)=>{
     try{
-        const data = await Model_Admin.getDataPesertaDiterimaJadwal()
+        const data = await Model_Admin.getDataCalonPesertaDiterima()
         res.status(200).json({data})
     }catch(err){
         res.status(500).json({ status: false, error: err.message });

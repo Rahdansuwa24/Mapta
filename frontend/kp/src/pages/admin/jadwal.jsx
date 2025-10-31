@@ -7,6 +7,7 @@ import { FaTimes } from "react-icons/fa";
 import { TbEdit } from "react-icons/tb";
 import { MdDeleteOutline } from "react-icons/md";
 import axios from 'axios'
+import { toast } from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 dayjs.locale('id');
@@ -37,7 +38,7 @@ function Jadwal() {
             const dataJadwal = rest.data.data
             setJadwalData(dataJadwal)
         }catch(error){
-            alert("gagal mengambil data")
+            toast.error(`Gagal dalam mengambil data jadwal`);
             console.error(error)
         }
     }
@@ -53,7 +54,7 @@ function Jadwal() {
                 const dataPeriodeKosong = res.data.data
                 setPeriodeKosong(dataPeriodeKosong)
             }catch(error){
-                alert("gagal mengambil data")
+                toast.error(`Gagal dalam mengambil data periode waktu peserta magang`);
                 console.error(error)
             }
     }
@@ -68,7 +69,7 @@ function Jadwal() {
                 const dataPeserta = res.data.data
                 setDataPeserta(dataPeserta)
             }catch(error){
-                alert("gagal mengambil data")
+               toast.error(`Gagal dalam mengambil data peserta yang sudah diterima`);
                 console.error(error)
             }
     }
@@ -87,7 +88,7 @@ function Jadwal() {
                         Authorization: `Bearer ${token}`,
                     },
                 })
-                alert("Jadwal berhasil diperbarui");
+                toast.success(`Jadwal berhasil diperbarui`);
             }else{
                 await axios.post(`http://localhost:3000/admin/jadwal/store`,{
                             
@@ -100,7 +101,7 @@ function Jadwal() {
                         Authorization: `Bearer ${token}`,
                     },
                 })
-                alert("Jadwal berhasil ditambahkan");
+                toast.success(`Jadwal berhasil ditambahkan`);
             }
 
             fetchDataJadwal();
@@ -108,7 +109,7 @@ function Jadwal() {
             setEditingJadwal(null);
         }catch(error){
             console.error(error);
-            alert("Gagal menyimpan jadwal");
+            toast.error(`Proses gagal`);
         }
     }
 
@@ -121,11 +122,11 @@ function Jadwal() {
                         Authorization: `Bearer ${token}`,
                     },
                 })
-                alert("Jadwal berhasil dihapus");
+                toast.success(`Jadwal berhasil dihapus`);
                 fetchDataJadwal();
             }catch(error){
                 console.error(error)
-                alert('gagal menghapus data')
+                toast.error(`Jadwal gagal dihapus`);
             }
         }
     }
@@ -137,7 +138,6 @@ function Jadwal() {
     const [jadwalData, setJadwalData] = useState([]);
     const [periodeKosong, setPeriodeKosong] = useState("")
     const [dataPeserta, setDataPeserta] = useState([])
-    const [selectedPesertaId, setSelectedPesertaId] = useState("");
 
     // State form jadwal
     const [formJadwal, setFormJadwal] = useState({
