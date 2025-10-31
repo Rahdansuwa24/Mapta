@@ -7,6 +7,7 @@ import { FaEllipsisVertical } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 import "../../styles/dashboard.css";
 import axios from "axios";
+import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 dayjs.locale("id");
@@ -101,7 +102,7 @@ function SelesaiMagang() {
       setDataFinal(dataFinal);
     } catch (error) {
       console.error(error);
-      alert("Gagal fetch data");
+      toast.error("Gagal mengambil data final peserta");
     }
   };
 

@@ -7,6 +7,7 @@ import { LuAlignJustify } from "react-icons/lu";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 import axios from 'axios'
+import { toast } from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 dayjs.locale('id');
@@ -31,8 +32,6 @@ function Diterima() {
     }, []);
 
     const [PesertaDiterima, setPesertaDiterima] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
 
     useEffect(()=>{
         fetchPesertaDiterima()
@@ -59,9 +58,7 @@ function Diterima() {
             setUploadedStatus(statusMap);
             setUploadedFiles(filesMap)
         }catch(error){
-            setError("gagal mengambil data")
-        }finally{
-            setLoading(false)
+            toast.error(`Gagal dalam mengambil data peserta`);
         }
     }
 
@@ -82,6 +79,16 @@ function Diterima() {
     };
 
     const handleFileChange = (pesertaId, e) => {
+        const file = e.target.files[0];
+        const allowedTypes = [
+            'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ];
+        if (!allowedTypes.includes(file.type)) {
+            toast.error("Hanya boleh upload dalam format dokumen dan pdf");
+            e.target.value = ""; 
+            return;
+        }
+
         setFileUploads({
             ...fileUploads,
             [pesertaId]: e.target.files[0]
@@ -91,7 +98,7 @@ function Diterima() {
     const handleUpload = async (pesertaId) => {
     const file = fileUploads[pesertaId];
     if (!file) {
-        alert("Pilih file terlebih dahulu!");
+        toast.error(`Silahkan unggah file terlebih dahulu`);
         return;
     }
 
@@ -114,11 +121,11 @@ function Diterima() {
         setUploadedStatus(prev=>({ ...prev, [pesertaId]: true }));
         setUploadedFiles((prev) => ({ ...prev, [pesertaId]: file.name }));
         setFileUploads(prev=>({ ...prev, [pesertaId]: null }));
-        alert(`File "${file.name}" berhasil diupload sebagai surat balasan diterima`);
+        toast.success(`File "${file.name}" berhasil diupload sebagai surat balasan diterima`);
         fetchPesertaDiterima()
     }catch (error) {
             console.error(error);
-            alert("Upload gagal!");
+            toast.error(`Upload surat balasan gagal`);
         }
     };
 
@@ -134,13 +141,13 @@ function Diterima() {
             },{
                 headers: { Authorization: `Bearer ${token}` },
             })
-            alert("Profil berhasil diperbarui!");
+            toast.success("Data peserta berhasil diperbarui!");
             setSelectedPeserta({ ...selectedPeserta, isEditing: false });
             fetchPesertaDiterima();
             setShowModal(false);
         }catch(error){
             console.error(error);
-            alert("Gagal memperbarui profil!");
+            toast.error(`Gagal dalam memperbarui data peserta`);
         }
     }
 

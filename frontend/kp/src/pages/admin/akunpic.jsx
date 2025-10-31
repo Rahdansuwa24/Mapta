@@ -7,6 +7,7 @@ import { FaTimes } from "react-icons/fa";
 import { TbEdit } from "react-icons/tb";
 import { MdDeleteOutline } from "react-icons/md";
 import axios from 'axios'
+import { toast } from "react-toastify";
 
 import "../../styles/dashboard.css";
 
@@ -56,10 +57,9 @@ function AkunPIC() {
                     }
                 })
                 const dataAkun = res.data.data
-                console.log(dataAkun)
                 setAkunList(dataAkun)
             }catch(error){
-                alert("gagal mengambil data")
+                toast.error("Gagal Mengambil Data Akun PIC")
                 console.error(error)
             }
     }
@@ -68,12 +68,12 @@ function AkunPIC() {
         e.preventDefault();
         const token = localStorage.getItem("token");
         if (!departemen || !email) {
-            alert("Harap lengkapi field departemen dan index!");
+            toast.error("Harap mengisi kolom email dan departemen");
             return;
         }
 
         if (editingIndex === null && !password) {
-            alert("Harap lengkapi field password!");
+            toast.error("Harap mengisi kolom password");
             return;
         }
 
@@ -93,32 +93,25 @@ function AkunPIC() {
                     "Content-Type": "application/json" 
                 },
             })
-                alert("data akun berhasil diperbarui")
+                toast.success("Data akun PIC berhasil diperbarui");
             } else {
-
             await axios.post(`http://localhost:3000/admin/pic/store`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json" 
                 },
             })
-                alert("data akun berhasil dibuat")
+                toast.success("Data akun PIC berhasil ditambahkan");
             }
             setShowModal(false);
             setDepartemen("");
             setEmail("");
             setPassword("");
             setEditingIndex(null)
-
-            try {
-                fetchDataAkun();
-            } catch (err) {
-                console.error("Gagal refresh data:", err);
-            }
-
+            await fetchDataAkun();
         }catch(error){
-            console.error("Terjadi kesalahan:", error.response?.data);
-            alert(error.response?.data?.message || "Gagal menyimpan data. Silakan coba lagi.");
+            console.error("Terjadi kesalahan:", error.response?.message);
+            toast.error(`Gagal menambahkan data: ${error.response?.data?.message || "Terjadi kesalahan"}`);
 
         }
 
@@ -136,11 +129,11 @@ function AkunPIC() {
                     Authorization: `Bearer ${token}`,
                 },
             })
-            alert("Data berhasil dihapus");
+            toast.success("Data akun berhasil dihapus");
             fetchDataAkun(); 
         }catch(error){
             console.error("Terjadi kesalahan:", error.response?.data);
-            alert(error.response?.data?.message || "Gagal menghapus data.");
+           toast.error(`Gagal menghapus data data: ${error.response?.data?.message || "Terjadi kesalahan"}`);
         }
     };
 

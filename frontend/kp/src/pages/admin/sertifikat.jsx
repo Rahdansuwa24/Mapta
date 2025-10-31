@@ -6,6 +6,7 @@ import NavbarAdmSf from "../../components/navbar-adm";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 import axios from 'axios'
+import { toast } from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 dayjs.locale('id');
@@ -52,7 +53,7 @@ function Sertifikat() {
             setUploadedFiles(filesMap)
         }catch(error){
             console.error(error)
-            alert("Gagal Fetch Data")
+            toast.error("Gagal mengambil data peserta")
 
         }
     }
@@ -68,6 +69,15 @@ function Sertifikat() {
     const [uploadedFiles, setUploadedFiles] = useState({});
 
     const handleFileChange = (pesertaId, e) => {
+        const file = e.target.files[0];
+        const allowedTypes = [
+            'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ];
+        if (!allowedTypes.includes(file.type)) {
+            toast.error("Hanya boleh upload dalam format dokumen dan pdf");
+            e.target.value = ""; 
+            return;
+        }
         setFileUploads({
         ...fileUploads,
         [pesertaId]: e.target.files[0],
@@ -77,7 +87,7 @@ function Sertifikat() {
     const handleUpload = async (pesertaId) => {
         const file = fileUploads[pesertaId];
         if (!file) {
-            alert("Pilih file terlebih dahulu!");
+            toast.error("Pilih file terlebih dahulu!");
             return;
         }
         const token = localStorage.getItem("token");
@@ -98,11 +108,11 @@ function Sertifikat() {
             setUploadedStatus(prev=>({ ...prev, [pesertaId]: true }));
             setUploadedFiles((prev) => ({ ...prev, [pesertaId]: file.name }));
             setFileUploads(prev=>({ ...prev, [pesertaId]: null }));
-            alert(`File "${file.name}" berhasil diupload untuk peserta`);
+            toast.success(`File "${file.name}" berhasil diupload untuk peserta`);
             fetchDataPesertaSelesai()
         }catch(error){
             console.error(error);
-            alert("Upload gagal!");
+            toast.error("Upload gagal!");
         }
     };
 

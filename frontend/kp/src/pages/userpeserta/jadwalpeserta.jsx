@@ -8,6 +8,7 @@ import { BiSolidCalendar } from "react-icons/bi";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoDocumentText } from "react-icons/io5";
 import axios from 'axios'
+import { toast } from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 dayjs.locale('id');
@@ -46,7 +47,7 @@ function JadwalPeserta() {
             setJadwalPeserta({periode, bidang})
         }catch(error){
             console.error(error)
-            alert("Gagal fetch data")
+            toast.error("Gagal mengambil data peserta")
         }
     }
 

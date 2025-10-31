@@ -9,6 +9,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoDocumentText } from "react-icons/io5";
 import { FaDownload } from "react-icons/fa";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 import "../../styles/user.css";
 
@@ -37,7 +38,7 @@ function SertifikatPeserta() {
             }
         }catch(error){
             console.error(error)
-            alert("gagal mendapat sertif")
+            toast.error("Gagal mengambil data sertifikat peserta")
         }
     }
 

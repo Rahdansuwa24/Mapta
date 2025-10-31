@@ -9,6 +9,7 @@ import { TbEdit } from "react-icons/tb";
 import { BiSolidCalendar } from "react-icons/bi";
 import { RiBallPenFill } from "react-icons/ri";
 import axios from 'axios'
+import { toast } from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 dayjs.locale('id');
@@ -36,7 +37,7 @@ function PenilaianPic() {
             setFetcDataPeserta(dataPeserta)
         }catch(error){
             console.error(error)
-            alert("gagal fetch data")
+            toast.error("gagal mengambil data peserta")
         }
     }
 
@@ -52,7 +53,7 @@ function PenilaianPic() {
             setAspekNonTeknisList(res.data.dataAspek.filter(a=>a.aspek === "non-teknis"))
         }catch(error){
             console.error(error)
-            alert("gagal fetch data")
+            toast.error("gagal mengambil data aspek bidang")
         }
     }
 
@@ -102,7 +103,7 @@ function PenilaianPic() {
             setDataPesertaHome(data)
         }catch(error){
             console.error(error)
-            alert("gagal fetch data")
+            toast.error("gagal mengambil data penilaian peserta di bidang ini")
         }
     }
 
@@ -145,19 +146,6 @@ function PenilaianPic() {
         groupedByInstansi(DataPesertaHome.filter((d) => d.instansi === filterInstansi)) :
         groupedByInstansi(DataPesertaHome)
     );
-
-    const filteredData = Object.entries(dataFiltered).reduce((acc, [instansi, pesertaList]) => {
-        const matchInstansi = instansi.toLowerCase().includes(searchTerm.toLowerCase());
-        const pesertaFiltered = pesertaList.filter((p) =>
-            p.nama.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
-        if (matchInstansi || pesertaFiltered.length > 0) {
-            acc[instansi] = pesertaFiltered.length > 0 ? pesertaFiltered : pesertaList;
-        }
-
-        return acc;
-    }, {});
 
     useEffect(() => {
         const initState = {};
@@ -245,7 +233,7 @@ function PenilaianPic() {
 
             await Promise.all(requests);
 
-            alert("Nilai berhasil disimpan");
+            toast.success("Nilai berhasil disimpan");
             fetchNilai();
             fetchDataPesertaPerInstansi();
 
@@ -257,7 +245,7 @@ function PenilaianPic() {
 
         } catch (error) {
             console.error(error);
-            alert("Gagal menyimpan data");
+            toast.error("Gagal menyimpan data");
         }
     };
 
@@ -282,12 +270,12 @@ function PenilaianPic() {
                 )
             );
 
-            alert("nilai peserta berhasil dihapus"); 
+            toast.success("Nilai peserta berhasil dihapus"); 
             fetchDataPesertaPerInstansi()
             fetchNilai()
         }catch(error){
             console.error(error);
-            alert("gagal menghapus nilai");
+            toast.error("Gagal menghapus nilai");
         }
     }
 

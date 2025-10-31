@@ -8,6 +8,7 @@ import { FaTimes } from "react-icons/fa";
 import { BiSolidCalendar } from "react-icons/bi";
 import { RiBallPenFill } from "react-icons/ri";
 import axios from 'axios'
+import { toast } from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 dayjs.locale('id');
@@ -51,10 +52,9 @@ function JadwalPic() {
                 return acc
             }, {})
             setDataJadwalPic(Object.values(groupedData));
-            setDataJadwalPicBidang(res.data.dataPic)
         }catch(error){
             console.error(error)
-            alert("Gagal mengambil data")
+            toast.error("Gagal mengambil data jadwal peserta")
         }
     }
 
@@ -63,7 +63,6 @@ function JadwalPic() {
     const [showModal, setShowModal] = useState(false);
     const [selectedPeserta, setSelectedPeserta] = useState(null);
     const [dataJadwalPic, setDataJadwalPic] = useState([])
-    const [dataJadwalPicBidang, setDataJadwalPicBidang] = useState([])
     const [searchTerm, setSearchTerm] = useState("");
 
     // fungsi untuk highlight hasil pencarian

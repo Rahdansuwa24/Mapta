@@ -9,10 +9,9 @@ import { FaCheck } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 import axios from 'axios'
 import dayjs from 'dayjs';
+import { toast } from "react-toastify";
 import 'dayjs/locale/id';
 dayjs.locale('id');
-import { collection, query, orderBy, limit, onSnapshot } from "firebase/firestore";
-import { db } from "../../config/firebase";
 import "../../styles/dashboard.css";
 
 function Dashboard() {
@@ -21,8 +20,12 @@ function Dashboard() {
     }, []);
 
     const [calonPeserta, setCalonPeserta] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedPeserta, setSelectedPeserta] = useState(null);
+    const [filterInstansi, setFilterInstansi] = useState("");
+    const [openInstansi, setOpenInstansi] = useState({}); 
+    const [showKuotaModal, setShowKuotaModal] = useState(false);
+    const [kuota, setKuota] = useState(null);
     
     useEffect(()=>{
         fetchPeserta()
@@ -40,10 +43,7 @@ function Dashboard() {
                 })
                 setCalonPeserta(res.data.data)
             }catch(error){
-                setError("gagal mengambil data")
-                
-            }finally{
-                setLoading(false)
+                toast.error("Gagal Mengambil Data Peserta Magang")
             }
     }
     const getKuota = async() =>{
@@ -56,18 +56,9 @@ function Dashboard() {
                 })
                 setKuota(res.data.total)
             }catch(error){
-                setError("gagal mengambil data")
-                
-            }finally{
-                setLoading(false)
+                 toast.error("Gagal Mengambil Data Peserta Magang")  
             }
     }
-    const [showModal, setShowModal] = useState(false);
-    const [selectedPeserta, setSelectedPeserta] = useState(null);
-    const [filterInstansi, setFilterInstansi] = useState("");
-    const [openInstansi, setOpenInstansi] = useState({}); 
-    const [showKuotaModal, setShowKuotaModal] = useState(false);
-    const [kuota, setKuota] = useState(null);
 
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -156,11 +147,11 @@ function Dashboard() {
                 headers: { Authorization: `Bearer ${token}` },
             }
         )
-            alert("Nilai kuota disimpan: " + kuota);
+            toast.success(`Kuota magang disimpan: ${kuota} peserta`);
             setShowKuotaModal(false);
         }catch(error){
             console.log(error)
-            alert("gagal memperbarui data")
+            toast.error(`gagal memperbarui kuota magang`);
         }
     };
 
@@ -196,7 +187,7 @@ function Dashboard() {
                     </div>
 
 
-                    {pesertaFiltered.length === 0 ? (
+                {pesertaFiltered.length === 0 ? (
                 <div className="no-data">
                     <p>Belum ada peserta magang yang mendaftar</p>
                 </div>
@@ -279,17 +270,18 @@ function Dashboard() {
                                                 try {
                                                     await axios.patch(
                                                     `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
-                                                    { status_penerimaan: "diterima" },
+                                                    { status_penerimaan: "Diterima" },
                                                     {
                                                         headers: {
                                                         Authorization: `Bearer ${token}`,
                                                         },
                                                     }
                                                     );
-                                                    alert("Lamaran disetujui");
+                                                    toast.success(`Lamaran telah Disetujui`);
                                                     fetchPeserta();
                                                 } catch (err) {
                                                     console.error(err);
+                                                    toast.error(`Gagal dalam update status peserta`);
                                                 }
                                                 }}
                                             >
@@ -307,17 +299,18 @@ function Dashboard() {
                                                 try {
                                                     await axios.patch(
                                                     `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
-                                                    { status_penerimaan: "ditolak" },
+                                                    { status_penerimaan: "Ditolak" },
                                                     {
                                                         headers: {
                                                             Authorization: `Bearer ${token}`,
                                                         },
                                                     }
                                                     );
-                                                    alert("Lamaran ditolak");
+                                                     toast.error(`Lamaran telah Ditolak`);
                                                     fetchPeserta();
                                                 } catch (err) {
                                                     console.error(err);
+                                                    toast.error(`Gagal dalam update status peserta`);
                                                 }
                                                 }}
                                             >
@@ -391,17 +384,17 @@ function Dashboard() {
                                                 try {
                                                     await axios.patch(
                                                     `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
-                                                    { status_penerimaan: "diterima" },
+                                                    { status_penerimaan: "Diterima" },
                                                     {
                                                         headers: {
                                                             Authorization: `Bearer ${token}`,
                                                         },
                                                     }
                                                     );
-                                                    alert("Lamaran disetujui");
+                                                    toast.success(`Lamaran telah disetujui`);
                                                     fetchPeserta();
                                                 } catch (err) {
-                                                    console.error(err);
+                                                    toast.error(`Gagal dalam update status peserta`);
                                                 }
                                                 }}
                                             >
@@ -419,17 +412,17 @@ function Dashboard() {
                                                 try {
                                                     await axios.patch(
                                                     `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
-                                                    { status_penerimaan: "ditolak" },
+                                                    { status_penerimaan: "Ditolak" },
                                                     {
                                                         headers: {
                                                             Authorization: `Bearer ${token}`,
                                                         },
                                                     }
                                                     );
-                                                    alert("Lamaran ditolak");
+                                                    toast.success(`Lamaran telah ditolak`);
                                                     fetchPeserta();
                                                 } catch (err) {
-                                                    console.error(err);
+                                                    toast.error(`Gagal dalam update status peserta`);
                                                 }
                                                 }}
                                             >

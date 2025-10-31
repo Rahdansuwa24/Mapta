@@ -76,7 +76,7 @@ router.patch('/update/(:id)', verifyToken('admin'),async(req, res)=>{
         res.status(500).json({ status: false, error: err.message });
     }
 })
-//bagian delete belum fix, dikarenakan di database harus dilakukan delete cascade
+
 router.delete('/delete/(:id)', verifyToken('admin'),async(req, res)=>{
     try{
         let id = req.params.id

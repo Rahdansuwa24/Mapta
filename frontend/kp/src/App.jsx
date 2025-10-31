@@ -24,6 +24,8 @@ import SertifikatPeserta from "./pages/userpeserta/sertifikatpeserta.jsx";
 import {jwtDecode} from "jwt-decode";
 import axios from 'axios';
 import { useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Protection({allowedRoles, children}){
   const token = localStorage.getItem("token")
@@ -98,6 +100,23 @@ function App() {
         <Route path="/peserta-jadwal" element={<Protection allowedRoles={['siswa']}><JadwalPeserta /></Protection>} />
         <Route path="/peserta-sertifikat" element={<Protection allowedRoles={['siswa']}><SertifikatPeserta /></Protection>} />
       </Routes>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        style={{ zIndex: 20000 }}
+        toastStyle={{
+          minWidth: "400px",
+          padding: "16px 24px",
+          fontSize: "16px"
+        }}
+      />
     </Router>
   );
 }
