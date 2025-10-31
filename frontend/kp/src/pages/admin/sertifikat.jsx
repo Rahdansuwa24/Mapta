@@ -262,6 +262,10 @@ function Sertifikat() {
                         )}
                     </div>
                     </div>
+                    {/* === Tombol Finalisasi ditambahkan di sini === */}
+                    <div className="finalisasi-container">
+                        <button className="btn-finalisasi">Finalisasi</button>
+                    </div>
                 </div>
                 </div>
             </div>
