@@ -110,6 +110,12 @@ function App() {
         draggable
         pauseOnHover
         theme="colored"
+        style={{ zIndex: 20000 }}
+        toastStyle={{
+          minWidth: "400px",
+          padding: "16px 24px",
+          fontSize: "16px"
+        }}
       />
     </Router>
   );
