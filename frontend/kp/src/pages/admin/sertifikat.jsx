@@ -264,7 +264,26 @@ function Sertifikat() {
                     </div>
                     {/* === Tombol Finalisasi ditambahkan di sini === */}
                     <div className="finalisasi-container">
-                        <button className="btn-finalisasi">Finalisasi</button>
+                        <button className="btn-finalisasi" onClick={async()=>{
+                             const token = localStorage.getItem("token");
+                            try {
+                                await axios.patch(
+                                `http://localhost:3000/admin/sertifikat/finalisasi/${selectedPeserta.id_peserta_magang}`,
+                                {status_penerimaan: "Final"},
+                                {
+                                    headers: {
+                                        Authorization: `Bearer ${token}`,
+                                    },
+                                }
+                                );
+                                toast.success(`Data peserta berhasil di finalisasi`);
+                                fetchDataPesertaSelesai()
+                                setShowModal(false)
+                            } catch (err) {
+                                console.error(err);
+                                toast.error(`Gagal dalam update status peserta`);
+                            }
+                        }}>Finalisasi</button>
                     </div>
                 </div>
                 </div>

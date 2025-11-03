@@ -401,9 +401,12 @@ const jadwalFiltered = jadwalData.filter((j) => {
                         type="date"
                         className="jadwal-input"
                         value={formJadwal.tanggal_mulai}
+                        min={periodeFiltered ? dayjs(periodeFiltered.tanggal_mulai_magang).format("YYYY-MM-DD") : ""}
+                        max={periodeFiltered ? dayjs(periodeFiltered.tanggal_selesai_magang).format("YYYY-MM-DD") : ""}
                         onChange={(e) =>
                         setFormJadwal({ ...formJadwal, tanggal_mulai: e.target.value })
                         }
+                        disabled={!periodeFiltered}
                     />
                     </div>
 
@@ -413,9 +416,12 @@ const jadwalFiltered = jadwalData.filter((j) => {
                         type="date"
                         className="jadwal-input"
                         value={formJadwal.tanggal_selesai}
+                        min={periodeFiltered ? dayjs(periodeFiltered.tanggal_mulai_magang).format("YYYY-MM-DD") : ""}
+                        max={periodeFiltered ? dayjs(periodeFiltered.tanggal_selesai_magang).format("YYYY-MM-DD") : ""}
                         onChange={(e) =>
                         setFormJadwal({ ...formJadwal, tanggal_selesai  : e.target.value })
                         }
+                        disabled={!periodeFiltered}
                     />
                     </div>
 
