@@ -406,9 +406,9 @@ static async storeAspek(data){
             throw(error)
         }
     }
-    static async updateSertif(id, sertifikat){
+    static async updateSertif(id, data){
         try{
-            const [result] = await db.query(`update peserta_magang set ? where id_peserta_magang = ?`, [sertifikat, id])
+            const [result] = await db.query(`update peserta_magang set ? where id_peserta_magang = ?`, [data, id])
             return result
         }catch(error){
             throw(error)

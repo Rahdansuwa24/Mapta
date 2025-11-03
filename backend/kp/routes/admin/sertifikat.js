@@ -34,6 +34,17 @@ router.get('/', verifyToken('admin'),async(req, res)=>{
         res.status(500).json({ status: false, error: err.message });
     }
 })
+router.patch('/finalisasi/:id', verifyToken('admin'),async(req, res)=>{
+    try{
+        let id = req.params.id
+        let status_penerimaan = req.body
+        const data = await Model_Admin.updateSertif(id, status_penerimaan)
+        res.status(200).json({data})
+    }catch(err){
+        console.log(err)
+        res.status(500).json({ status: false, error: err.message });
+    }
+})
 router.get('/cek-sertif', async(req, res)=>{
     res.render("template/sertifikat")
 })
