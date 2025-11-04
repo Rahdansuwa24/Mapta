@@ -128,6 +128,24 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.manual-link {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #fff;
+    font-size: 14px;
+    font-style: italic;
+    text-decoration: none;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    font-size: 13px;
+}
+
+.manual-link:hover {
+    color: #d0dfe7;
+    text-decoration: underline;
+}
 
     @media (max-width: 1280px) {
       .choose-title { font-size: 3rem; }

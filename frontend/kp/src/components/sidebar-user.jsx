@@ -31,12 +31,25 @@ export default function SidebarUser({ menuItems = [] }) { // ✅ default []
 
                 <div className="su-nav-items">
                     {menuItems.map((item, idx) => (
-                        <Link to={item.path} key={idx}>
-                            <div className={`su-nav-item ${isActive(item.path) ? "su-active" : ""}`}>
+                        item.isDownload ? (
+                            <a
+                                key={idx}
+                                href={item.path}
+                                target="_blank"
+                                rel="noopener noreferrer" 
+                                className={`su-nav-item ${isActive(item.path) ? "su-active" : ""}`}
+                            >
                                 <span className="su-icon">{item.icon}</span>
                                 {item.label}
-                            </div>
-                        </Link>
+                            </a>
+                        ) : (
+                            <Link to={item.path} key={idx}>
+                                <div className={`su-nav-item ${isActive(item.path) ? "su-active" : ""}`}>
+                                    <span className="su-icon">{item.icon}</span>
+                                    {item.label}
+                                </div>
+                            </Link>
+                        )
                     ))}
                 </div>
 

@@ -5,6 +5,7 @@ import { BiSolidCalendar } from "react-icons/bi";
 import { RiBallPenFill } from "react-icons/ri";
 import { IoDocumentText } from "react-icons/io5";
 import { HiUserGroup } from "react-icons/hi2";
+import { FaFileDownload } from "react-icons/fa";
 import { MdApps } from "react-icons/md";
 import { MdArticle } from "react-icons/md";
 import { AiOutlineFileDone } from "react-icons/ai";
@@ -142,6 +143,25 @@ export default function Sidebar() {
                 Akun PIC
             </div>
             </Link>
+
+            <Link
+                to="#"
+                onClick={() => {
+                    const link = document.createElement("a");
+                    link.href = "/files/buku-panduan-admin.pdf";
+                    link.target = "_blank"; // ✅ membuka di tab baru
+                    link.rel = "noopener noreferrer"; // ✅ keamanan tambahan
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }}
+                >
+                <div className={`nav-item ${isActive("/buku-panduan") ? "active" : ""}`}>
+                    <span className="icon"><FaFileDownload /></span>
+                    Buku Panduan
+                </div>
+            </Link>
+
         </div>
         </div>
     );
