@@ -193,7 +193,7 @@ function PenilaianPic() {
             ...aspekTeknisList.map(a => {
                     const found = selectedPeserta.aspekTeknis.find(x => Number(x.id_aspek) === Number(a.id_aspek));
                     return {
-                        id_aspek: a.id_aspek,
+                        id_aspek: Number(a.id_aspek),
                         id_penilaian: found ? Number(found.id_penilaian) : null,
                         nilai: nilaiAspek[a.id_aspek] !== undefined ? parseFloat(nilaiAspek[a.id_aspek]) : null,
                     };
@@ -201,37 +201,33 @@ function PenilaianPic() {
                 ...aspekNonTeknisList.map(a => {
                     const found = selectedPeserta.aspekNonTeknis.find(x => Number(x.id_aspek) === Number(a.id_aspek));
                     return {
-                        id_aspek: a.id_aspek,
+                        id_aspek: Number(a.id_aspek),
                         id_penilaian: found ? parseInt(found.id_penilaian) : null,
                         nilai: nilaiAspek[a.id_aspek] !== undefined ? parseFloat(nilaiAspek[a.id_aspek]) : null,
                     };
                 })
             ];
-            const requests = aspekSemua
-                .filter(a => a.nilai !== null)
-                .map(a => {
-                    if (a.id_penilaian) {
-                        // update
-                        return axios.patch(
-                            `http://localhost:3000/pic/penilaian/update/${a.id_penilaian}`,
-                            { penilaian: a.nilai },
-                            { headers: { Authorization: `Bearer ${token}` } }
-                        );
-                    } else {
-                        // insert
-                        return axios.post(
-                            "http://localhost:3000/pic/penilaian/store",
-                            {
-                                id_aspek: a.id_aspek,
-                                id_peserta_magang: selectedPeserta.id_peserta_magang,
-                                penilaian: a.nilai
-                            },
-                            { headers: { Authorization: `Bearer ${token}` } }
-                        );
-                    }
-                });
-
-            await Promise.all(requests);
+            for (const a of aspekSemua.filter(a => a.nilai !== null)) {
+                if (a.id_penilaian) {
+                    // update
+                    await axios.patch(
+                        `http://localhost:3000/pic/penilaian/update/${a.id_penilaian}`,
+                        { penilaian: a.nilai },
+                        { headers: { Authorization: `Bearer ${token}` } }
+                    );
+                } else {
+                    // insert
+                    await axios.post(
+                        "http://localhost:3000/pic/penilaian/store",
+                        {
+                            id_aspek: Number(a.id_aspek),
+                            id_peserta_magang: Number(selectedPeserta.id_peserta_magang),
+                            penilaian: Number(a.nilai)
+                        },
+                        { headers: { Authorization: `Bearer ${token}` } }
+                    );
+                }
+            }
 
             toast.success("Nilai berhasil disimpan");
             fetchNilai();

@@ -161,13 +161,6 @@ const dataFiltered = filterInstansi
         }));
     };
 
-    const toggleAspekVisibility = (namaAspek) => {
-        setAspekVisibility((prev) => ({
-        ...prev,
-        [namaAspek]: !prev[namaAspek],
-        }));
-    };
-
     const pesertaList = (selectedInstansi
         ? dataNilaiPeserta.filter((d) => d.instansi === selectedInstansi)
         : dataNilaiPeserta);
@@ -202,22 +195,31 @@ const dataFiltered = filterInstansi
                     nilaiAspek[key] !== undefined
                     ? parseFloat(nilaiAspek[key])
                     : null,
+                jenis: a.jenis
                 };
             });
             console.log(aspekSemua)
 
             await Promise.all(
-                aspekSemua.map((a) => {
-                    if (a.id_penilaian) {
-                        return axios.patch(
+            aspekSemua.map(async (a) => {
+                if (a.id_penilaian) {
+                    if (a.jenis === "teknis") {
+                        await axios.patch(
                             `http://localhost:3000/admin/penilaian/update/${a.id_penilaian}`,
                             { penilaian: a.nilai ?? null },
                             { headers: { Authorization: `Bearer ${token}` } }
                         );
+                    } 
+                    else if (a.jenis === "non-teknis") {
+                        await axios.patch(
+                            `http://localhost:3000/admin/penilaian/update-final-non-teknis/${a.id_penilaian}`,
+                            { nilai: a.nilai ?? null,  id_peserta_magang: selectedPeserta.id_peserta_magang, id_aspek: a.id_aspek },
+                            { headers: { Authorization: `Bearer ${token}` } }
+                        );
                     }
-                    return null;
-                })
-            );
+                }
+            })
+        );
             toast.success("Nilai berhasil diperbarui");
             fetchNilaiAdmin();
         }catch(error){
@@ -308,12 +310,12 @@ const dataFiltered = filterInstansi
                                                         onClick={() => {
                                                             const pesertaDetail = dataNilaiPeserta.find(d => d.id_peserta_magang === p.id_peserta_magang);
 
-                                                            const departemenList = Object.keys(pesertaDetail.groupedByBidang);
+                                                            const departemenList = Object.keys(pesertaDetail.groupedByBidang).filter(bidang => pesertaDetail.groupedByBidang[bidang].teknis.length > 0);
                                                             setDepartemenList(departemenList);
 
                                                             const semuaAspek = departemenList.flatMap((bidang) => [
                                                                 ...pesertaDetail.groupedByBidang[bidang].teknis,
-                                                                ...pesertaDetail.groupedByBidang[bidang].nonTeknis,
+                                                                ...pesertaDetail.aspekNonTeknis,
                                                             ]);
                                                             
                                                             const nilai = {};
@@ -491,7 +493,7 @@ const dataFiltered = filterInstansi
                                     </div>
                                 )}
 
-                                {departemenList.map((bidang) => (
+                                {departemenList.filter((bidang) => bidang && bidang.trim() !== "").map((bidang) => (
                                 <div key={bidang}>
                                     <h2 style={{ marginTop: "15px",
                                     marginBottom: "15px",
@@ -516,29 +518,36 @@ const dataFiltered = filterInstansi
                                         );
                                     })
                                     )}
+                                </div>
+                                ))}
 
-                                    <p style={{ fontStyle: "italic", fontWeight: 500 }}>Aspek Non Teknis</p>
-                                    {selectedPeserta.groupedByBidang[bidang].nonTeknis.length === 0 ? (
-                                    <p>Tidak ada aspek non teknis</p>
-                                    ) : (
-                                    selectedPeserta.groupedByBidang[bidang].nonTeknis.map((a) => {
-                                        const key = a.id_penilaian || `${a.id_aspek}-${selectedPeserta.id_peserta_magang}`;
-                                        return (
+                                {selectedPeserta?.aspekNonTeknis?.length > 0 && (
+                                <div style={{ marginTop: "20px" }}>
+                                    <h2
+                                    style={{
+                                        marginTop: "15px",
+                                        marginBottom: "15px",
+                                        fontWeight: 700,
+                                    }}
+                                    >
+                                    Aspek Non Teknis
+                                    </h2>
+                                    {selectedPeserta.aspekNonTeknis.map((a) => {
+                                    const key = a.id_penilaian || `${a.id_aspek}-${selectedPeserta.id_peserta_magang}`;
+                                    return (
                                         <div key={`nonteknis-${key}`} className="dp-aspek-item">
-                                            <span>{a.nama}</span>
-                                            <input
+                                        <span>{a.nama}</span>
+                                        <input
                                             type="number"
                                             placeholder="Nilai"
                                             value={nilaiAspek[key] ?? ""}
                                             onChange={(e) => handleInputChange(key, e.target.value)}
-                                            />
+                                        />
                                         </div>
-                                        );
-                                    })
-                                    )}
+                                    );
+                                    })}
                                 </div>
-                                ))}
-
+                                )}
                                 <button className="dp-btn-simpan" onClick={handleSave}>
                                     Simpan Nilai
                                 </button>
