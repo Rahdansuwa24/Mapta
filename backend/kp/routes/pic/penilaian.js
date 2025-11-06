@@ -54,8 +54,16 @@ router.post('/store', verifyToken("pic"),async(req, res)=>{
 
         let data = {penilaian, id_aspek, id_peserta_magang, id_pic}
         await Model_PIC.storeNilai(data)
+        console.log(id_aspek)
+        let CekAspek = await Model_PIC.CekAspek(id_aspek)
+        let aspekNonTeknis = CekAspek[0].aspek;
+
+        if (aspekNonTeknis === "non-teknis") {
+            await Model_PIC.recalculateFinalNonTeknis(id_peserta_magang);
+        }
         res.status(200).json({message: 'penambahan berhasil'})
     }catch(err){
+        console.log(err)
         res.status(500).json({ status: false, error: err.message });
     }
 })
@@ -64,10 +72,14 @@ router.patch('/update/(:id)', verifyToken("pic"),async(req, res)=>{
     try{
         let id = req.params.id
         let {penilaian} = req.body
-        // if(penilaian === undefined){
-        //     return res.status(400).json({ message: "Nilai harus diisi" });
-        // }
         await Model_PIC.updateNilai(id, {penilaian: penilaian ?? null})
+        const [dataPenilaian] = await Model_PIC.getPenilaianById(id);
+        if (dataPenilaian) {
+            const [cekAspek] = await Model_PIC.CekAspek(dataPenilaian.id_aspek);
+            if (cekAspek && cekAspek.aspek === "non-teknis") {
+                await Model_PIC.recalculateFinalNonTeknis(dataPenilaian.id_peserta_magang);
+            }
+        }
         res.status(200).json({message: 'data berhasil diperbarui'})
     }catch(err){
         console.log(err)
@@ -77,7 +89,14 @@ router.patch('/update/(:id)', verifyToken("pic"),async(req, res)=>{
 router.delete('/delete/(:id)', verifyToken("pic"),async(req, res)=>{
     try{
         let id = req.params.id
+        const [dataPenilaian] = await Model_PIC.getPenilaianById(id);
         await Model_PIC.deleteNilai(id)
+        if (dataPenilaian) {
+            const [cekAspek] = await Model_PIC.CekAspek(dataPenilaian.id_aspek);
+            if (cekAspek && cekAspek.aspek === "non-teknis") {
+                await Model_PIC.recalculateFinalNonTeknis(dataPenilaian.id_peserta_magang);
+            }
+        }
         res.status(200).json({message: 'data berhasil dihapus'})
     }catch(err){
         res.status(500).json({ status: false, error: err.message });

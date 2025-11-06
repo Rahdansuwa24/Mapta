@@ -248,59 +248,62 @@ static async storeAspek(data){
     }
     static async getNilai(){
         try{
-            const [result] = await db.query(`SELECT pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri,
-            GROUP_CONCAT(
-            CASE WHEN a.aspek = 'teknis' 
-            THEN COALESCE(p.id_penilaian, 'null') END 
-            ORDER BY a.id_aspek SEPARATOR ', '
-            ) AS id_penilaian_teknis,
+            const [result] = await db.query(`SELECT 
+                pe.id_peserta_magang,
+                pe.nama,
+                pe.instansi,
+                pe.foto_diri,
 
-            GROUP_CONCAT(
-            CASE WHEN a.aspek = 'teknis'
-            THEN COALESCE(a.id_aspek, 'null') END 
-            ORDER BY a.id_aspek SEPARATOR ', ') AS id_aspek_teknis,
+                GROUP_CONCAT(
+                    CASE WHEN a.aspek = 'teknis' THEN COALESCE(p.id_penilaian, 'null') END
+                    ORDER BY a.id_aspek SEPARATOR ', '
+                ) AS id_penilaian_teknis,
 
-            GROUP_CONCAT(
-            CASE WHEN a.aspek = 'teknis'
-            THEN COALESCE(a.subjek, 'null') END 
-            ORDER BY a.id_aspek SEPARATOR ', ') AS aspek_teknis,
+                GROUP_CONCAT(
+                    CASE WHEN a.aspek = 'teknis' THEN COALESCE(a.id_aspek, 'null') END
+                    ORDER BY a.id_aspek SEPARATOR ', '
+                ) AS id_aspek_teknis,
 
-            GROUP_CONCAT(
-            CASE WHEN a.aspek = 'teknis'
-            THEN COALESCE(p.penilaian, 'null') END 
-            ORDER BY a.id_aspek SEPARATOR ', ') AS nilai_teknis,
+                GROUP_CONCAT(
+                    CASE WHEN a.aspek = 'teknis' THEN COALESCE(a.subjek, 'null') END
+                    ORDER BY a.id_aspek SEPARATOR ', '
+                ) AS aspek_teknis,
 
-            GROUP_CONCAT(
-            CASE WHEN a.aspek = 'teknis'
-            THEN COALESCE(pic.bidang, 'null') END 
-            ORDER BY a.id_aspek SEPARATOR ' || ') AS bidang_teknis,
-                
-            GROUP_CONCAT(
-            CASE WHEN a.aspek = 'non-teknis'
-            THEN COALESCE(p.id_penilaian, 'null') END 
-            ORDER BY a.id_aspek SEPARATOR ', ') AS id_penilaian_non_teknis,
+                GROUP_CONCAT(
+                    CASE WHEN a.aspek = 'teknis' THEN COALESCE(p.penilaian, 'null') END
+                    ORDER BY a.id_aspek SEPARATOR ', '
+                ) AS nilai_teknis,
 
-            GROUP_CONCAT(
-            CASE WHEN a.aspek = 'non-teknis'
-            THEN COALESCE(a.id_aspek, 'null') END 
-            ORDER BY a.id_aspek SEPARATOR ', ') AS id_aspek_non_teknis,
+                GROUP_CONCAT(
+                    CASE WHEN a.aspek = 'teknis' THEN COALESCE(pic.bidang, 'null') END
+                    ORDER BY a.id_aspek SEPARATOR ' || '
+                ) AS bidang_teknis,
+                (
+                    SELECT GROUP_CONCAT(COALESCE(fpn.id_penilaian_final, 'null') ORDER BY fpn.id_aspek SEPARATOR ', ')
+                    FROM final_penilaian_non_teknis fpn
+                    WHERE fpn.id_peserta_magang = pe.id_peserta_magang
+                ) AS id_penilaian_non_teknis,
 
-            GROUP_CONCAT(
-            CASE WHEN a.aspek = 'non-teknis'
-            THEN COALESCE(a.subjek, 'null') END 
-            ORDER BY a.id_aspek SEPARATOR ', ') AS aspek_non_teknis,
+                (
+                    SELECT GROUP_CONCAT(COALESCE(fpn.id_aspek, 'null') ORDER BY fpn.id_aspek SEPARATOR ', ')
+                    FROM final_penilaian_non_teknis fpn
+                    WHERE fpn.id_peserta_magang = pe.id_peserta_magang
+                ) AS id_aspek_non_teknis,
 
-            GROUP_CONCAT(
-            CASE WHEN a.aspek = 'non-teknis'
-            THEN COALESCE(p.penilaian, 'null') END 
-            ORDER BY a.id_aspek SEPARATOR ', ') AS nilai_non_teknis,
+                (
+                    SELECT GROUP_CONCAT(COALESCE(a2.subjek, 'null') ORDER BY fpn.id_aspek SEPARATOR ', ')
+                    FROM final_penilaian_non_teknis fpn
+                    LEFT JOIN aspek a2 ON fpn.id_aspek = a2.id_aspek
+                    WHERE fpn.id_peserta_magang = pe.id_peserta_magang
+                ) AS aspek_non_teknis,
 
-            GROUP_CONCAT(
-            CASE WHEN a.aspek = 'non-teknis' 
-            THEN COALESCE(pic.bidang, 'null') END ORDER BY a.id_aspek SEPARATOR ' || ') 
-            AS bidang_non_teknis,
-            
-            MAX(p.id_penilaian) AS penilaian_terbaru
+                (
+                    SELECT GROUP_CONCAT(COALESCE(fpn.nilai, 'null') ORDER BY fpn.id_aspek SEPARATOR ', ')
+                    FROM final_penilaian_non_teknis fpn
+                    WHERE fpn.id_peserta_magang = pe.id_peserta_magang
+                ) AS nilai_non_teknis,
+
+                MAX(p.id_penilaian) AS penilaian_terbaru
 
             FROM peserta_magang AS pe
             LEFT JOIN penilaian AS p ON pe.id_peserta_magang = p.id_peserta_magang
@@ -310,7 +313,7 @@ static async storeAspek(data){
             GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri
             HAVING COUNT(p.id_penilaian) > 0
             ORDER BY penilaian_terbaru DESC;
-            `)
+        `)
             return result
         }catch(error){
             throw(error)
@@ -325,9 +328,19 @@ static async storeAspek(data){
             throw err
         }
     }
-    static async deleteNilai(id, penilaian){
+    static async updateNilaiFinalNonTeknis(id, penilaian){
         try{
-            const [result] = await db.query('update penilaian set ? where id_penilaian = ?', [penilaian, id])
+            const [result] = await db.query('update final_penilaian_non_teknis set ? where id_penilaian_final = ?', [penilaian, id])
+            return result
+        }catch(err){
+            throw err
+        }
+    }
+    static async setStatusNilai(id_peserta_magang, id_aspek){
+        try{
+            const [result] = await db.query(`UPDATE penilaian 
+            SET status_penilaian = 'Final'
+            WHERE id_peserta_magang = ? AND id_aspek = ?`, [id_peserta_magang, id_aspek])
             return result
         }catch(err){
             throw err
@@ -380,24 +393,68 @@ static async storeAspek(data){
         }
     }
     static async getDownloadSertif(id){
-        try{
-            const [result] = await db.query(`SELECT p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan, p.sertifikat,
-            GROUP_CONCAT(CASE WHEN pe.penilaian IS NOT NULL THEN a.aspek END ORDER BY a.aspek SEPARATOR ', ') AS aspek_list,
-            GROUP_CONCAT(CASE WHEN pe.penilaian IS NOT NULL THEN a.subjek END ORDER BY a.aspek SEPARATOR ', ') AS subjek_list,
-            GROUP_CONCAT(CASE WHEN pe.penilaian IS NOT NULL THEN pe.penilaian END ORDER BY a.aspek SEPARATOR ', ') AS penilaian_list
+    try{
+        const [result] = await db.query(`
+            SELECT 
+                p.id_peserta_magang, 
+                p.nama, 
+                p.nomor_identitas, 
+                p.foto_diri, 
+                p.instansi, 
+                p.tanggal_mulai_magang, 
+                p.tanggal_selesai_magang, 
+                p.status_penerimaan, 
+                p.sertifikat,
+
+                -- TEKNIS
+                GROUP_CONCAT(
+                    CASE WHEN a.aspek = 'teknis' THEN COALESCE(pe.penilaian, 'null') END
+                    ORDER BY a.id_aspek SEPARATOR ', '
+                ) AS nilai_teknis,
+                GROUP_CONCAT(
+                    CASE WHEN a.aspek = 'teknis' THEN COALESCE(a.subjek, 'null') END
+                    ORDER BY a.id_aspek SEPARATOR ', '
+                ) AS aspek_teknis,
+                GROUP_CONCAT(
+                    CASE WHEN a.aspek = 'teknis' THEN COALESCE(a.aspek, 'null') END
+                    ORDER BY a.id_aspek SEPARATOR ', '
+                ) AS aspek_list_teknis,
+
+                -- NON-TEKNIS
+                (
+                    SELECT GROUP_CONCAT(COALESCE(fpn.nilai, 'null') ORDER BY fpn.id_aspek SEPARATOR ', ')
+                    FROM final_penilaian_non_teknis fpn
+                    WHERE fpn.id_peserta_magang = p.id_peserta_magang
+                ) AS nilai_non_teknis,
+                (
+                    SELECT GROUP_CONCAT(COALESCE(a2.subjek, 'null') ORDER BY fpn.id_aspek SEPARATOR ', ')
+                    FROM final_penilaian_non_teknis fpn
+                    LEFT JOIN aspek a2 ON fpn.id_aspek = a2.id_aspek
+                    WHERE fpn.id_peserta_magang = p.id_peserta_magang
+                ) AS aspek_non_teknis,
+                (
+                    SELECT GROUP_CONCAT(COALESCE(fpn.id_aspek, 'null') ORDER BY fpn.id_aspek SEPARATOR ', ')
+                    FROM final_penilaian_non_teknis fpn
+                    WHERE fpn.id_peserta_magang = p.id_peserta_magang
+                ) AS id_aspek_non_teknis,
+                (
+                    SELECT GROUP_CONCAT(COALESCE(fpn.id_penilaian_final, 'null') ORDER BY fpn.id_aspek SEPARATOR ', ')
+                    FROM final_penilaian_non_teknis fpn
+                    WHERE fpn.id_peserta_magang = p.id_peserta_magang
+                ) AS id_penilaian_non_teknis
+
             FROM peserta_magang p
-            LEFT JOIN penilaian pe 
-            ON p.id_peserta_magang = pe.id_peserta_magang
-            LEFT JOIN aspek a 
-            ON a.id_aspek = pe.id_aspek
-            WHERE p.status_penerimaan = 'selesai' and p.id_peserta_magang = ?
-            GROUP BY p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan;
-            `, [id])
-            return result
-        }catch(error){
-            throw(error)
-        }
+            LEFT JOIN penilaian pe ON p.id_peserta_magang = pe.id_peserta_magang
+            LEFT JOIN aspek a ON pe.id_aspek = a.id_aspek
+            WHERE p.status_penerimaan = 'selesai' AND p.id_peserta_magang = ?
+            GROUP BY p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan, p.sertifikat;
+        `, [id])
+
+        return result
+    }catch(error){
+        throw(error)
     }
+}
     static async getDataDasborSertifById(id){
         try{
             const [result] = await db.query(`select sertifikat from peserta_magang where id_peserta_magang = ?`, [id])

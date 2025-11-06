@@ -51,6 +51,14 @@ class Model_Pic{
             throw(error)
         }
     }
+    static async storeNilaiFinalNonTeknis(data){
+        try{
+            const [result] = await db.query(`insert into final_penilaian_non_teknis set ?`,[data])
+            return result
+        }catch(error){
+            throw(error)
+        }
+    }
     static async getDataCalonPesertaDiterima(id_users){
         try{
             const [result] = await db.query(`select p.instansi, p.nama, p.foto_diri, p.id_peserta_magang, j.id_jadwal from peserta_magang p left join jadwal j on p.id_peserta_magang = j.id_peserta_magang where j.bidang = (select bidang from pic where id_users = ?) and p.status_penerimaan = 'Diterima'`, [id_users])
@@ -65,6 +73,53 @@ class Model_Pic{
             return result
         }catch(error){
             throw(error)
+        }
+    }
+    static async CekAspek(id_aspek){
+            try{
+                const [result] = await db.query(`SELECT aspek FROM aspek WHERE id_aspek = ?`, [id_aspek])
+                return result
+            }catch(error){
+                throw(error)
+            }
+    }
+    static async recalculateFinalNonTeknis(id_peserta_magang) {
+        const [rows] = await db.query(`
+        select p.id_aspek, ROUND(AVG(COALESCE(p.penilaian, 0))) AS rata_rata
+        from penilaian p join aspek a ON p.id_aspek = a.id_aspek
+        where a.aspek = 'non-teknis' and p.id_peserta_magang = ?
+        group BY a.id_aspek
+        `, [id_peserta_magang]);
+    
+        for (const row of rows) {
+            const { id_aspek, rata_rata } = row;
+
+            const [cek] = await db.query(`
+                SELECT id_penilaian_final FROM final_penilaian_non_teknis
+                WHERE id_peserta_magang = ? AND id_aspek = ?
+            `, [id_peserta_magang, id_aspek]);
+
+            if (cek.length > 0) {
+                await db.query(`
+                UPDATE final_penilaian_non_teknis
+                SET nilai = ?
+                WHERE id_peserta_magang = ? AND id_aspek = ?
+                `, [rata_rata, id_peserta_magang, id_aspek]);
+            } else {
+                await db.query(`
+                INSERT INTO final_penilaian_non_teknis (id_peserta_magang, id_aspek, nilai)
+                VALUES (?, ?, ?)
+                `, [id_peserta_magang, id_aspek, rata_rata]);
+            }
+        }
+    }
+    static async getPenilaianById(id_penilaian) {
+        try {
+            const [result] = await db.query(`select id_penilaian, id_aspek, id_peserta_magang 
+            from penilaian where id_penilaian = ?`, [id_penilaian]);
+            return result;
+        } catch (error) {
+            throw error;
         }
     }
     static async updateNilai(id, penilaian){
