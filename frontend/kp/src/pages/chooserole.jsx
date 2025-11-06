@@ -21,6 +21,10 @@ const ChooseRoleSection = () => {
             <FaArrowLeft size={18} />
         </button>
 
+        <a href="/files/buku-panduan-peserta.pdf" className="manual-link" target="_blank" rel="noopener noreferrer">
+            &#9432; download buku panduan penggunaan aplikasi mapta bagi peserta
+        </a>
+
         <motion.div
             className="choose-contain"
             initial={{ opacity: 0, y: 50 }}

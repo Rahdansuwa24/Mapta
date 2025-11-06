@@ -7,6 +7,7 @@ import { LuAlignJustify } from "react-icons/lu";
 import { FaTimes } from "react-icons/fa";
 import { BiSolidCalendar } from "react-icons/bi";
 import { RiBallPenFill } from "react-icons/ri";
+import { FaFileDownload } from "react-icons/fa";
 import axios from 'axios'
 import { toast } from "react-toastify";
 import dayjs from 'dayjs';
@@ -128,6 +129,8 @@ const jadwalFiltered = dataJadwalPic
             menuItems={[
                 { path: "/pic-jadwal", label: "Jadwal", icon: <BiSolidCalendar /> },
                 { path: "/pic-penilaian", label: "Penilaian", icon: <RiBallPenFill /> },
+                { path: "/files/buku-panduan-pic.pdf", label: "Buku Panduan", icon: <FaFileDownload  />, isDownload: true },
+                
             ]}
         />
         <div className="jp-content-area">
