@@ -279,10 +279,13 @@ function PenilaianPic() {
     const hitungIndeksHuruf = (nilai) => {
         if (!nilai && nilai !== 0) return "-";
         const n = parseFloat(nilai);
-        if (n >= 85) return "A";
-        if (n >= 70) return "B";
-        if (n >= 55) return "C";
-        if (n >= 40) return "D";
+        if (n >= 90) return "A";
+        if (n >= 85) return "A-";
+        if (n >= 80) return "B+";
+        if (n >= 75) return "B";
+        if (n >= 70) return "C+";
+        if (n >= 65) return "C";
+        if (n >= 60) return "D";
         return "E";
     };
 
