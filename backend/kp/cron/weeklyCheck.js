@@ -30,4 +30,6 @@ async function scheduler() {
 
 cron.schedule("0 10 */2 * *", scheduler)
 
+// cron.schedule("*/2 * * * *", scheduler);
+
 module.exports = scheduler

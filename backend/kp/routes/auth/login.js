@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
             if(status_penerimaan === "Ditolak"){
                 return res.status(400).json({message: "Anda Ditolak Magang"})
             }
-            if(status_penerimaan === "Non-Akif"){
+            if(status_penerimaan === "Non-Aktif"){
                 return res.status(400).json({message: "Periode Magang Anda Sudah Selesai"})
             }
         }
