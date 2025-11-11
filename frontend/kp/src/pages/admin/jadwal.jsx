@@ -21,7 +21,6 @@ function Jadwal() {
 
     useEffect(() => {
         fetchDataJadwal()
-        fetchDataPeriodekosong()
         fetchDataPeserta()
     }, []);
 
@@ -41,22 +40,6 @@ function Jadwal() {
             toast.error(`Gagal dalam mengambil data jadwal`);
             console.error(error)
         }
-    }
-
-    const fetchDataPeriodekosong = async()=>{
-        const token = localStorage.getItem("token")
-        const res = await axios.get("http://localhost:3000/admin/jadwal/getPeriode", {
-                headers:{
-                    Authorization: `Bearer ${token}`
-                }
-            })
-            try{
-                const dataPeriodeKosong = res.data.data
-                setPeriodeKosong(dataPeriodeKosong)
-            }catch(error){
-                toast.error(`Gagal dalam mengambil data periode waktu peserta magang`);
-                console.error(error)
-            }
     }
     const fetchDataPeserta = async()=>{
         const token = localStorage.getItem("token")
@@ -136,7 +119,6 @@ function Jadwal() {
     const [showModal, setShowModal] = useState(false);
     const [editingJadwal, setEditingJadwal] = useState(null);
     const [jadwalData, setJadwalData] = useState([]);
-    const [periodeKosong, setPeriodeKosong] = useState("")
     const [dataPeserta, setDataPeserta] = useState([])
 
     // State form jadwal
