@@ -55,7 +55,6 @@ router.patch('/update/(:id)', verifyToken('admin'),async(req, res)=>{
     try{
         let id = req.params.id
         let {bidang, email, password} = req.body
-        console.log(req.body)
         if(!bidang || !email){
              return res.status(400).json({ message: `pastikan field bidang dan email tidak ada yang kosong` });
         }

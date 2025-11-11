@@ -45,7 +45,6 @@ router.patch('/update/(:id)', verifyToken('admin'),async(req, res)=>{
 
 router.delete('/delete', verifyToken('admin'),async(req, res)=>{
     try{
-        console.log("BODY DELETE:", req.body)
         const {id_aspek} = req.body
         if(!id_aspek || id_aspek.length === 0) return res.status(400).json({message: 'tidak ada data yang dipilih'})
         const result = await Model_Admin.deleteAspek(id_aspek)

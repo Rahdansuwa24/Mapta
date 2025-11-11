@@ -17,7 +17,7 @@ async function scheduler() {
         for(const row of rowsFinal){
             const tanggalSelesai = dayjs(row.tanggal_selesai_magang);
             const threeWeeksLater = tanggalSelesai.add(3, 'week');
-            if(threeWeeksLater.isBefore(sekarang) || tigaMingguSetelahSelesai.isSame(sekarang, 'day')){
+            if(threeWeeksLater.isBefore(sekarang) || threeWeeksLater.isSame(sekarang, 'day')){
                 await db.query(`UPDATE peserta_magang SET status_penerimaan = 'Non-Aktif' WHERE id_peserta_magang = ?`, [row.id_peserta_magang])
                 console.log(`Peserta ${row.nama} (ID: ${row.id_peserta_magang}) akun peserta sudah di non-aktifkan.`);
             }

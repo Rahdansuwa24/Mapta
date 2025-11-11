@@ -253,6 +253,7 @@ static async storeAspek(data){
                 pe.nama,
                 pe.instansi,
                 pe.foto_diri,
+                pe.status_penerimaan,
 
                 GROUP_CONCAT(
                     CASE WHEN a.aspek = 'teknis' THEN COALESCE(p.id_penilaian, 'null') END
@@ -309,7 +310,7 @@ static async storeAspek(data){
             LEFT JOIN penilaian AS p ON pe.id_peserta_magang = p.id_peserta_magang
             LEFT JOIN aspek AS a ON p.id_aspek = a.id_aspek
             LEFT JOIN pic ON p.id_pic = pic.id_pic
-
+            where pe.status_penerimaan = 'Diterima'
             GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri
             HAVING COUNT(p.id_penilaian) > 0
             ORDER BY penilaian_terbaru DESC;
@@ -383,9 +384,9 @@ static async storeAspek(data){
             LEFT JOIN aspek a ON p.id_aspek = a.id_aspek
             LEFT JOIN pic ON p.id_pic = pic.id_pic
             WHERE j.bidang = pic.bidang
-            AND pe.status_penerimaan = 'Final'
+            AND pe.status_penerimaan = 'Non-Aktif' or pe.status_penerimaan = 'Final'
             GROUP BY pe.id_peserta_magang, pe.nama, pe.instansi, pe.foto_diri
-            HAVING COUNT(p.id_penilaian) > 0;
+            HAVING COUNT(p.id_penilaian) > 0 order by pe.tanggal_selesai_magang desc;
             `)
             return result
         }catch(error){
@@ -406,7 +407,6 @@ static async storeAspek(data){
                 p.status_penerimaan, 
                 p.sertifikat,
 
-                -- TEKNIS
                 GROUP_CONCAT(
                     CASE WHEN a.aspek = 'teknis' THEN COALESCE(pe.penilaian, 'null') END
                     ORDER BY a.id_aspek SEPARATOR ', '
@@ -420,7 +420,6 @@ static async storeAspek(data){
                     ORDER BY a.id_aspek SEPARATOR ', '
                 ) AS aspek_list_teknis,
 
-                -- NON-TEKNIS
                 (
                     SELECT GROUP_CONCAT(COALESCE(fpn.nilai, 'null') ORDER BY fpn.id_aspek SEPARATOR ', ')
                     FROM final_penilaian_non_teknis fpn

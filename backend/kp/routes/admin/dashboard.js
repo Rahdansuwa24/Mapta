@@ -62,9 +62,7 @@ router.patch('/update-surat-balasan/(:id)', verifyToken('admin'),  upload.single
         }
         const dataLama = await Model_Admin.getDataCalonPesertaByIdWithoutStatus(id)
         const peserta = Array.isArray(dataLama) ? dataLama[0] : dataLama
-        console.log(peserta)
         const fileLama = peserta.surat_balasan
-        console.log(fileLama)
         if (fileLama) {
             const docDirDiterima = path.resolve('public/document-admin/diterima');
             const docDirDitolak = path.resolve('public/document-admin/ditolak');

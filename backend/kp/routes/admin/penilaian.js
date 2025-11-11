@@ -40,7 +40,6 @@ router.patch('/update/(:id)', verifyToken("admin"),async(req, res)=>{
             if(nilai === undefined){
                 return res.status(400).json({ message: "Nilai harus diisi" });
             }
-            console.log({id_peserta_magang, id_aspek})
             await Model_Admin.updateNilaiFinalNonTeknis(id, {nilai})
             await Model_Admin.setStatusNilai(id_peserta_magang, id_aspek)
             res.status(200).json({message: 'data berhasil diperbarui'})
@@ -52,7 +51,6 @@ router.patch('/update/(:id)', verifyToken("admin"),async(req, res)=>{
 
 router.delete('/delete', verifyToken('admin'),async(req, res)=>{
     try{
-        console.log("BODY DELETE:", req.body)
         const {id_aspek} = req.body
         if(!id_aspek || id_aspek.length === 0) return res.status(400).json({message: 'tidak ada data yang dipilih'})
         const result = await Model_Admin.deleteAspek(id_aspek)
