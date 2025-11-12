@@ -133,11 +133,11 @@ function Jadwal() {
     // Departemen static
     const departemenStatic = [
         "Kesekretariatan",
-        "Deposit, Akuisisi, Pelestarian dan Pengolahan Bahan Perpustakaan",
+        "Deposit, Pengembangan, dan Pelestarian bahan Perpustakaan",
+        "Pembinaan Perpustakaan",
         "Pelayanan Perpustakaan dan Informasi",
-        "Pengembangan Sumber Daya",
-        "Penyelamatan dan Pendayagunaan Kearsipan",
-        "Pembinaan dan Pengawasan Kearsipan",
+        "Pemberdayaan dan Pengawasan Kearsipan",
+        "Penyelamatan dan Pemanfaatan Arsip Statis",
     ];
 
 // Filter jadwal berdasarkan departemen dan kata kunci pencarian

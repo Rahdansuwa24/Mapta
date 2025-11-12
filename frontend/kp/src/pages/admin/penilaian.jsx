@@ -233,7 +233,7 @@ function Penilaian() {
                                 {aspekNonTeknisGlobal.length > 0 && (
                                     <div className="departemen-group">
                                         <span style={{ fontStyle: "italic", fontWeight: 500, fontSize: "14.5px" }}>
-                                            GLOBAL (Semua Departemen)
+                                            Default (Semua Departemen)
                                         </span>
                                         <div className="aspek-list">
                                             {aspekNonTeknisGlobal.map((a, idx) => (
@@ -348,18 +348,18 @@ function Penilaian() {
                                                 >
                                                     <option value="">-- Pilih Departemen --</option>
                                                     <option value="Kesekretariatan">Kesekretariatan</option>
-                                                    <option value="Deposit, Akuisisi, Pelestarian dan Pengolahan Bahan Perpustakaan">
-                                                        Deposit, Akuisisi, Pelestarian dan Pengolahan Bahan Perpustakaan
+                                                    <option value="Deposit, Pengembangan, dan Pelestarian bahan Perpustakaan">
+                                                        Deposit, Pengembangan, dan Pelestarian bahan Perpustakaan
                                                     </option>
-                                                    <option value="Pelayanan Perpustakaan dan Informasi">
-                                                        Pelayanan Perpustakaan dan Informasi
+                                                    <option value="Pembinaan Perpustakaan">
+                                                        Pembinaan Perpustakaan
                                                     </option>
-                                                    <option value="Pengembangan Sumber Daya">Pengembangan Sumber Daya</option>
-                                                    <option value="Penyelamatan dan Pendayagunaan Kearsipan">
-                                                        Penyelamatan dan Pendayagunaan Kearsipan
+                                                    <option value="Pelayanan Perpustakaan dan Informasi">Pelayanan Perpustakaan dan Informasi</option>
+                                                    <option value="Pemberdayaan dan Pengawasan Kearsipan">
+                                                        Pemberdayaan dan Pengawasan Kearsipan
                                                     </option>
-                                                    <option value="Pembinaan dan Pengawasan Kearsipan">
-                                                        Pembinaan dan Pengawasan Kearsipan
+                                                    <option value="Penyelamatan dan Pemanfaatan Arsip Statis">
+                                                        Penyelamatan dan Pemanfaatan Arsip Statis
                                                     </option>
                                                 </select>
                                             </div>
@@ -375,18 +375,18 @@ function Penilaian() {
                                                     <option value="">-- Pilih Penerapan --</option>
                                                     <option value="GLOBAL">Default (Semua Departemen)</option>
                                                     <option value="Kesekretariatan">Kesekretariatan</option>
-                                                    <option value="Deposit, Akuisisi, Pelestarian dan Pengolahan Bahan Perpustakaan">
-                                                        Deposit, Akuisisi, Pelestarian dan Pengolahan Bahan Perpustakaan
+                                                    <option value="Deposit, Pengembangan, dan Pelestarian bahan Perpustakaan">
+                                                        Deposit, Pengembangan, dan Pelestarian bahan Perpustakaan
                                                     </option>
-                                                    <option value="Pelayanan Perpustakaan dan Informasi">
-                                                        Pelayanan Perpustakaan dan Informasi
+                                                    <option value="Pembinaan Perpustakaan">
+                                                        Pembinaan Perpustakaan
                                                     </option>
-                                                    <option value="Pengembangan Sumber Daya">Pengembangan Sumber Daya</option>
-                                                    <option value="Penyelamatan dan Pendayagunaan Kearsipan">
-                                                        Penyelamatan dan Pendayagunaan Kearsipan
+                                                    <option value="Pelayanan Perpustakaan dan Informasi">Pelayanan Perpustakaan dan Informasi</option>
+                                                    <option value="Pemberdayaan dan Pengawasan Kearsipan">
+                                                        Pemberdayaan dan Pengawasan Kearsipan
                                                     </option>
-                                                    <option value="Pembinaan dan Pengawasan Kearsipan">
-                                                        Pembinaan dan Pengawasan Kearsipan
+                                                    <option value="Penyelamatan dan Pemanfaatan Arsip Statis">
+                                                        Penyelamatan dan Pemanfaatan Arsip Statis
                                                     </option>
                                                 </select>
                                             </div>
