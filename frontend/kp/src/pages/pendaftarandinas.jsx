@@ -183,7 +183,7 @@ export default function PendaftaranDinas() {
         >
             {withTopInfo && (
                 <div className="top-info">
-                    <b>Note:</b> Peserta Instansi/Dinas wajib mengunggah Foto Formal berseragam dinas, sedangkan dokumen bersifat opsional (dapat dikirim saat pendaftaran atau menyusul).
+                    <b>Note:</b> Peserta Pegawai/Instansi wajib mengunggah Foto Formal berseragam dinas, sedangkan dokumen bersifat opsional (dapat dikirim saat pendaftaran atau menyusul).
                 </div>
             )}
 
@@ -224,13 +224,19 @@ export default function PendaftaranDinas() {
                         </label>
                         <div className="samping-foto">
                             <select value={formData[index].jenjang} onChange={(e)=>handleChange(index, "jenjang", e.target.value)} disabled>
-                                <option value="dinas">Dinas</option>
+                                <option value="dinas">Instansi</option>
                             </select>
                             <select disabled>
                                 <option value="individu">Individu</option>
                             </select>
                         </div>
                     </div>
+                    <input
+                        type="tel"
+                        placeholder="Nomor WhatsApp"
+                        value={formData[index].telepon}
+                        onChange={(e) => handleChange(index, "telepon", e.target.value)}
+                    />
                     <input type="email" placeholder="Email Aktif" value={formData[index].email} onChange={(e)=>handleChange(index, "email", e.target.value)} />
                     <div className="password-input">
                     <input
@@ -299,7 +305,7 @@ export default function PendaftaranDinas() {
                     </div>
                     <label className="input-file-wrap">
                         <div className="placeholder-text">
-                            Upload Dokumen Pendukung
+                            Upload Dokumen/Surat Pendukung
                         </div>
                         <input
                             type="file"
@@ -349,7 +355,7 @@ export default function PendaftaranDinas() {
                     </a>
                 </div>
                 <div className="title">
-                    <h1>Formulir Pendaftaran Magang Dinas</h1>
+                    <h1>Formulir Pendaftaran Magang Instansi</h1>
                     <hr />
                     <p>
                         Silakan lengkapi data diri dan dokumen yang diperlukan

@@ -349,6 +349,12 @@ const fetchKuotaTersisa = async()=>{
                             </select>
                         </div>
                     </div>
+                    <input
+                        type="tel"
+                        placeholder="Nomor WhatsApp"
+                        value={formData[index].telepon}
+                        onChange={(e) => handleChange(index, "telepon", e.target.value)}
+                    />
                     <input type="email" placeholder="Email Aktif" value={formData[index].email} onChange={(e)=>handleChange(index, "email", e.target.value)} />
                     <div className="password-input">
                     <input
@@ -389,6 +395,14 @@ const fetchKuotaTersisa = async()=>{
                 </div>
 
                 <div className="kolom">
+                    <select
+                        value={formData[index].nama}
+                        onChange={(e) => handleChange(index, "nama", e.target.value)}
+                        >
+                        <option value="">Pilih Peran</option>
+                        <option value="Ketua">Ketua</option>
+                        <option value="Anggota">Anggota</option>
+                    </select>
                     <input type="text" placeholder="Nama Lengkap" value={formData[index].nama} onChange={(e)=>handleChange(index, "nama", e.target.value)} />
                     <input type="text" placeholder="Instansi" value={formData[index].instansi} onChange={(e)=>handleChange(index, "instansi", e.target.value)} />
                     <input type="text" placeholder="NIP/NIM" value={formData[index].nomor_identitas} onChange={(e)=>handleChange(index, "nomor_identitas", e.target.value)}/>
@@ -418,7 +432,7 @@ const fetchKuotaTersisa = async()=>{
 
                     <label className="input-file-wrap">
                         <div className="placeholder-text">
-                            Upload Dokumen Pendukung
+                            Upload Dokumen/Surat Permohonan
                         </div>
                         <input
                             type="file"

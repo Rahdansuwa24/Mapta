@@ -66,11 +66,11 @@ const fadeUp = {
 
     const steps = [
         { t: "Klik Daftar", d: "Pilih tombol Daftar di navigasi untuk menuju halaman Form Pendaftaran." },
-        { t: "Pilih Jenjang", d: "SMK/SMA/Mahasiswa → pilih Siswa. Pegawai/ASN → pilih Dinas" },
+        { t: "Pilih Jenjang", d: "SMK/SMA/Mahasiswa → pilih Siswa. Pegawai/Instansi → pilih Dinas" },
         { t: "Perhatikan Catatan", d: "Baca dengan seksama note/perintah sebelum mulai mengisi data." },
         { t: "Pilih Kategori bagi Siswa", d: "Kelompok → tombol “Tambah” aktif setelah pilih kategori. Individu → isi data langsung tanpa tombol “Tambah”." },
         { t: "Isi Instansi Lengkap", d: "Tuliskan nama sekolah/universitas tanpa singkatan." },
-        { t: "Upload Dokumen (Wajib untuk Siswa)", d: "Surat pernyataan/proposal dari kampus atau sekolah dan Dokumen pendukung lain. Untuk Pegawai/ASN, dokumen tidak diwajibkan." },
+        { t: "Upload Dokumen (Wajib untuk Siswa)", d: "Surat pernyataan/proposal dari kampus atau sekolah dan Dokumen pendukung lain. Untuk Pegawai/Instansi, dokumen tidak diwajibkan." },
         { t: "Tunggu Konfirmasi Email", d: "Setelah selesai melengkapi semua data dan mengunggah dokumen, klik Daftar dan tunggu proses konfirmasi melalui email dan Anda akan menerima balasan apakah pendaftaran diterima atau ditolak." },
         { t: "Login", d: "Jika diterima, masuk menggunakan email & password yang sudah dibuat." },
     ];
@@ -181,11 +181,11 @@ const fadeUp = {
                     <motion.div className="org-list" variants={listStagger} initial="hidden" whileInView="show" viewport={{ once: true }}>
                     {[
                         "Bidang Kesekretariatan",
-                        "Bidang Deposit, Akuisisi, Pelestarian dan Pengolahan Bahan Perpustakaan",
+                        "Bidang Deposit, Pengembangan, dan Pelestarian bahan Perpustakaan",
+                        "Bidang Pembinaan Perpustakaan",
                         "Bidang Pelayanan Perpustakaan dan Informasi",
-                        "Bidang Pengembangan Sumber Daya",
-                        "Bidang Penyelamatan dan Pendayagunaan Kearsipan",
-                        "Bidang Pembinaan dan Pengawasan Kearsipan",
+                        "Bidang Pemberdayaan dan Pengawasan Kearsipan",
+                        "Bidang Penyelamatan dan Pemanfaatan Arsip Statis",
                     ].map((item, idx) => (
                         <motion.div key={idx} className="org-item" variants={fadeUp}>
                         <span className="number">{idx + 1}</span>
@@ -329,6 +329,11 @@ const fadeUp = {
                     <p>
                     <strong>Kearsipan Jatim</strong> – Jl. Jagir Wonokromo No.350,
                     RT.011/RW.01, Sidosermo, Kec. Wonocolo, Surabaya, Jawa Timur 60239
+                    </p>
+                    <p>
+                    <strong>Depo Arsip Pandaaan Jatim</strong> – Jl. Raya Surabaya
+                    - Malang No.8, Macanan, Karang Jati, Kec. Pandaan, Pasuruan, 
+                    Jawa Timur 67156
                     </p>
                 </div>
             </div>

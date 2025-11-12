@@ -71,16 +71,17 @@ const ChooseRoleSection = () => {
                 transition={{ duration: 0.8, delay: 0.6 }}
             >
                 <span>
-                Apakah Anda mendaftar sebagai <b>Dinas</b> untuk mengikuti program
-                magang yang diselenggarakan oleh Dinas Perpustakaan dan Kearsipan
-                Provinsi Jawa Timur? Program ini ditujukan bagi pegawai atau
-                perwakilan dinas yang ingin memperluas wawasan dan mengenal lebih
-                dekat lingkungan kerja, sistem, serta prosedur yang berlaku pada
-                setiap bidang, sehingga dapat menjadi bekal dalam peningkatan
-                kompetensi dan pemahaman kerja di instansi masing-masing.
+                Apakah Anda mendaftar sebagai <b>instansi</b> untuk mengikuti program 
+                magang yang diselenggarakan oleh Dinas Perpustakaan dan 
+                Kearsipan Provinsi Jawa Timur? Program ini ditujukan bagi
+                pegawai atau perwakilan instansi yang ingin memperluas wawasan 
+                dan mengenal lebih dekat lingkungan kerja, sistem, serta 
+                prosedur yang berlaku pada setiap bidang, sehingga dapat 
+                menjadi bekal dalam peningkatan kompetensi dan pemahaman kerja 
+                di instansi masing-masing.
                 </span>
                 <Link to="/pendaftarandinas">
-                <button>Daftar Sebagai Dinas</button>
+                <button>Daftar Sebagai Instansi</button>
                 </Link>
             </motion.div>
             </div>
