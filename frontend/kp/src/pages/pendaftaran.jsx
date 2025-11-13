@@ -32,6 +32,8 @@ export default function PendaftaranMagang() {
             nomor_identitas: "",
             tanggal_mulai_magang: "",
             tanggal_selesai_magang: "",
+            no_whatsapp: "",
+            jabatan: "",
             jenjang: "siswa",
             kategori: "",
             foto: null,
@@ -71,6 +73,8 @@ const fetchKuotaTersisa = async()=>{
                 nomor_identitas: "",
                 tanggal_mulai_magang: prev[0].tanggal_mulai_magang,
                 tanggal_selesai_magang: prev[0].tanggal_selesai_magang,
+                no_whatsapp: "",
+                jabatan: "",
                 jenjang: "siswa",
                 kategori: "kelompok",
                 foto: null,
@@ -192,7 +196,7 @@ const fetchKuotaTersisa = async()=>{
 
         if (kategoriPertama === 'individu') {
             const user = { ...formData[0], kategori: "individu" };
-            for (let key of ["email", "password", "nama", "instansi", "nomor_identitas", "tanggal_mulai_magang", "tanggal_selesai_magang", "jenjang"]) {
+            for (let key of ["email", "password", "nama", "instansi", "nomor_identitas", "tanggal_mulai_magang", "tanggal_selesai_magang", "jenjang", "no_whatsapp", "jabatan"]) {
                 formDataToSend.append(key, user[key]);
             }
 
@@ -202,7 +206,7 @@ const fetchKuotaTersisa = async()=>{
             }
         } else { 
             formData.forEach((user, index) => {
-                for (let key of ["email", "password", "nama", "instansi", "nomor_identitas", "tanggal_mulai_magang", "tanggal_selesai_magang", "jenjang"]) {
+                for (let key of ["email", "password", "nama", "instansi", "nomor_identitas", "tanggal_mulai_magang", "tanggal_selesai_magang", "jenjang", "no_whatsapp", "jabatan"]) {
                     formDataToSend.append(`users[${index}][${key}]`, user[key]);
                 }
 
@@ -234,6 +238,8 @@ const fetchKuotaTersisa = async()=>{
                 tanggal_mulai_magang: "",
                 tanggal_selesai_magang: "",
                 jenjang: "siswa",
+                no_whatsapp: "",
+                jabatan: "",
                 kategori: "",
                 foto: null,
                 dokumen: [],
@@ -352,8 +358,8 @@ const fetchKuotaTersisa = async()=>{
                     <input
                         type="tel"
                         placeholder="Nomor WhatsApp"
-                        value={formData[index].telepon}
-                        onChange={(e) => handleChange(index, "telepon", e.target.value)}
+                        value={formData[index].no_whatsapp}
+                        onChange={(e) => handleChange(index, "no_whatsapp", e.target.value)}
                     />
                     <input type="email" placeholder="Email Aktif" value={formData[index].email} onChange={(e)=>handleChange(index, "email", e.target.value)} />
                     <div className="password-input">
@@ -396,10 +402,10 @@ const fetchKuotaTersisa = async()=>{
 
                 <div className="kolom">
                     <select
-                        value={formData[index].nama}
-                        onChange={(e) => handleChange(index, "nama", e.target.value)}
+                        value={formData[index].jabatan}
+                        onChange={(e) => handleChange(index, "jabatan", e.target.value)}
                         >
-                        <option value="">Pilih Peran</option>
+                        <option value="">Pilih Jabatan</option>
                         <option value="Ketua">Ketua</option>
                         <option value="Anggota">Anggota</option>
                     </select>
