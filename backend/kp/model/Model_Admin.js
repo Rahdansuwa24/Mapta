@@ -416,7 +416,7 @@ static async storeAspek(data){
                     ORDER BY a.id_aspek SEPARATOR ', '
                 ) AS aspek_teknis,
                 GROUP_CONCAT(
-                    CASE WHEN a.aspek = 'teknis' THEN COALESCE(a.aspek, 'null') END
+                    CASE WHEN a.aspek = 'teknis' THEN COALESCE(a.subjek, 'null') END
                     ORDER BY a.id_aspek SEPARATOR ', '
                 ) AS aspek_list_teknis,
 
@@ -448,7 +448,6 @@ static async storeAspek(data){
             WHERE p.status_penerimaan = 'selesai' AND p.id_peserta_magang = ?
             GROUP BY p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan, p.sertifikat;
         `, [id])
-
         return result
     }catch(error){
         throw(error)
