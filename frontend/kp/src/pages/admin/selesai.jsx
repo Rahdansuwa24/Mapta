@@ -308,22 +308,22 @@ function SelesaiMagang() {
                   />
                 </div>
 
-                <div className="detail-item"><b>Nama:</b><p>{selectedPeserta.nama}</p></div>
-                <div className="detail-item"><b>NIM/NIP:</b><p>{selectedPeserta.nomor_identitas}</p></div>
-                <div className="detail-item"><b>Instansi:</b><p>{selectedPeserta.instansi}</p></div>
+                <div className="detail-item"><b>Nama :</b><p>{selectedPeserta.nama}</p></div>
+                <div className="detail-item"><b>NIM/NIP :</b><p>{selectedPeserta.nomor_identitas}</p></div>
+                <div className="detail-item"><b>Instansi :</b><p>{selectedPeserta.instansi}</p></div>
                 <div className="detail-item">
-                  <b>Tanggal Mulai - Tanggal Selesai:</b>
+                  <b>Tanggal Mulai - Tanggal Selesai :</b>
                   <p>
                     {dayjs(selectedPeserta.tanggal_mulai_magang).format("DD MMMM YYYY")} hingga{" "}
                     {dayjs(selectedPeserta.tanggal_selesai_magang).format("DD MMMM YYYY")}
                   </p>
                 </div>
-                <div className="detail-item"><b>Kategori:</b><p>{selectedPeserta.kategori}</p></div>
-                <div className="detail-item"><b>Jabatan:</b><p>{selectedPeserta.jabatan}</p></div>
-                <div className="detail-item"><b>No Whatsapp:</b><p>{selectedPeserta.no_whatsapp}</p></div>
-                <div className="detail-item"><b>Email:</b><p>{selectedPeserta.email}</p></div>
+                <div className="detail-item"><b>Kategori :</b><p>{selectedPeserta.kategori}</p></div>
+                <div className="detail-item"><b>Jabatan :</b><p>{selectedPeserta.jabatan}</p></div>
+                <div className="detail-item"><b>No Whatsapp :</b><p>{selectedPeserta.no_whatsapp}</p></div>
+                <div className="detail-item"><b>Email :</b><p>{selectedPeserta.email}</p></div>
                 <div className="detail-item">
-                  <b>Status:</b>
+                  <b>Status :</b>
                   <p><span className="status-label selesai">{selectedPeserta.status_penerimaan}</span></p>
                 </div>
 
@@ -350,7 +350,7 @@ function SelesaiMagang() {
 
                     {/* Surat */}
                     <div className="detail-item">
-                    <b>Surat Penerimaan/Penolakan :</b>
+                    <b>Surat Penerimaan :</b>
                     <div className="dokumen-list">
                         {selectedPeserta.surat_balasan ? (
                         <div className="dokumen-item">
@@ -369,6 +369,34 @@ function SelesaiMagang() {
                         <p>Tidak ada surat</p>
                         )}
                     </div>
+                    </div>
+
+                    {/* Laporan Akhir */}
+                    <div className="detail-item">
+                      <b>Laporan Akhir :</b>
+                      <div className="dokumen-list">
+                        {selectedPeserta.laporan_akhir ? (
+                          <div className="dokumen-item">
+                            <span>{selectedPeserta.laporan_akhir}</span>
+                            <div className="dokumen-actions">
+                              <button
+                                className="btn-download"
+                                onClick={() => {
+                                  window.open(
+                                    `http://localhost:3000/static/laporan-akhir/${selectedPeserta.laporan_akhir}`,
+                                    "_blank",
+                                    "noopener,noreferrer"
+                                  );
+                                }}
+                              >
+                                Download
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p>Tidak ada laporan akhir</p>
+                        )}
+                      </div>
                     </div>
 
                     {/* Sertifikat */}
