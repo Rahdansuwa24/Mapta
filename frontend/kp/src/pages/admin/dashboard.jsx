@@ -229,7 +229,7 @@ function Dashboard() {
                                         <th>Instansi</th>
                                         <th>Tanggal Mulai Magang</th>
                                         <th>Tanggal Selesai Magang</th>
-                                        <th>Kategori</th>
+                                        <th>Jabatan</th>
                                         <th>Aksi</th>
                                     </tr>
                                     </thead>
@@ -255,7 +255,7 @@ function Dashboard() {
                                             "DD MMMM YYYY"
                                             )}
                                         </td>
-                                        <td>{peserta.kategori}</td>
+                                        <td>{peserta.jabatan}</td>
                                         <td className="aksi-cell">
                                             <div className="aksi-wrapper">
                                             <button
@@ -343,7 +343,7 @@ function Dashboard() {
                                         <th>Instansi</th>
                                         <th>Tanggal Mulai Magang</th>
                                         <th>Tanggal Selesai Magang</th>
-                                        <th>Kategori</th>
+                                        <th>Jabatan</th>
                                         <th>Aksi</th>
                                     </tr>
                                     </thead>
@@ -369,7 +369,7 @@ function Dashboard() {
                                             "DD MMMM YYYY"
                                             )}
                                         </td>
-                                        <td>{peserta.kategori}</td>
+                                        <td>{peserta.jabatan}</td>
                                         <td className="aksi-cell">
                                             <div className="aksi-wrapper">
                                             <button
@@ -488,6 +488,14 @@ function Dashboard() {
                                 <div className="detail-item">
                                     <b>Kategori :</b>
                                     <p>{selectedPeserta.kategori}</p>
+                                </div>
+                                <div className="detail-item">
+                                    <b>Jabatan :</b>
+                                    <p>{selectedPeserta.jabatan}</p>
+                                </div>
+                                <div className="detail-item">
+                                    <b>No Whatsapp :</b>
+                                    <p>{selectedPeserta.no_whatsapp}</p>
                                 </div>
                                 <div className="detail-item">
                                     <b>Email :</b>

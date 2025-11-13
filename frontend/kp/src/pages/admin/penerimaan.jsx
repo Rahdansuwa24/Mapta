@@ -266,7 +266,7 @@ const filteredPeserta = PesertaDiterima.filter((p) => {
                                                     <th>Instansi</th>
                                                     <th>Tanggal Mulai Magang</th>
                                                     <th>Tanggal Selesai Magang</th>
-                                                    <th>Kategori</th>
+                                                    <th>Jabatan</th>
                                                     <th>Status</th>
                                                     <th>Upload Surat Penerimaan</th>
                                                     <th>Aksi</th>
@@ -283,7 +283,7 @@ const filteredPeserta = PesertaDiterima.filter((p) => {
                                                         <td>{highlightText(peserta.instansi, searchTerm)}</td>
                                                         <td>{dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")}</td>
                                                         <td>{dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}</td>
-                                                        <td>{peserta.kategori}</td>
+                                                        <td>{peserta.jabatan}</td>
                                                         <td>
                                                             <span className="status-label diterima">{peserta.status_penerimaan}</span>
                                                         </td>
@@ -325,7 +325,7 @@ const filteredPeserta = PesertaDiterima.filter((p) => {
                                                     <th>Instansi</th>
                                                     <th>Tanggal Mulai Magang</th>
                                                     <th>Tanggal Selesai Magang</th>
-                                                    <th>Kategori</th>
+                                                    <th>Jabatan</th>
                                                     <th>Status</th>
                                                     <th>Upload Surat Penerimaan</th>
                                                     <th>Aksi</th>
@@ -345,7 +345,7 @@ const filteredPeserta = PesertaDiterima.filter((p) => {
                                                     <td>{peserta.instansi}</td>
                                                     <td>{dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")}</td>
                                                     <td>{dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}</td>
-                                                    <td>{peserta.kategori}</td>
+                                                    <td>{peserta.jabatan}</td>
                                                     <td>
                                                         <span className="status-label diterima">{peserta.status_penerimaan}</span>
                                                     </td>
@@ -438,19 +438,30 @@ const filteredPeserta = PesertaDiterima.filter((p) => {
                                     </div>
 
                                     <div className="peserta-detail-item">
+                                        <b>Tanggal Mulai - Selesai :</b>
+                                        <input className="peserta-input" type="text" value={`${dayjs(selectedPeserta.tanggal_mulai_magang).format("DD MMMM YYYY")} hingga ${dayjs(selectedPeserta.tanggal_selesai_magang).format("DD MMMM YYYY")}`}  disabled />
+                                    </div>
+
+                                    <div className="peserta-detail-item">
                                         <b>Email :</b>
                                         <input className="peserta-input" type="text" value={selectedPeserta.email} disabled/>
                                     </div>
 
                                     <div className="peserta-detail-item">
-                                        <b>Tanggal Mulai - Selesai :</b>
-                                        <input className="peserta-input" type="text" value={`${dayjs(selectedPeserta.tanggal_mulai_magang).format("DD MMMM YYYY")} hingga ${dayjs(selectedPeserta.tanggal_selesai_magang).format("DD MMMM YYYY")}`}  disabled />
+                                        <b>No Whatsapp :</b>
+                                        <input className="peserta-input" type="text" value={selectedPeserta.no_whatsapp} disabled />
                                     </div>
 
                                     <div className="peserta-detail-item">
                                         <b>Kategori :</b>
                                         <input className="peserta-input" type="text" value={selectedPeserta.kategori} disabled />
                                     </div>
+
+                                    <div className="peserta-detail-item">
+                                        <b>Jabatan :</b>
+                                        <input className="peserta-input" type="text" value={selectedPeserta.jabatan} disabled />
+                                    </div>
+                                    
                                     <div className="peserta-detail-item">
                                         <b>Status :</b>
                                         <select

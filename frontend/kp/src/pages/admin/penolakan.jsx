@@ -464,18 +464,28 @@ function Ditolak() {
                                     </div>
 
                                     <div className="peserta-detail-item">
+                                        <b>Tanggal Mulai - Selesai :</b>
+                                        <input className="peserta-input" type="text" value={`${dayjs(selectedPeserta.tanggal_mulai_magang).format("DD MMMM YYYY")} hingga ${dayjs(selectedPeserta.tanggal_selesai_magang).format("DD MMMM YYYY")}`}  disabled />
+                                    </div>
+                                    
+                                    <div className="peserta-detail-item">
                                         <b>Email :</b>
                                         <input className="peserta-input" type="text" value={selectedPeserta.email} disabled/>
                                     </div>
-
+                                    
                                     <div className="peserta-detail-item">
-                                        <b>Tanggal Mulai - Selesai :</b>
-                                        <input className="peserta-input" type="text" value={`${dayjs(selectedPeserta.tanggal_mulai_magang).format("DD MMMM YYYY")} hingga ${dayjs(selectedPeserta.tanggal_selesai_magang).format("DD MMMM YYYY")}`} disabled />
+                                        <b>No Whatsapp :</b>
+                                        <input className="peserta-input" type="text" value={selectedPeserta.no_whatsapp} disabled />
                                     </div>
-
+                                    
                                     <div className="peserta-detail-item">
-                                        <b>Kategori :</b>
-                                        <input className="peserta-input" type="text" value={selectedPeserta.kategori} disabled />
+                                            <b>Kategori :</b>
+                                            <input className="peserta-input" type="text" value={selectedPeserta.kategori} disabled />
+                                    </div>
+                                    
+                                    <div className="peserta-detail-item">
+                                        <b>Jabatan :</b>
+                                        <input className="peserta-input" type="text" value={selectedPeserta.jabatan} disabled />
                                     </div>
 
                                     <div className="peserta-detail-item">

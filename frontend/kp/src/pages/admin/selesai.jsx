@@ -237,6 +237,7 @@ function SelesaiMagang() {
                             <th>Tgl Mulai</th>
                             <th>Tgl Selesai</th>
                             <th>Kategori</th>
+                            <th>Jabatan</th>
                             <th>Status</th>
                             <th>Detail Profil</th>
                           </tr>
@@ -260,6 +261,7 @@ function SelesaiMagang() {
                                 {dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}
                               </td>
                               <td>{peserta.kategori}</td>
+                              <td>{peserta.jabatan}</td>
                               <td>
                                 <span className="status-label selesai">
                                   {peserta.status_penerimaan}
@@ -317,6 +319,8 @@ function SelesaiMagang() {
                   </p>
                 </div>
                 <div className="detail-item"><b>Kategori:</b><p>{selectedPeserta.kategori}</p></div>
+                <div className="detail-item"><b>Jabatan:</b><p>{selectedPeserta.jabatan}</p></div>
+                <div className="detail-item"><b>No Whatsapp:</b><p>{selectedPeserta.no_whatsapp}</p></div>
                 <div className="detail-item"><b>Email:</b><p>{selectedPeserta.email}</p></div>
                 <div className="detail-item">
                   <b>Status:</b>
