@@ -20,6 +20,7 @@ import JadwalPIC from "./pages/userpic/jadwalpic.jsx";
 import PenilaianPIC from "./pages/userpic/penilaianpic.jsx";
 import NilaiPeserta from "./pages/userpeserta/nilaipeserta.jsx";
 import JadwalPeserta from "./pages/userpeserta/jadwalpeserta.jsx";
+import LaporanPeserta from "./pages/userpeserta/laporanpeserta.jsx";
 import SertifikatPeserta from "./pages/userpeserta/sertifikatpeserta.jsx";
 import {jwtDecode} from "jwt-decode";
 import axios from 'axios';
@@ -99,6 +100,7 @@ function App() {
         <Route path="/peserta-nilai" element={<Protection allowedRoles={['siswa']}><NilaiPeserta /></Protection>} />
         <Route path="/peserta-jadwal" element={<Protection allowedRoles={['siswa']}><JadwalPeserta /></Protection>} />
         <Route path="/peserta-sertifikat" element={<Protection allowedRoles={['siswa']}><SertifikatPeserta /></Protection>} />
+        <Route path="/peserta-laporan" element={<Protection allowedRoles={['siswa']}><LaporanPeserta /></Protection>} />
       </Routes>
       <ToastContainer
         position="top-right"

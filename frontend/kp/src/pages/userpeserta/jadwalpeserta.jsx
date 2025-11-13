@@ -7,6 +7,7 @@ import NavbarUsr from "../../components/navbar-user";
 import { BiSolidCalendar } from "react-icons/bi";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoDocumentText } from "react-icons/io5";
+import { FaFileInvoice } from "react-icons/fa6";
 import { FaFileDownload } from "react-icons/fa";
 import axios from 'axios'
 import { toast } from "react-toastify";
@@ -74,6 +75,7 @@ function JadwalPeserta() {
                 menuItems={[
                     { path: "/peserta-jadwal", label: "Jadwal", icon: <BiSolidCalendar /> },
                     { path: "/peserta-nilai", label: "Nilai", icon: <FaCircleCheck /> },
+                    { path: "/peserta-laporan", label: "Laporan Akhir", icon: <FaFileInvoice /> },
                     { path: "/peserta-sertifikat", label: "Sertifikat", icon: <IoDocumentText /> },
                     { path: "/files/buku-panduan-peserta.pdf", label: "Buku Panduan", icon: <FaFileDownload  />, isDownload: true },
                 ]}

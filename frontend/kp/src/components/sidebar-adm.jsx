@@ -132,7 +132,7 @@ export default function Sidebar() {
                         </Link>
                         <Link to="/admin-jadwal-pp">
                             <div className={`dropdown-item ${isActive("/admin-jadwal-pp") ? "active" : ""}`}>
-                                PP
+                                BINPUS
                             </div>
                         </Link>
                         <Link to="/admin-jadwal-ppi">
