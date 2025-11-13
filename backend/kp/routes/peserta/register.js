@@ -29,7 +29,7 @@ router.post('/register', upload.any(), async (req, res) => {
                     const user = req.body.users[i];
                     if (!user.email || !user.password || !user.nama || !user.instansi ||
                         !user.nomor_identitas || !user.tanggal_mulai_magang ||
-                        !user.tanggal_selesai_magang || !user.jenjang) {
+                        !user.tanggal_selesai_magang || !user.jenjang || !user.no_whatsapp || !user.jabatan) {
                         hapusFiles(req.files);
                         return res.status(400).json({ message: `Pastikan semua data anggota ${i + 1} sudah diisi` });
                     }
@@ -89,6 +89,8 @@ router.post('/register', upload.any(), async (req, res) => {
                         kategori: 'kelompok',
                         dokumen_pendukung: JSON.stringify(user.dokumen_pendukung),
                         jenjang: user.jenjang,
+                        no_whatsapp: user.no_whatsapp,
+                        jabatan: user.jabatan,
                         id_users: idAkun,
                         id_kelompok: idKelompok
                     };
@@ -106,7 +108,7 @@ router.post('/register', upload.any(), async (req, res) => {
         }
         
         // Handle pendaftaran individu
-        const { nama, nomor_identitas, instansi, tanggal_mulai_magang, tanggal_selesai_magang, jenjang, email, password } = req.body;
+        const { nama, nomor_identitas, instansi, tanggal_mulai_magang, tanggal_selesai_magang, jenjang, email, password, no_whatsapp, jabatan } = req.body;
         
         const fotoIndividu = req.files.find(f => f.fieldname === 'foto_diri');
         const dokumenPendukungIndividu = req.files.filter(f => f.fieldname === 'dokumen_pendukung');
@@ -118,7 +120,7 @@ router.post('/register', upload.any(), async (req, res) => {
             hapusFiles(req.files);
             return res.status(400).json({ message: "Dokumen pendukung wajib diunggah" });
         }
-        if (!email || !password || !nama || !nomor_identitas || !instansi || !tanggal_mulai_magang || !tanggal_selesai_magang || !jenjang) {
+        if (!email || !password || !nama || !nomor_identitas || !instansi || !tanggal_mulai_magang || !tanggal_selesai_magang || !jenjang || !no_whatsapp || !jabatan) {
             hapusFiles(req.files);
             return res.status(400).json({ message: 'Pastikan semua data sudah diisi' });
         }
@@ -160,6 +162,8 @@ router.post('/register', upload.any(), async (req, res) => {
             kategori: 'individu',
             dokumen_pendukung: JSON.stringify(dokumenPendukungIndividu.map(f => f.filename)),
             jenjang,
+            no_whatsapp,
+            jabatan,
             id_users: idAkun,
         };
 
