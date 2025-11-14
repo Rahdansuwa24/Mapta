@@ -1,6 +1,6 @@
 // PAGE UPLOAD LAPORAN AKHIR
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import SidebarUsr from "../../components/sidebar-user";
 import NavbarUsr from "../../components/navbar-user";
@@ -17,7 +17,8 @@ import "../../styles/user.css";
 function UploadLaporanAkhir() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadedFileUrl, setUploadedFileUrl] = useState(null);
-    const [fileName, setFileName] = useState("");
+    const fileInputRef = useRef(null);
+
 
     useEffect(() => {
         document.title = "Upload Laporan Akhir";
@@ -27,14 +28,13 @@ function UploadLaporanAkhir() {
     const fetchUploadedLaporan = async () => {
         const token = localStorage.getItem("token");
         try {
-            const res = await axios.get("http://localhost:3000/peserta/laporan-akhir", {
+            const res = await axios.get("http://localhost:3000/peserta/sertifikat/laporan-magang", {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            const laporan = res.data.laporan;
-            if (laporan) {
-                setUploadedFileUrl(`http://localhost:3000/static/laporan-akhir/${laporan}`);
-                setFileName(laporan);
+            const laporan_magang = res.data.laporan_magang;
+            if (laporan_magang) {
+                setUploadedFileUrl(`http://localhost:3000/static/document-laporan/${laporan_magang}`);
             } else {
                 setUploadedFileUrl(null);
             }
@@ -46,12 +46,16 @@ function UploadLaporanAkhir() {
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        if (file && file.type === "application/pdf") {
-            setSelectedFile(file);
-        } else {
-            toast.warning("Hanya file PDF yang diperbolehkan.");
-            e.target.value = null;
+        const allowedTypes = [
+            'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ];
+        if (!allowedTypes.includes(file.type)) {
+            toast.error("Hanya boleh upload dalam format dokumen dan pdf");
+            e.target.value = ""; 
+            return;
         }
+        setSelectedFile(file);
+        setFileName(file.name); 
     };
 
     const handleUpload = async (e) => {
@@ -63,12 +67,12 @@ function UploadLaporanAkhir() {
         }
 
         const formData = new FormData();
-        formData.append("laporan", selectedFile);
+        formData.append("laporan_magang", selectedFile);
 
         const token = localStorage.getItem("token");
 
         try {
-            await axios.post("http://localhost:3000/peserta/laporan-akhir/upload", formData, {
+            await axios.patch("http://localhost:3000/peserta/sertifikat/unggah-laporan", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     Authorization: `Bearer ${token}`,
@@ -77,6 +81,9 @@ function UploadLaporanAkhir() {
 
             toast.success("Laporan akhir berhasil diunggah!");
             setSelectedFile(null);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+            }
             fetchUploadedLaporan();
         } catch (error) {
             console.error(error);
@@ -173,6 +180,7 @@ function UploadLaporanAkhir() {
                                 id="file-upload"
                                 type="file"
                                 accept="application/pdf"
+                                ref={fileInputRef}
                                 onChange={handleFileChange}
                                 style={{
                                     border: "1px solid #ccc",
