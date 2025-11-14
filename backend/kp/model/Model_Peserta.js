@@ -45,7 +45,7 @@ class Model_Peserta{
     }
     static async getSertifikatPeserta(id) {
             try {
-                const [result] = await db.query(`select sertifikat from peserta_magang where id_users = ?`, [id]);
+                const [result] = await db.query(`select sertifikat, laporan_magang from peserta_magang where id_users = ?`, [id]);
                 return result
             } catch (error) {
                 throw(error);
@@ -74,6 +74,22 @@ class Model_Peserta{
             } catch (error) {
                 throw(error);
             }
+    }
+    static async unggahLaporan(id, data){
+        try{
+            const [result] = await db.query(`update peserta_magang set ? where id_users = ?`, [data, id])
+            return result
+        }catch(error){
+            throw(error)
+        }
+    }
+    static async getDataLaporanById(id){
+        try{
+            const [result] = await db.query(`select laporan_magang from peserta_magang where id_users = ?`, [id])
+            return result
+        }catch(error){
+            throw(error)
+        }
     }
 }
 
