@@ -271,4 +271,8 @@
     }
     .sertifikat.hal2 .ttd p{
       text-align: left;
+      font-size: 14px;
+    }
+    .sertifikat.hal2 .ttd .ttd-image{
+      font-size: 14px;
     }
