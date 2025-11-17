@@ -48,76 +48,76 @@ router.patch('/finalisasi/:id', verifyToken('admin'),async(req, res)=>{
 router.get('/cek-sertif', async(req, res)=>{
     res.render("template/sertifikat")
 })
-    router.get('/download-sertifikat/:id', async(req, res)=>{
-        try{
-            const id = req.params.id
-            const rows = await Model_Admin.getDownloadSertif(id)
-            if (!rows.length) return res.status(404).send("Peserta tidak ditemukan");
+router.get('/download-sertifikat/:id', async(req, res)=>{
+    try{
+        const id = req.params.id
+        const rows = await Model_Admin.getDownloadSertif(id)
+        if (!rows.length) return res.status(404).send("Peserta tidak ditemukan");
 
-            const peserta = rows[0]
+        const peserta = rows[0]
 
-            peserta.tanggal_mulai_magang = dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")
-            peserta.tanggal_selesai_magang = dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")
+        peserta.tanggal_mulai_magang = dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")
+        peserta.tanggal_selesai_magang = dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")
 
-            // TEKNIS
-            const aspekTeknisArr = peserta.aspek_teknis ? peserta.aspek_teknis.split(", ") : [];
-            const subjekTeknisArr = peserta.aspek_list_teknis ? peserta.aspek_list_teknis.split(", ") : [];
-            const nilaiTeknisArr = peserta.nilai_teknis ? peserta.nilai_teknis.split(", ").map(Number) : [];
-            const teknis = aspekTeknisArr.map((aspek, i) => ({
-                aspek,
-                subjek: subjekTeknisArr[i] || '-',
-                angka: nilaiTeknisArr[i] || 0,
-                huruf: convertNilaiHuruf(nilaiTeknisArr[i] || 0)
-            }));
-            const teknisNumbered = teknis.map((item, i) => ({ ...item, no: i + 1 }));
+        // TEKNIS
+        const aspekTeknisArr = peserta.aspek_teknis ? peserta.aspek_teknis.split(", ") : [];
+        const subjekTeknisArr = peserta.aspek_list_teknis ? peserta.aspek_list_teknis.split(", ") : [];
+        const nilaiTeknisArr = peserta.nilai_teknis ? peserta.nilai_teknis.split(", ").map(Number) : [];
+        const teknis = aspekTeknisArr.map((aspek, i) => ({
+            aspek,
+            subjek: subjekTeknisArr[i] || '-',
+            angka: nilaiTeknisArr[i] || 0,
+            huruf: convertNilaiHuruf(nilaiTeknisArr[i] || 0)
+        }));
+        const teknisNumbered = teknis.map((item, i) => ({ ...item, no: i + 1 }));
 
-            // NON TEKNIS
-            const aspekNonArr = peserta.aspek_non_teknis ? peserta.aspek_non_teknis.split(", ") : [];
-            const subjekNonArr = peserta.aspek_non_teknis ? peserta.aspek_non_teknis.split(", ") : [];
-            const nilaiNonArr = peserta.nilai_non_teknis ? peserta.nilai_non_teknis.split(", ").map(Number) : [];
-            const nonTeknis = aspekNonArr.map((aspek, i) => ({
-                aspek,
-                subjek: subjekNonArr[i] || '-',
-                angka: nilaiNonArr[i] || 0,
-                huruf: convertNilaiHuruf(nilaiNonArr[i] || 0)
-            }));
-            const nonTeknisNumbered = nonTeknis.map((item, i) => ({ ...item, no: i + 1 }));
+        // NON TEKNIS
+        const aspekNonArr = peserta.aspek_non_teknis ? peserta.aspek_non_teknis.split(", ") : [];
+        const subjekNonArr = peserta.aspek_non_teknis ? peserta.aspek_non_teknis.split(", ") : [];
+        const nilaiNonArr = peserta.nilai_non_teknis ? peserta.nilai_non_teknis.split(", ").map(Number) : [];
+        const nonTeknis = aspekNonArr.map((aspek, i) => ({
+            aspek,
+            subjek: subjekNonArr[i] || '-',
+            angka: nilaiNonArr[i] || 0,
+            huruf: convertNilaiHuruf(nilaiNonArr[i] || 0)
+        }));
+        const nonTeknisNumbered = nonTeknis.map((item, i) => ({ ...item, no: i + 1 }));
 
-            // Fungsi hitung jumlah & rata-rata
-            const hitungJumlah = (arr) => arr.reduce((sum, x) => sum + (x.angka || 0), 0);
-            const hitungRata = (arr) => arr.length ? (hitungJumlah(arr) / arr.length).toFixed(2) : 0;
+        // Fungsi hitung jumlah & rata-rata
+        const hitungJumlah = (arr) => arr.reduce((sum, x) => sum + (x.angka || 0), 0);
+        const hitungRata = (arr) => arr.length ? (hitungJumlah(arr) / arr.length).toFixed(2) : 0;
 
-            const teknisJumlah = hitungJumlah(teknis);
-            const teknisRata = hitungRata(teknis);
-            const teknisHuruf = convertNilaiHuruf(teknisRata);
+        const teknisJumlah = hitungJumlah(teknis);
+        const teknisRata = hitungRata(teknis);
+        const teknisHuruf = convertNilaiHuruf(teknisRata);
 
-            const nonJumlah = hitungJumlah(nonTeknis);
-            const nonRata = hitungRata(nonTeknis);
-            const nonHuruf = convertNilaiHuruf(nonRata);
+        const nonJumlah = hitungJumlah(nonTeknis);
+        const nonRata = hitungRata(nonTeknis);
+        const nonHuruf = convertNilaiHuruf(nonRata);
 
-            const html = await ejs.renderFile(
-            path.join(__dirname, "../../views/template/sertifikat.ejs"),
-            { peserta, teknis: teknisNumbered, nonTeknis: nonTeknisNumbered, teknisJumlah, teknisRata, teknisHuruf, nonJumlah, nonRata, nonHuruf }
-            );
+        const html = await ejs.renderFile(
+        path.join(__dirname, "../../views/template/sertifikat.ejs"),
+        { peserta, teknis: teknisNumbered, nonTeknis: nonTeknisNumbered, teknisJumlah, teknisRata, teknisHuruf, nonJumlah, nonRata, nonHuruf }
+        );
 
-            const browser = await puppeteer.launch();
-            const page = await browser.newPage();
-            await page.setContent(html, { waitUntil: "networkidle0" });
-            const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
-            await browser.close();
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.setContent(html, { waitUntil: "networkidle0" });
+        const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
+        await browser.close();
 
-            const sanitize = (str) => str.replace(/\s+/g, "_").replace(/[^a-zA-Z0-9._-]/g, "");
-            const fileName = `sertifikat_${sanitize(peserta.nama)}_${sanitize(peserta.instansi)}.pdf`;
+        const sanitize = (str) => str.replace(/\s+/g, "_").replace(/[^a-zA-Z0-9._-]/g, "");
+        const fileName = `sertifikat_${sanitize(peserta.nama)}_${sanitize(peserta.instansi)}.pdf`;
 
-            res.setHeader("Content-Type", "application/pdf");
-            res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
-            res.end(pdfBuffer);
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+        res.end(pdfBuffer);
 
-        }catch(error){
-            console.error(error);
-            res.status(500).send("Gagal generate PDF");
-        }
-    });
+    }catch(error){
+        console.error(error);
+        res.status(500).send("Gagal generate PDF");
+    }
+});
 
 router.patch('/update-sertifikat/(:id)', verifyToken('admin'),  upload.single("sertifikat"), async(req, res)=>{
     try{
