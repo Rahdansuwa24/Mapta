@@ -36,12 +36,8 @@ export default function Sidebar() {
         }
         if (
             location.pathname === "/admin-jadwal" ||
-            location.pathname === "/admin-jadwal-sekre" ||
-            location.pathname === "/admin-jadwal-dpp" ||
-            location.pathname === "/admin-jadwal-pp" ||
-            location.pathname === "/admin-jadwal-ppi" ||
-            location.pathname === "/admin-jadwal-ppk" ||
-            location.pathname === "/admin-jadwal-ppas"
+            location.pathname === "/admin-jadwal-ppas" ||
+            location.pathname === "/admin-lihat-jadwal"
         ) {
             setOpenJadwalDropdown(true);
         }
@@ -120,29 +116,9 @@ export default function Sidebar() {
                                 Buat Jadwal
                             </div>
                         </Link>
-                        <Link to="/admin-jadwal-sekre">
-                            <div className={`dropdown-item ${isActive("/admin-jadwal-sekre") ? "active" : ""}`}>
-                                Sekretariat
-                            </div>
-                        </Link>
-                        <Link to="/admin-jadwal-dpp">
-                            <div className={`dropdown-item ${isActive("/admin-jadwal-dpp") ? "active" : ""}`}>
-                                DPP
-                            </div>
-                        </Link>
-                        <Link to="/admin-jadwal-pp">
-                            <div className={`dropdown-item ${isActive("/admin-jadwal-pp") ? "active" : ""}`}>
-                                BINPUS
-                            </div>
-                        </Link>
-                        <Link to="/admin-jadwal-ppi">
-                            <div className={`dropdown-item ${isActive("/admin-jadwal-ppi") ? "active" : ""}`}>
-                                PPI
-                            </div>
-                        </Link>
-                        <Link to="/admin-jadwal-ppk">
-                            <div className={`dropdown-item ${isActive("/admin-jadwal-ppk") ? "active" : ""}`}>
-                                PPK
+                        <Link to="/admin-lihat-jadwal">
+                            <div className={`dropdown-item ${isActive("/admin-lihat-jadwal") ? "active" : ""}`}>
+                                Lihat Jadwal
                             </div>
                         </Link>
                         <Link to="/admin-jadwal-ppas">

@@ -16,6 +16,9 @@ import Penilaian from "./pages/admin/penilaian.jsx";
 import DataPenilaian from "./pages/admin/datapenilaian.jsx";
 import Sertifikat from "./pages/admin/sertifikat.jsx";
 import AkunPIC from "./pages/admin/akunpic.jsx";
+
+import CekJadwal from "./pages/admin/cekjadwal.jsx";
+
 import JadwalAdminPPAS from "./pages/admin/jadwalPPAS.jsx";
 
 import JadwalPIC from "./pages/userpic/jadwalpic.jsx";
@@ -94,6 +97,7 @@ function App() {
         <Route path="/admin-penolakan" element={<Protection allowedRoles={['admin']}><Ditolak /></Protection>} />
         <Route path="/admin-selesai" element={<Protection allowedRoles={['admin']}><SelesaiMagang /></Protection>} />
         <Route path="/admin-jadwal" element={<Protection allowedRoles={['admin']}><Jadwal /></Protection>} />
+        <Route path="/admin-lihat-jadwal" element={<Protection allowedRoles={['admin']}><CekJadwal /></Protection>} />
         <Route path="/admin-jadwal-ppas" element={<Protection allowedRoles={['admin']}><JadwalAdminPPAS /></Protection>} />
         <Route path="/admin-penilaian" element={<Protection allowedRoles={['admin']}><Penilaian /></Protection>} />
         <Route path="/admin-data-penilaian" element={<Protection allowedRoles={['admin']}><DataPenilaian /></Protection>} />
