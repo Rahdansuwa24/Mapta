@@ -12,6 +12,14 @@ router.get('/', verifyToken('admin'),async(req, res)=>{
         res.status(500).json({ status: false, error: err.message });
     }
 })
+router.get('/PPAS', verifyToken('admin'),async(req, res)=>{
+    try{
+        const data = await Model_Admin.getJadwalPPAS()
+        res.status(200).json({data})
+    }catch(err){
+        res.status(500).json({ status: false, error: err.message });
+    }
+})
 router.get('/peserta', verifyToken('admin'),async(req, res)=>{
     try{
         const data = await Model_Admin.getDataCalonPesertaDiterima()

@@ -132,6 +132,15 @@ class Model_Admin{
             throw(error)
         }
     }
+    static async getJadwalPPAS(){
+        try{
+            const [result] = await db.query(`select j.tanggal_mulai, j.tanggal_selesai, j.bidang, p.nama, p.instansi, p.nomor_identitas, p.id_peserta_magang, p.id_kelompok, p.foto_diri from jadwal j left join peserta_magang p on j.id_peserta_magang = p.id_peserta_magang where j.bidang = "Penyelamatan dan Pendayagunaan Kearsipan" 
+            and p.status_penerimaan = 'Diterima' order by j.tanggal_mulai`)
+            return result
+        }catch(error){
+            throw(error)
+        }
+    }
     static async storeJadwal(data){
         try{
             const [result] = await db.query(`insert into jadwal set ?`, [data])
