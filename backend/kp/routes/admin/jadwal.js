@@ -12,9 +12,9 @@ router.get('/', verifyToken('admin'),async(req, res)=>{
         res.status(500).json({ status: false, error: err.message });
     }
 })
-router.get('/PPAS', verifyToken('admin'),async(req, res)=>{
+router.get('/cekSemuaJadwal', verifyToken('admin'),async(req, res)=>{
     try{
-        const data = await Model_Admin.getJadwalPPAS()
+        const data = await Model_Admin.getJadwalPesertaAll()
         res.status(200).json({data})
     }catch(err){
         res.status(500).json({ status: false, error: err.message });

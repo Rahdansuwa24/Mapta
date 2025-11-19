@@ -21,9 +21,9 @@
         <div class="nomor">Nomor: ${nomor_naskah}</div>
         <div class="diberikan">Diberikan kepada:</div>
 
-        <div class="nama">DEVI RIDHO SYAVITRI</div>
+        <div class="nama"><%= peserta.nama.toUpperCase() %></div>
         <hr>
-        <div class="univ">UNIVERSITAS AIRLANGGA</div>
+        <div class="univ"><%= peserta.instansi.toUpperCase() %></div>
 
         <div class="deskripsi">
         Telah melaksanakan Praktik Kerja Lapangan (Magang) <br>
@@ -72,21 +72,23 @@
                 </tr>
             </thead>
             <tbody>
-                <tr><td>1</td><td>Pelayanan Perpustakaan dan Kearsipan</td><td>88</td><td>A-</td></tr>
-                <tr><td>2</td><td>Pengelolaan Bahan Pustaka dan Arsip</td><td>88</td><td>A-</td></tr>
-                <tr><td>3</td><td>Preservasi Bahan Pustaka dan Arsip</td><td>87</td><td>A-</td></tr>
-                <tr><td>4</td><td>Digitalisasi Arsip</td><td>88</td><td>A-</td></tr>
-                <tr><td>5</td><td>Literasi Informasi</td><td>82</td><td>B+</td></tr>
-                <tr><td>6</td><td>Pelayanan Perpustakaan dan Kearsipan</td><td>88</td><td>A-</td></tr>
-                <tr><td>7</td><td>Pengelolaan Bahan Pustaka dan Arsip</td><td>88</td><td>A-</td></tr>
-                <tr><td>8</td><td>Preservasi Bahan Pustaka dan Arsip</td><td>87</td><td>A-</td></tr>
-                <tr><td>9</td><td>Digitalisasi Arsip</td><td>88</td><td>A-</td></tr>
-                <tr><td>10</td><td>Literasi Informasi</td><td>82</td><td>B+</td></tr>
-                <tr><td>11</td><td>Pelayanan Perpustakaan dan Kearsipan</td><td>88</td><td>A-</td></tr>
-                <tr><td>12</td><td>Pengelolaan Bahan Pustaka dan Arsip</td><td>88</td><td>A-</td></tr>
-
-                <tr><td colspan="2">Jumlah</td><td>610</td><td></td></tr>
-                <tr><td colspan="2">Nilai Rata-Rata</td><td>87,14</td><td>A-</td></tr>
+                <% teknis.forEach(t => { %>
+              <tr>
+                <td><%= t.no %></td>
+                <td><%= t.subjek %></td>
+                <td><%= t.angka %></td>
+                <td><%= t.huruf %></td>
+              </tr>
+            <% }) %>
+                <td colspan="2">Jumlah</td>
+                <td><%= teknisJumlah %></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="2">Nilai Rata-Rata</td>
+                <td><%= teknisRata %></td>
+                <td><%= teknisHuruf %></td>
+            </tr>
             </tbody>
             </table>
         </div>
@@ -107,14 +109,24 @@
                 </tr>
             </thead>
             <tbody>
-                <tr><td>1</td><td>Kehadiran</td><td>88</td><td>A-</td></tr>
-                <tr><td>2</td><td>Skill/Keahlian</td><td>86</td><td>A-</td></tr>
-                <tr><td>3</td><td>Kreatifitas</td><td>88</td><td>A-</td></tr>
-                <tr><td>4</td><td>Komunikasi</td><td>87</td><td>A-</td></tr>
-                <tr><td>5</td><td>Sikap/Etika</td><td>88</td><td>A-</td></tr>
-
-                <tr><td colspan="2">Jumlah</td><td>437</td><td></td></tr>
-                <tr><td colspan="2">Nilai Rata-Rata</td><td>87,4</td><td>A-</td></tr>
+                 <% nonTeknis.forEach(n => { %>
+                <tr>
+                <td><%= n.no %></td>
+                <td><%= n.subjek %></td>
+                <td><%= n.angka %></td>
+                <td><%= n.huruf %></td>
+                </tr>
+            <% }) %>
+            <tr>
+                <td colspan="2">Jumlah</td>
+                <td><%= nonJumlah %></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="2">Nilai Rata-Rata</td>
+                <td><%= nonRata %></td>
+                <td><%= nonHuruf %></td>
+            </tr>
             </tbody>
             </table>
         </div>

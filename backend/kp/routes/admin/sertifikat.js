@@ -45,9 +45,6 @@ router.patch('/finalisasi/:id', verifyToken('admin'),async(req, res)=>{
         res.status(500).json({ status: false, error: err.message });
     }
 })
-router.get('/cek-sertif', async(req, res)=>{
-    res.render("template/sertifikat")
-})
 router.get('/download-sertifikat/:id', async(req, res)=>{
     try{
         const id = req.params.id
@@ -96,7 +93,7 @@ router.get('/download-sertifikat/:id', async(req, res)=>{
         const nonHuruf = convertNilaiHuruf(nonRata);
 
         const html = await ejs.renderFile(
-        path.join(__dirname, "../../views/template/sertifikat.ejs"),
+        path.join(__dirname, "../../views/template/sertifikat-baru.ejs"),
         { peserta, teknis: teknisNumbered, nonTeknis: nonTeknisNumbered, teknisJumlah, teknisRata, teknisHuruf, nonJumlah, nonRata, nonHuruf }
         );
 
