@@ -36,7 +36,6 @@ export default function Sidebar() {
         }
         if (
             location.pathname === "/admin-jadwal" ||
-            location.pathname === "/admin-jadwal-ppas" ||
             location.pathname === "/admin-lihat-jadwal"
         ) {
             setOpenJadwalDropdown(true);
@@ -119,11 +118,6 @@ export default function Sidebar() {
                         <Link to="/admin-lihat-jadwal">
                             <div className={`dropdown-item ${isActive("/admin-lihat-jadwal") ? "active" : ""}`}>
                                 Lihat Jadwal
-                            </div>
-                        </Link>
-                        <Link to="/admin-jadwal-ppas">
-                            <div className={`dropdown-item ${isActive("/admin-jadwal-ppas") ? "active" : ""}`}>
-                                PPAS
                             </div>
                         </Link>
                     </div>

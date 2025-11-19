@@ -84,6 +84,14 @@ function Sertifikat() {
         });
     };
 
+    const laporanMap = {};
+    dataPesertaSelesai.forEach(p => {
+        // Jika backend mengirim URL / nama file laporan → berarti sudah mengumpulkan
+        laporanMap[p.id_peserta_magang] = p.laporan_akhir ? "Sudah Mengumpulkan" : "Belum Mengumpulkan";
+    });
+
+    setStatusLaporan(laporanMap);
+
     const handleUpload = async (pesertaId) => {
         const file = fileUploads[pesertaId];
         if (!file) {
@@ -151,6 +159,7 @@ function Sertifikat() {
                     <th>Tanggal Mulai Magang</th>
                     <th>Tanggal Selesai Magang</th>
                     <th>Status Magang</th>
+                    <th>Status Pengumpulan Laporan</th>
                     <th>Download Sertifikat</th>
                     <th>Upload Sertifikat</th>
                     <th>Aksi</th>
@@ -167,10 +176,17 @@ function Sertifikat() {
                         <td>{highlightText(peserta.instansi, searchTerm)}</td>
                         <td>{dayjs(peserta.tanggal_mulai_magang).format("DD MMMM YYYY")}</td>
                         <td>{dayjs(peserta.tanggal_selesai_magang).format("DD MMMM YYYY")}</td>
+
                         <td>
                         <span className="status-label selesai">
                             {peserta.status_penerimaan}
                         </span>
+                        </td>
+
+                        <td>
+                            <span className={`status-label ${statusLaporan[peserta.id_peserta_magang] === "Sudah Mengumpulkan" ? "sukses" : "gagal"}`}>
+                                {statusLaporan[peserta.id_peserta_magang] || "-"}
+                            </span>
                         </td>
 
                         <td>
@@ -248,6 +264,16 @@ function Sertifikat() {
                     <div className="peserta-detail-item">
                         <b>Status Magang :</b> {selectedPeserta.status_penerimaan}
                     </div>
+                    
+                    <div className="peserta-detail-item">
+                        <b>Status Pengumpulan Laporan :</b>{" "}
+                        {statusLaporan[selectedPeserta.id_peserta_magang] === "Sudah Mengumpulkan" ? (
+                            <span className="status-label sukses">Sudah Mengumpulkan</span>
+                        ) : (
+                            <span className="status-label gagal">Belum Mengumpulkan</span>
+                        )}
+                    </div>
+
                     <div className="peserta-detail-item">
                         <b>Status Upload Sertifikat:</b>{" "}
                         {uploadedStatus[selectedPeserta.id_peserta_magang] ? (
