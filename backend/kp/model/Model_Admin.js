@@ -357,7 +357,7 @@ static async storeAspek(data){
     }
     static async getDataDasborSertif(){
         try{
-            const [result] = await db.query(`SELECT p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan, p.sertifikat,
+            const [result] = await db.query(`SELECT p.id_peserta_magang, p.nama, p.nomor_identitas, p.foto_diri, p.instansi, p.tanggal_mulai_magang, p.tanggal_selesai_magang, p.status_penerimaan, p.sertifikat, p.laporan_magang,
             GROUP_CONCAT(CASE WHEN pe.penilaian IS NOT NULL THEN a.aspek END ORDER BY a.aspek SEPARATOR ', ') AS aspek_list,
             GROUP_CONCAT(CASE WHEN pe.penilaian IS NOT NULL THEN a.subjek END ORDER BY a.aspek SEPARATOR ', ') AS subjek_list,
             GROUP_CONCAT(CASE WHEN pe.penilaian IS NOT NULL THEN pe.penilaian END ORDER BY a.aspek SEPARATOR ', ') AS penilaian_list

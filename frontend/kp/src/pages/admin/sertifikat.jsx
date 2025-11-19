@@ -31,7 +31,7 @@ function Sertifikat() {
         document.title = "Admin MAPTA";
         fetchDataPesertaSelesai()
     }, []);
-
+   
     const fetchDataPesertaSelesai = async()=>{
         const token = localStorage.getItem("token")
         try{
@@ -67,6 +67,15 @@ function Sertifikat() {
     const [dataPeserta, setDataPeserta] = useState([])
     const [selectedPeserta, setSelectedPeserta] = useState(null);
     const [uploadedFiles, setUploadedFiles] = useState({});
+    const [statusLaporan, setStatusLaporan] = useState({});
+    useEffect(() => {
+        const laporanMap = {};
+        dataPeserta.forEach(p => {
+            laporanMap[p.id_peserta_magang] =
+                p.laporan_magang ? "Sudah Mengumpulkan" : "Belum Mengumpulkan";
+        });
+        setStatusLaporan(laporanMap);
+    }, [dataPeserta]);
 
     const handleFileChange = (pesertaId, e) => {
         const file = e.target.files[0];
@@ -83,14 +92,6 @@ function Sertifikat() {
         [pesertaId]: e.target.files[0],
         });
     };
-
-    const laporanMap = {};
-    dataPesertaSelesai.forEach(p => {
-        // Jika backend mengirim URL / nama file laporan → berarti sudah mengumpulkan
-        laporanMap[p.id_peserta_magang] = p.laporan_akhir ? "Sudah Mengumpulkan" : "Belum Mengumpulkan";
-    });
-
-    setStatusLaporan(laporanMap);
 
     const handleUpload = async (pesertaId) => {
         const file = fileUploads[pesertaId];
@@ -265,14 +266,14 @@ function Sertifikat() {
                         <b>Status Magang :</b> {selectedPeserta.status_penerimaan}
                     </div>
                     
-                    <div className="peserta-detail-item">
+                    {/* <div className="peserta-detail-item">
                         <b>Status Pengumpulan Laporan :</b>{" "}
                         {statusLaporan[selectedPeserta.id_peserta_magang] === "Sudah Mengumpulkan" ? (
                             <span className="status-label sukses">Sudah Mengumpulkan</span>
                         ) : (
                             <span className="status-label gagal">Belum Mengumpulkan</span>
                         )}
-                    </div>
+                    </div> */}
 
                     <div className="peserta-detail-item">
                         <b>Status Upload Sertifikat:</b>{" "}
@@ -287,6 +288,34 @@ function Sertifikat() {
                         <span className="status-label gagal">Belum Upload</span>
                         )}
                     </div>
+                    </div>
+
+                    <div className="peserta-detail-item">
+                        <b>Status Pengumpulan Laporan :</b>
+                        <div className="dokumen-list">
+                            {selectedPeserta.laporan_magang ? (
+                                <div className="dokumen-item">
+                                    <span>{selectedPeserta.laporan_magang}</span>
+
+                                    <div className="dokumen-actions">
+                                        <button
+                                            className="btn-download"
+                                            onClick={() => {
+                                                window.open(
+                                                    `http://localhost:3000/static/document-laporan/${selectedPeserta.laporan_magang}`,
+                                                    "_blank",
+                                                    "noopener,noreferrer"
+                                                );
+                                            }}
+                                        >
+                                            Download
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <p>Belum Mengumpulkan Laporan</p>
+                            )}
+                        </div>
                     </div>
                     {/* === Tombol Finalisasi ditambahkan di sini === */}
                     <div className="finalisasi-container">
