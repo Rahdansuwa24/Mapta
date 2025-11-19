@@ -133,12 +133,12 @@ class Model_Admin{
         }
     }
     static async getJadwalPesertaAll() {
-            try {
-                const [result] = await db.query(`select j.tanggal_mulai, j.tanggal_selesai, j.bidang, p.nama, p.instansi from jadwal j left join peserta_magang p on j.id_peserta_magang = p.id_peserta_magang where p.status_penerimaan = "Diterima"`);
-                return result
-            } catch (error) {
-                throw(error);
-            }
+        try {
+            const [result] = await db.query(`select j.tanggal_mulai, j.tanggal_selesai, j.bidang, p.nama, p.instansi from jadwal j left join peserta_magang p on j.id_peserta_magang = p.id_peserta_magang where p.status_penerimaan = "Diterima" order by j.tanggal_mulai`);
+            return result
+        } catch (error) {
+            throw(error);
+        }
     }
     static async storeJadwal(data){
         try{
