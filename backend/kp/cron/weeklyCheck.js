@@ -5,7 +5,10 @@ const db = require('../config/database')
 async function scheduler() {
     try{
         const sekarang = dayjs()
-        const [rowsDiterima] = await db.query(`select id_peserta_magang, nama, tanggal_mulai_magang, tanggal_selesai_magang, status_penerimaan from peserta_magang where status_penerimaan = 'Diterima'`)
+        const [rowsDiterima] = await db.query(`select p.id_peserta_magang, p.nama, p.tanggal_mulai_magang, p.tanggal_selesai_magang
+        from peserta_magang p
+        where p.status_penerimaan = 'Diterima'
+        and exists (select 1 from penilaian pe where pe.id_peserta_magang = p.id_peserta_magang)`)
         for(const row of rowsDiterima){
             if(dayjs(row.tanggal_selesai_magang).isBefore(sekarang) || dayjs(row.tanggal_selesai_magang).isSame(sekarang)){
                 await db.query(`UPDATE peserta_magang SET status_penerimaan = 'Selesai' WHERE id_peserta_magang = ?`, [row.id_peserta_magang])
@@ -30,6 +33,6 @@ async function scheduler() {
 
 cron.schedule("0 10 */2 * *", scheduler)
 
-// cron.schedule("*/2 * * * *", scheduler);
+// cron.schedule("*/1 * * * *", scheduler);
 
 module.exports = scheduler
