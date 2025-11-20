@@ -185,7 +185,7 @@ function Sertifikat() {
                         </td>
 
                         <td>
-                            <span className={`status-label ${statusLaporan[peserta.id_peserta_magang] === "Sudah Mengumpulkan" ? "sukses" : "gagal"}`}>
+                            <span className={`status-label ${statusLaporan[peserta.id_peserta_magang] === "Sudah Mengumpulkan" ? "sudah" : "belum"}`}>
                                 {statusLaporan[peserta.id_peserta_magang] || "-"}
                             </span>
                         </td>
@@ -259,12 +259,13 @@ function Sertifikat() {
                         <b>Instansi :</b> {selectedPeserta.instansi}
                     </div>
                     <div className="peserta-detail-item">
+                        <b>Status Magang :</b> {selectedPeserta.status_penerimaan}
+                    </div>
+                    <div className="peserta-detail-item">
                         <b>Tanggal :</b>{" "}
                         {dayjs(selectedPeserta.tanggal_mulai_magang).format("DD MMMM YYYY")} - {dayjs(selectedPeserta.tanggal_selesai_magang).format("DD MMMM YYYY")}
                     </div>
-                    <div className="peserta-detail-item">
-                        <b>Status Magang :</b> {selectedPeserta.status_penerimaan}
-                    </div>
+                    
                     
                     {/* <div className="peserta-detail-item">
                         <b>Status Pengumpulan Laporan :</b>{" "}

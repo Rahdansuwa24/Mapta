@@ -978,6 +978,18 @@ tbody tr:nth-child(even) {
     border-radius: 6px;
     }
 
+    .status-label.sudah {
+    border: 2px solid #2E7D32;                 /* Hijau tua */
+    background-color: rgba(46, 125, 50, 0.2);  /* Hijau transparan */
+    color: #2E7D32;                            /* Warna teks hijau */
+    }
+
+    .status-label.belum {
+        border: 2px solid #C62828;                 /* Merah tua */
+        background-color: rgba(198, 40, 40, 0.2);  /* Merah transparan */
+        color: #C62828;                            /* Warna teks merah */
+    }
+
         /* khusus untuk status selesai */
     .status-label.selesai {
     border: 2px solid #20406F;                
