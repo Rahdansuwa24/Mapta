@@ -236,7 +236,7 @@ function AkunPIC() {
                         onChange={(e) => setDepartemen(e.target.value)}
                         >
                         <option value="">-- Pilih Departemen --</option>
-                        <option value="Kesekretariatan">Kesekretariatan</option>
+                        <option value="Kesekretariatan">Sekretariat</option>
                         <option value="Deposit, Pengembangan, dan Pelestarian bahan Perpustakaan">
                             Deposit, Pengembangan, dan Pelestarian bahan Perpustakaan
                         </option>

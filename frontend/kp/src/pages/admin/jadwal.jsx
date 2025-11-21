@@ -132,7 +132,7 @@ function Jadwal() {
 
     // Departemen static
     const departemenStatic = [
-        "Kesekretariatan",
+        "Sekretariat",
         "Deposit, Pengembangan, dan Pelestarian bahan Perpustakaan",
         "Pembinaan Perpustakaan",
         "Pelayanan Perpustakaan dan Informasi",
