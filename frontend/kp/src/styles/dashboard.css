@@ -1330,7 +1330,7 @@ tbody tr:nth-child(even) {
     /* Main content container */
 .max-w-7xl {
   width: 100%;
-  max-width: 1280px;
+  /* max-width: 1280px; */
   margin-inline: auto;
   padding-bottom: 40px;
 }
@@ -1345,10 +1345,10 @@ tbody tr:nth-child(even) {
 }
 
 .judul-chart-daftar {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 800;
   color: #040f1f;
-  letter-spacing: 0.3px;
+  /* letter-spacing: 0.3px; */
   margin: 0;
   /* text-transform: uppercase; */
 }
