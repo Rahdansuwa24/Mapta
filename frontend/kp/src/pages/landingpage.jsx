@@ -40,7 +40,7 @@ const fadeUp = {
         },
         {
         q: "Kapan mendapat pemberitahuan diterima atau ditolak?",
-        a: "Proses seleksi membutuhkan waktu kurang lebih 2 minggu sejak pendaftaran. Hasil seleksi akan dikirim melalui email yang digunakan saat pendaftaran.",
+        a: "Proses seleksi membutuhkan waktu kurang lebih 2 minggu sejak pendaftaran. Hasil seleksi akan dikirim melalui email atau nomor whatsapp yang digunakan saat pendaftaran.",
         },
         {
         q: "Penulisan instansi yang benar bagaimana?",
@@ -59,8 +59,12 @@ const fadeUp = {
     - Jumlah form anggota dapat ditambahkan sesuai kebutuhan.`,
         },
         {
-        q: "Bagaimana cara mendapatkan sertifikat magang?",
-        a: "Sertifikat akan tersedia setelah seluruh nilai dari setiap departemen atau bidang selesai dihitung dan direkap. Untuk mengunduhnya, peserta cukup login ke aplikasi MAPTA, masuk ke menu Sertifikat, lalu klik Download Sertifikat. Sertifikat hanya tersedia maksimal 3 bulan sejak diterbitkan.",
+        q: "Bagaimana cara login setelah dinyatakan diterima?",
+        a: "Anda dapat login ke aplikasi MAPTA menggunakan email dan kata sandi yang telah dibuat saat pendaftaran. Jika Anda lupa kata sandi, silakan klik menu 'Lupa Sandi' pada halaman login, dan sistem akan mengirimkan kata sandi baru ke alamat email Anda."
+        },
+        {
+        q: "Kapan sertifikat akan muncul atau dapat diperoleh?",
+        a: "Sertifikat akan tersedia setelah peserta terlebih dahulu mengumpulkan laporan akhir dari setiap bidang yang dimagangkan. Seluruh laporan tersebut digabung menjadi satu berkas dan dikumpulkan melalui halaman Pengumpulan Laporan di aplikasi MAPTA. Setelah laporan diterima dan seluruh nilai dari setiap bidang selesai dihitung serta direkap, sertifikat akan muncul di menu Sertifikat dan dapat diunduh oleh peserta.",
         },
     ];
 
@@ -71,7 +75,7 @@ const fadeUp = {
         { t: "Pilih Kategori bagi Siswa", d: "Kelompok → tombol “Tambah” aktif setelah pilih kategori. Individu → isi data langsung tanpa tombol “Tambah”." },
         { t: "Isi Instansi Lengkap", d: "Tuliskan nama sekolah/universitas tanpa singkatan." },
         { t: "Upload Dokumen (Wajib untuk Siswa)", d: "Surat pernyataan/proposal dari kampus atau sekolah dan Dokumen pendukung lain. Untuk Pegawai/Instansi, dokumen tidak diwajibkan." },
-        { t: "Tunggu Konfirmasi Email", d: "Setelah selesai melengkapi semua data dan mengunggah dokumen, klik Daftar dan tunggu proses konfirmasi melalui email dan Anda akan menerima balasan apakah pendaftaran diterima atau ditolak." },
+        { t: "Tunggu Konfirmasi Email/Whatsapp", d: "Setelah selesai melengkapi semua data dan mengunggah dokumen, klik Daftar dan tunggu proses konfirmasi melalui email atau No Whatsapp dan Anda akan menerima balasan apakah pendaftaran diterima atau ditolak." },
         { t: "Login", d: "Jika diterima, masuk menggunakan email & password yang sudah dibuat." },
     ];
 
