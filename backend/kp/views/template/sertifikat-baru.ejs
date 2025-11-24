@@ -21,9 +21,9 @@
         <div class="nomor">Nomor: ${nomor_naskah}</div>
         <div class="diberikan">Diberikan kepada:</div>
 
-        <div class="nama"><%= peserta.nama.toUpperCase() %></div>
+        <div class="nama"><%= peserta.nama.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()) %></div>
         <hr>
-        <div class="univ"><%= peserta.instansi.toUpperCase() %></div>
+        <div class="univ"><%= peserta.instansi.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()) %></div>
 
         <div class="deskripsi">
         Telah melaksanakan Praktik Kerja Lapangan (Magang) <br>
