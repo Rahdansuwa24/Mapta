@@ -21,6 +21,7 @@ import CekJadwal from "./pages/admin/cekjadwal.jsx";
 
 import JadwalPIC from "./pages/userpic/jadwalpic.jsx";
 import PenilaianPIC from "./pages/userpic/penilaianpic.jsx";
+import ChartAdmin from "./pages/admin/chart.jsx";
 
 import NilaiPeserta from "./pages/userpeserta/nilaipeserta.jsx";
 import JadwalPeserta from "./pages/userpeserta/jadwalpeserta.jsx";
@@ -100,6 +101,7 @@ function App() {
         <Route path="/admin-data-penilaian" element={<Protection allowedRoles={['admin']}><DataPenilaian /></Protection>} />
         <Route path="/admin-sertifikat" element={<Protection allowedRoles={['admin']}><Sertifikat /></Protection>} />
         <Route path="/admin-pic" element={<Protection><AkunPIC /></Protection>} />
+        <Route path="/admin-chart" element={<ChartAdmin />} />
         <Route path="/pic-jadwal" element={<Protection allowedRoles={['pic']}><JadwalPIC /></Protection>} />
         <Route path="/pic-penilaian" element={<Protection allowedRoles={['pic']}><PenilaianPIC /></Protection>} />
         <Route path="/peserta-nilai" element={<Protection allowedRoles={['siswa']}><NilaiPeserta /></Protection>} />

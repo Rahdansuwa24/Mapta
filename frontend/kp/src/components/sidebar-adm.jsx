@@ -7,6 +7,7 @@ import { IoDocumentText } from "react-icons/io5";
 import { HiUserGroup } from "react-icons/hi2";
 import { FaFileDownload } from "react-icons/fa";
 import { MdApps, MdArticle } from "react-icons/md";
+import { FaChartPie } from "react-icons/fa";
 import { AiOutlineFileDone } from "react-icons/ai";
 import { FaCheck, FaTimes, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import logoMapta from "../assets/images/logo_mapta.png";
@@ -164,6 +165,13 @@ export default function Sidebar() {
                         Akun PIC
                     </div>
                 </Link>
+
+            <Link to="/admin-chart">
+            <div className={`nav-item ${isActive("/admin-chart") ? "active" : ""}`}>
+                <span className="icon"><FaChartPie  /></span>
+                Statistik
+            </div>
+            </Link>
 
                 <Link
                     to="#"
