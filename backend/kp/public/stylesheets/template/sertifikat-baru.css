@@ -81,6 +81,7 @@
     .nomor {
       text-align: center;
       font-size: 15px;
+      margin-left: -3rem;
       margin-bottom: 25px;
       font-family: 'Garet', sans-serif;
     }
@@ -96,9 +97,8 @@
     .nama {
       text-align: center;
       font-family: 'Agrandir', sans-serif;
-      font-size: 30.5px;
+      font-size: 31px;
       margin-top: 10px;
-      /* font-weight: bold; */
     }
 
     hr {
@@ -112,9 +112,8 @@
     .univ {
       text-align: center;
       font-family: 'Garet', sans-serif;
-      font-size: 19.5px;
+      font-size: 20px;
       margin-bottom: 15px;
-      /* font-weight: bold; */
     }
 
     .deskripsi {
@@ -132,7 +131,7 @@
       align-items: center;
       margin-top: 30px;
       padding: 0 28mm;
-      gap: 90px;
+      gap: 85px;
     }
 
     .piagam {
@@ -157,7 +156,8 @@
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      height: 105px;
+      height: 120px;
+      margin-left: 1.3rem;
     }
 
     .nama-pejabat {

@@ -31,6 +31,7 @@ router.get('/', verifyToken('admin'),async(req, res)=>{
         const data = await Model_Admin.getDataDasborSertif()
         res.status(200).json({data})
     }catch(err){
+        console.error(err)
         res.status(500).json({ status: false, error: err.message });
     }
 })
