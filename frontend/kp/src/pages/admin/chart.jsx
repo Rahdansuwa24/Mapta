@@ -19,8 +19,8 @@ import {
 } from 'recharts';
 
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
-import autoTable from "jspdf-autotable";
+import html2canvas from "html2canvas-pro";
+import { autoTable } from "jspdf-autotable";
 
 const generateColor = (index) => {
     const hue = (index * 137.508) % 360;
@@ -39,6 +39,7 @@ export default function AdminChartsMapta() {
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isExporting, setIsExporting] = useState(false);
 
     useEffect(() => {
         const fetchStatistics = async () => {
@@ -72,72 +73,138 @@ export default function AdminChartsMapta() {
         const element = document.getElementById('charts-wrapper');
         if (!element) return;
 
-        const canvas = await html2canvas(element, {
-            scale: 2,
-            useCORS: true,
-        });
+        try {
+            setIsExporting(true);
 
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF("p", "mm", "a4");
+            // Render visual grafik ke canvas gambar
+            const canvas = await html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+            });
 
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = pdf.internal.pageSize.getHeight();
-        const imgWidth = pageWidth - 20;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF("p", "mm", "a4");
 
-        let heightLeft = imgHeight;
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const margin = 10;
+            const imgWidth = pageWidth - (margin * 2);
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        pdf.setFontSize(16);
-        pdf.text("Statistik Pendaftaran Peserta Magang", 10, 10);
-        pdf.addImage(imgData, "PNG", 10, 18, imgWidth, imgHeight);
+            // HALAMAN 1: KOP LAPORAN & GRAFIK VISUAL
+            pdf.setFont("helvetica", "bold");
+            pdf.setFontSize(15);
+            pdf.setTextColor(45, 90, 156);
+            pdf.text("LAPORAN STATISTIK PENDAFTARAN PESERTA MAGANG", margin, 15);
 
-        heightLeft -= pageHeight;
+            pdf.setFont("helvetica", "normal");
+            pdf.setFontSize(9);
+            pdf.setTextColor(110, 110, 110);
+            const tanggalCetak = new Date().toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            pdf.text(`Waktu Cetak: ${tanggalCetak} WIB | Tahun Analisis: ${selectedYear}`, margin, 21);
 
-        while (heightLeft >= 0) {
+            // Garis pembatas header
+            pdf.setDrawColor(210, 220, 235);
+            pdf.setLineWidth(0.4);
+            pdf.line(margin, 24, pageWidth - margin, 24);
+
+            // Tampilkan grafik secara proporsional di halaman 1
+            const maxChartHeight = pageHeight - 32 - margin;
+            if (imgHeight <= maxChartHeight) {
+                pdf.addImage(imgData, "PNG", margin, 27, imgWidth, imgHeight);
+            } else {
+                const scaledHeight = maxChartHeight;
+                const scaledWidth = (canvas.width * scaledHeight) / canvas.height;
+                const posX = margin + (imgWidth - scaledWidth) / 2;
+                pdf.addImage(imgData, "PNG", posX, 27, scaledWidth, scaledHeight);
+            }
+
+            // HALAMAN 2: TABEL DETAIL DATA STATISTIK
             pdf.addPage();
-            const position = heightLeft - imgHeight + 18;
-            pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
+
+            pdf.setFont("helvetica", "bold");
+            pdf.setFontSize(13);
+            pdf.setTextColor(45, 90, 156);
+            pdf.text("DETAIL REKAPITULASI DATA STATISTIK", margin, 15);
+
+            pdf.setDrawColor(210, 220, 235);
+            pdf.setLineWidth(0.4);
+            pdf.line(margin, 18, pageWidth - margin, 18);
+
+            // Helper aman pemanggil autoTable
+            const callAutoTable = (options) => {
+                if (typeof autoTable === 'function') {
+                    autoTable(pdf, options);
+                } else if (typeof pdf.autoTable === 'function') {
+                    pdf.autoTable(options);
+                }
+            };
+
+            // 1. Tabel Pendaftar per Tahun
+            pdf.setFontSize(10.5);
+            pdf.setTextColor(30, 41, 59);
+            pdf.text("1. Pendaftar per Tahun", margin, 26);
+            callAutoTable({
+                startY: 29,
+                head: [['Tahun', 'Jumlah Pendaftar']],
+                body: yearlyData.map((row) => [row.year, `${row.count} orang`]),
+                theme: 'striped',
+                headStyles: { fillColor: [45, 90, 156], textColor: 255, fontStyle: 'bold' },
+                styles: { fontSize: 8.5, cellPadding: 2.5 },
+                margin: { left: margin, right: margin }
+            });
+
+            // 2. Tabel Pendaftar per Bulan
+            let currentY = (pdf.lastAutoTable ? pdf.lastAutoTable.finalY : 30) + 9;
+            pdf.setFontSize(10.5);
+            pdf.setTextColor(30, 41, 59);
+            pdf.text(`2. Pendaftar per Bulan (Tahun ${selectedYear})`, margin, currentY);
+            callAutoTable({
+                startY: currentY + 3,
+                head: [['Bulan', 'Jumlah Pendaftar']],
+                body: monthlyData.map((row) => [row.month, `${row.count} orang`]),
+                theme: 'striped',
+                headStyles: { fillColor: [45, 90, 156], textColor: 255, fontStyle: 'bold' },
+                styles: { fontSize: 8.5, cellPadding: 2.5 },
+                margin: { left: margin, right: margin }
+            });
+
+            // 3. Tabel Distribusi per Instansi
+            currentY = (pdf.lastAutoTable ? pdf.lastAutoTable.finalY : currentY) + 9;
+            if (currentY > pageHeight - 45) {
+                pdf.addPage();
+                currentY = 18;
+            }
+            pdf.setFontSize(10.5);
+            pdf.setTextColor(30, 41, 59);
+            pdf.text("3. Distribusi Peserta per Instansi / Universitas", margin, currentY);
+            callAutoTable({
+                startY: currentY + 3,
+                head: [['Instansi / Universitas', 'Jumlah Peserta']],
+                body: categoryData.length > 0 
+                    ? categoryData.map((row) => [row.name, `${row.value} orang`])
+                    : [['Belum ada data instansi', '0 orang']],
+                theme: 'striped',
+                headStyles: { fillColor: [45, 90, 156], textColor: 255, fontStyle: 'bold' },
+                styles: { fontSize: 8.5, cellPadding: 2.5 },
+                margin: { left: margin, right: margin }
+            });
+
+            pdf.save(`laporan-statistik-magang-${selectedYear}.pdf`);
+        } catch (err) {
+            console.error("Gagal membuat PDF:", err);
+            alert("Terjadi kendala saat membuat file PDF: " + err.message);
+        } finally {
+            setIsExporting(false);
         }
-
-        // BAGIAN TABEL DATA
-        pdf.addPage();
-        pdf.setFontSize(14);
-        pdf.text("Detail Data Statistik", 10, 15);
-
-        // 1. Tabel Pendaftar per Tahun
-        pdf.text("Pendaftar per Tahun", 10, 25);
-        autoTable(pdf, {
-            startY: 30,
-            head: [['Tahun', 'Jumlah']],
-            body: yearlyData.map((row) => [row.year, row.count]),
-            theme: 'striped',
-            headStyles: { fillColor: [45, 90, 156], textColor: 255 },
-        });
-
-        // 2. Tabel Pendaftar per Bulan
-        let finalY = (pdf.lastAutoTable ? pdf.lastAutoTable.finalY : 30) + 10;
-        pdf.text(`Pendaftar per Bulan (${selectedYear})`, 10, finalY);
-        autoTable(pdf, {
-            startY: finalY + 5,
-            head: [['Bulan', 'Jumlah']],
-            body: monthlyData.map((row) => [row.month, row.count]),
-            theme: 'striped',
-            headStyles: { fillColor: [45, 90, 156], textColor: 255 },
-        });
-
-        // 3. Tabel Distribusi per Instansi
-        finalY = (pdf.lastAutoTable ? pdf.lastAutoTable.finalY : finalY) + 10;
-        pdf.text("Distribusi Peserta per Instansi / Universitas", 10, finalY);
-        autoTable(pdf, {
-            startY: finalY + 5,
-            head: [['Instansi / Universitas', 'Jumlah']],
-            body: categoryData.map((row) => [row.name, row.value]),
-            theme: 'striped',
-            headStyles: { fillColor: [45, 90, 156], textColor: 255 },
-        });
-
-        pdf.save(`data-statistik-peserta-magang-${selectedYear}.pdf`);
     };
 
     const yearOptions = availableYears.length > 0 
@@ -162,8 +229,14 @@ export default function AdminChartsMapta() {
                                     <span className="text-xs text-red-500 font-medium">{error}</span>
                                 )}
                             </div>
-                            <button onClick={handleDownloadChartsPDF} className="bg-green-600 hover:bg-green-700 transition">
-                                <span className="icon">Download Data</span>
+                            <button 
+                                onClick={handleDownloadChartsPDF} 
+                                disabled={isExporting}
+                                style={{ opacity: isExporting ? 0.7 : 1, cursor: isExporting ? 'not-allowed' : 'pointer' }}
+                            >
+                                <span className="icon">
+                                    {isExporting ? 'Menyiapkan PDF...' : 'Download Data'}
+                                </span>
                             </button>
                         </div>
 
