@@ -6,7 +6,7 @@ import { LuAlignJustify } from "react-icons/lu";
 import { FaTimes } from "react-icons/fa";
 import { TbEdit } from "react-icons/tb";
 import { MdDeleteOutline } from "react-icons/md";
-import axios from 'axios'
+import api from '../../config/api'
 import { toast } from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
@@ -29,7 +29,7 @@ function Jadwal() {
     const fetchDataJadwal = async()=>{
         const token = localStorage.getItem("token")
         try{
-            const rest = await axios.get("http://localhost:3000/admin/jadwal", {
+            const rest = await api.get("/admin/jadwal", {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }
@@ -43,7 +43,7 @@ function Jadwal() {
     }
     const fetchDataPeserta = async()=>{
         const token = localStorage.getItem("token")
-        const res = await axios.get("http://localhost:3000/admin/jadwal/peserta", {
+        const res = await api.get("/admin/jadwal/peserta", {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }
@@ -61,7 +61,7 @@ function Jadwal() {
         const token = localStorage.getItem("token");
         try{
             if(editingJadwal){
-                await axios.patch(`http://localhost:3000/admin/jadwal/update/${editingJadwal.id_jadwal}`,{
+                await api.patch(`/admin/jadwal/update/${editingJadwal.id_jadwal}`,{
                     bidang: formJadwal.departemen,
                     id_peserta_magang: formJadwal.id_peserta_magang,
                     tanggal_mulai: formJadwal.tanggal_mulai,
@@ -73,7 +73,7 @@ function Jadwal() {
                 })
                 toast.success(`Jadwal berhasil diperbarui`);
             }else{
-                await axios.post(`http://localhost:3000/admin/jadwal/store`,{
+                await api.post(`/admin/jadwal/store`,{
                             
                     bidang: formJadwal.departemen,
                     id_peserta_magang: formJadwal.id_peserta_magang,
@@ -100,7 +100,7 @@ function Jadwal() {
         const token = localStorage.getItem("token");
         if(window.confirm("Yakin ingin mengahpus jadwal ini?")){
             try{
-                await axios.delete(`http://localhost:3000/admin/jadwal/delete/${id}`,{
+                await api.delete(`/admin/jadwal/delete/${id}`,{
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

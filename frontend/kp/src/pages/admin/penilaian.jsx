@@ -5,7 +5,7 @@ import SidebarAdmTm from "../../components/sidebar-adm";
 import NavbarAdmTm from "../../components/navbar-adm";
 import { FaTimes, FaTrash } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import axios from 'axios'
+import api from '../../config/api'
 import { toast } from "react-toastify";
 
 import "../../styles/dashboard.css";
@@ -30,7 +30,7 @@ function Penilaian() {
     const fetchAspek = async()=>{
         const token = localStorage.getItem("token")
         try{
-            const rest = await axios.get("http://localhost:3000/admin/aspek", {
+            const rest = await api.get("/admin/aspek", {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }
@@ -67,7 +67,7 @@ function Penilaian() {
                 bidang: departemen,
                 aspek: kategoriAspek
             }
-            await axios.post("http://localhost:3000/admin/aspek/store", data, {
+            await api.post("/admin/aspek/store", data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -102,7 +102,7 @@ function Penilaian() {
                 return;
             }
             try{
-                await axios.delete("http://localhost:3000/admin/aspek/delete", {
+                await api.delete("/admin/aspek/delete", {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },data: { id_aspek: idsToDelete }

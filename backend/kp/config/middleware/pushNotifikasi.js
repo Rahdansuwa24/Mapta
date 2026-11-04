@@ -3,8 +3,13 @@ const db = require('../middleware/firebase');
 const admin = require('firebase-admin');
 
 async function pushNotifikasi(data) {
+  if (!db) {
+    console.warn('Push notifikasi dilewati: Firebase belum terhubung atau dinonaktifkan.');
+    return;
+  }
+
   try {
-    const notifRef = db.collection('notifikasi')
+    const notifRef = db.collection('notifikasi');
     const docRef = notifRef.doc();
 
     const notifData = {

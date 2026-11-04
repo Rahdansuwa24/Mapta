@@ -4,7 +4,7 @@ import { BsArrowUpCircle } from "react-icons/bs";
 import { ImEye, ImEyeBlocked } from "react-icons/im";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa"; 
-import axios from 'axios'
+import api from '../config/api'
 
 import "../styles/pendaftaran.css";
 import logoMapta from "../assets/images/logo_mapta.png";
@@ -44,7 +44,7 @@ export default function PendaftaranMagang() {
 
 const fetchKuotaTersisa = async()=>{
         try{
-            let data = await axios.get("http://localhost:3000/peserta/kuota")
+            let data = await api.get("/peserta/kuota")
             setKuota(data.data.sisaKuota)
         }catch(error){
             console.error(error)
@@ -224,7 +224,7 @@ const fetchKuotaTersisa = async()=>{
             console.log(pair[0], pair[1]);
         }
         try {
-            const response = await axios.post("http://localhost:3000/peserta/register", formDataToSend) 
+            const response = await api.post("/peserta/register", formDataToSend) 
             console.log("Response:", response.data);
             alert(response.data.message);
             await fetchKuotaTersisa()

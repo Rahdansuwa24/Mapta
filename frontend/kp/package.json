@@ -24,7 +24,7 @@
     "react-router-dom": "^7.9.1",
     "react-scroll": "^1.9.3",
     "react-toastify": "^11.0.5",
-    "recharts": "^3.5.0"
+    "recharts": "^3.10.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

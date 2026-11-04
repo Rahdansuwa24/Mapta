@@ -6,7 +6,7 @@ import { LuAlignJustify } from "react-icons/lu";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 import "../../styles/dashboard.css";
-import axios from "axios";
+import api, { API_BASE_URL } from "../../config/api";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
@@ -65,7 +65,7 @@ function SelesaiMagang() {
   const fetchDataNilaiFinal = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.get("http://localhost:3000/admin/dasbor/final", {
+      const res = await api.get("/admin/dasbor/final", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -248,7 +248,7 @@ function SelesaiMagang() {
                               <td>{idx + 1}</td>
                               <td className="nama-cell">
                                 <img
-                                  src={`http://localhost:3000/static/images/${peserta.foto_diri}`}
+                                  src={`${API_BASE_URL}/static/images/${peserta.foto_diri}`}
                                   alt="Foto Profil"
                                 />
                                 <span>{highlightText(peserta.nama, searchTerm)}</span>
@@ -302,7 +302,7 @@ function SelesaiMagang() {
 
                 <div className="profile-pic">
                   <img
-                    src={`http://localhost:3000/static/images/${selectedPeserta.foto_diri}`}
+                    src={`${API_BASE_URL}/static/images/${selectedPeserta.foto_diri}`}
                     alt="Profil"
                     style={{ width: "90px", height: "90px", borderRadius: "10px" }}
                   />
@@ -337,7 +337,7 @@ function SelesaiMagang() {
                             <span>{doc}</span>
                             <div className="dokumen-actions">
                               <button className="btn-download" onClick={()=>{
-                                  window.open(`http://localhost:3000/static/document/${doc}`,"_blank", "noopener,noreferrer")
+                                  window.open(`${API_BASE_URL}/static/document/${doc}`,"_blank", "noopener,noreferrer")
                               }}>Download</button>
                             </div>
                             </div>
@@ -358,7 +358,7 @@ function SelesaiMagang() {
                           <div className="dokumen-actions">
                             <button className="btn-download"
                               onClick={()=>{
-                                  window.open(`http://localhost:3000/public/document-admin/diterima/${selectedPeserta.surat_balasan}`,"_blank", "noopener,noreferrer")
+                                  window.open(`${API_BASE_URL}/public/document-admin/diterima/${selectedPeserta.surat_balasan}`,"_blank", "noopener,noreferrer")
                               }}
                             >
                               Download
@@ -383,7 +383,7 @@ function SelesaiMagang() {
                                 className="btn-download"
                                 onClick={() => {
                                   window.open(
-                                    `http://localhost:3000/static/laporan-akhir/${selectedPeserta.laporan_akhir}`,
+                                    `${API_BASE_URL}/static/laporan-akhir/${selectedPeserta.laporan_akhir}`,
                                     "_blank",
                                     "noopener,noreferrer"
                                   );
@@ -409,7 +409,7 @@ function SelesaiMagang() {
                           <div className="dokumen-actions">
                             <button
                                 onClick={()=>{
-                                  window.open(`http://localhost:3000/static/document-sertif/${selectedPeserta.sertifikat}`,"_blank", "noopener,noreferrer")
+                                  window.open(`${API_BASE_URL}/static/document-sertif/${selectedPeserta.sertifikat}`,"_blank", "noopener,noreferrer")
                               }}
                               className="btn-download"
                             >

@@ -16,6 +16,17 @@ router.get('/', verifyToken('siswa'),async(req, res)=>{
         res.status(500).json({ status: false, error: err.message });
     }
 })
+router.get("/download/:filename", (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, "../../public/document-sertif", filename);
+
+  res.download(filePath, filename, (err) => {
+    if (err) {
+      console.error("Download error:", err);
+      res.status(404).send("File tidak ditemukan.");
+    }
+  });
+});
 router.get('/laporan-magang', verifyToken('siswa'),async(req, res)=>{
     try{
         let id_users = req.user.id
@@ -50,16 +61,5 @@ router.patch('/unggah-laporan', verifyToken('siswa'),  upload.single("laporan_ma
     }
 })
 
-router.get("/download/:filename", (req, res) => {
-  const filename = req.params.filename;
-  const filePath = path.join(__dirname, "../../public/document-sertif", filename);
-
-  res.download(filePath, filename, (err) => {
-    if (err) {
-      console.error("Download error:", err);
-      res.status(404).send("File tidak ditemukan.");
-    }
-  });
-});
 
 module.exports = router

@@ -6,7 +6,7 @@ import NavbarUsr from "../../components/navbar-adm";
 import { LuAlignJustify } from "react-icons/lu";
 import { FaTimes, FaTrash } from "react-icons/fa";
 import { TbEdit } from "react-icons/tb";
-import axios from 'axios'
+import api, { API_BASE_URL } from '../../config/api'
 import { toast } from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
@@ -38,7 +38,7 @@ function DataPenilaianAspek() {
     const fetchNilaiAdmin = async()=>{
         const token = localStorage.getItem(("token"))
         try{
-            const res = await axios.get("http://localhost:3000/admin/penilaian", {
+            const res = await api.get("/admin/penilaian", {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }
@@ -204,15 +204,15 @@ const dataFiltered = filterInstansi
             aspekSemua.map(async (a) => {
                 if (a.id_penilaian) {
                     if (a.jenis === "teknis") {
-                        await axios.patch(
-                            `http://localhost:3000/admin/penilaian/update/${a.id_penilaian}`,
+                        await api.patch(
+                            `/admin/penilaian/update/${a.id_penilaian}`,
                             { penilaian: a.nilai ?? null },
                             { headers: { Authorization: `Bearer ${token}` } }
                         );
                     } 
                     else if (a.jenis === "non-teknis") {
-                        await axios.patch(
-                            `http://localhost:3000/admin/penilaian/update-final-non-teknis/${a.id_penilaian}`,
+                        await api.patch(
+                            `/admin/penilaian/update-final-non-teknis/${a.id_penilaian}`,
                             { nilai: a.nilai ?? null,  id_peserta_magang: selectedPeserta.id_peserta_magang, id_aspek: a.id_aspek },
                             { headers: { Authorization: `Bearer ${token}` } }
                         );
@@ -492,7 +492,7 @@ const dataFiltered = filterInstansi
 
                                 {selectedPeserta && (
                                     <div className="dp-profile-pic">
-                                        <img src={`http://localhost:3000/static/images/${selectedPeserta.foto_diri}`} alt="profil" />
+                                        <img src={`${API_BASE_URL}/static/images/${selectedPeserta.foto_diri}`} alt="profil" />
                                     </div>
                                 )}
 

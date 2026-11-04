@@ -7,7 +7,7 @@ import { LuAlignJustify } from "react-icons/lu";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
-import axios from 'axios'
+import api, { API_BASE_URL } from '../../config/api'
 import { toast } from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
@@ -42,7 +42,7 @@ function Ditolak() {
     const fetchPesertaDitolak = async()=>{
         const token = localStorage.getItem("token")
         try{
-            const res = await axios.get("http://localhost:3000/admin/dasbor/penolakan", {
+            const res = await api.get("/admin/dasbor/penolakan", {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }
@@ -107,8 +107,8 @@ function Ditolak() {
         formData.append("surat_balasan", file);
 
         try {
-            await axios.patch(
-            `http://localhost:3000/admin/dasbor/update-surat-balasan/${pesertaId}`,
+            await api.patch(
+            `/admin/dasbor/update-surat-balasan/${pesertaId}`,
             formData,
                 {
                     headers: {
@@ -131,7 +131,7 @@ function Ditolak() {
         const handleSaveProfile = async()=>{
             const token = localStorage.getItem("token")
             try{
-                await axios.patch(`http://localhost:3000/admin/dasbor/update/profile/${selectedPeserta.id_peserta_magang}`, {
+                await api.patch(`/admin/dasbor/update/profile/${selectedPeserta.id_peserta_magang}`, {
                     nama: selectedPeserta.nama,
                     nomor_identitas: selectedPeserta.nomor_identitas, 
                     instansi: selectedPeserta.instansi,
@@ -153,7 +153,7 @@ function Ditolak() {
         const token = localStorage.getItem("token")
         if(!window.confirm("Yakin ingin mengahpus data ini?")) return
         try{
-            await axios.delete(`http://localhost:3000/admin/dasbor/delete/penolakan/${id}`, {
+            await api.delete(`/admin/dasbor/delete/penolakan/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -291,7 +291,7 @@ function Ditolak() {
                                                     <tr key={peserta.id_peserta_magang}>
                                                         <td>{idx + 1}</td>
                                                         <td className="nama-cell">
-                                                        <img src={`http://localhost:3000/static/images/${peserta.foto_diri}`} alt="Foto Profil" />
+                                                        <img src={`${API_BASE_URL}/static/images/${peserta.foto_diri}`} alt="Foto Profil" />
                                                         <span>{highlightText(peserta.nama, searchTerm)}</span>
                                                         </td>
                                                         <td>{highlightText(peserta.instansi, searchTerm)}</td>
@@ -357,7 +357,7 @@ function Ditolak() {
                                                     <td>{i + 1}</td>
                                                     <td className="nama-cell">
                                                         <img
-                                                        src={`http://localhost:3000/static/images/${peserta.foto_diri}`}
+                                                        src={`${API_BASE_URL}/static/images/${peserta.foto_diri}`}
                                                         alt="Foto Profil"
                                                         />
                                                         <span>{highlightText(peserta.nama, searchTerm)}</span>
@@ -429,7 +429,7 @@ function Ditolak() {
                                 <div className="peserta-top-section">
                                     <div className="peserta-profile-pic">
                                         <img
-                                            src={`http://localhost:3000/static/images/${selectedPeserta.foto_diri}`}
+                                            src={`${API_BASE_URL}/static/images/${selectedPeserta.foto_diri}`}
                                             alt="Profil"
                                             style={{ width: "90px", height: "90px", borderRadius: "10px" }}
                                         />
@@ -530,7 +530,7 @@ function Ditolak() {
                                                 <span>{doc}</span>
                                                 <div className="dokumen-actions">
                                                     <button className="btn-download" onClick={()=>{
-                                                        window.open(`http://localhost:3000/static/document/${doc}`,"_blank", "noopener,noreferrer")
+                                                        window.open(`${API_BASE_URL}/static/document/${doc}`,"_blank", "noopener,noreferrer")
                                                     }}>Download</button>
                                                 </div>
                                             </div>

@@ -1,24 +1,44 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAnalytics, isSupported } from "firebase/analytics";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const env = typeof import.meta !== "undefined" && import.meta.env ? import.meta.env : {};
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDAyUo3Gs7aaR9Fa52leRBPp1r8ioQdook",
-  authDomain: "mapta-realtime-notification.firebaseapp.com",
-  projectId: "mapta-realtime-notification",
-  storageBucket: "mapta-realtime-notification.firebasestorage.app",
-  messagingSenderId: "1044003645083",
-  appId: "1:1044003645083:web:73ec28184360b156de483e",
-  measurementId: "G-8XKRGXQ4EE"
+  apiKey: env.VITE_FIREBASE_API_KEY,
+  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: env.VITE_FIREBASE_APP_ID,
+  measurementId: env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-export const db = getFirestore(app)
+// Inisialisasi Firebase secara aman jika konfigurasi tersedia
+let app = null;
+let db = null;
+let analytics = null;
 
+try {
+  if (firebaseConfig.apiKey && firebaseConfig.projectId) {
+    app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+    db = getFirestore(app);
+
+    if (typeof window !== "undefined") {
+      isSupported().then((supported) => {
+        if (supported && firebaseConfig.measurementId) {
+          analytics = getAnalytics(app);
+        }
+      }).catch(() => {
+        // Analytics opsional
+      });
+    }
+  } else {
+    console.warn("Konfigurasi Firebase belum diisi di berkas .env");
+  }
+} catch (error) {
+  console.error("Gagal menginisialisasi Firebase:", error.message);
+}
+
+export { db, analytics };
+export default app;

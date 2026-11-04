@@ -8,7 +8,7 @@ import { FaTimes } from "react-icons/fa";
 import { BiSolidCalendar } from "react-icons/bi";
 import { RiBallPenFill } from "react-icons/ri";
 import { FaFileDownload } from "react-icons/fa";
-import axios from 'axios'
+import api, { API_BASE_URL } from '../../config/api'
 import { toast } from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
@@ -25,7 +25,7 @@ function JadwalPic() {
     const fetchJadwalPic = async()=>{
         const token = localStorage.getItem("token")
         try{
-            let res = await axios.get("http://localhost:3000/pic/jadwal", {
+            let res = await api.get("/pic/jadwal", {
                     headers:{
                     Authorization: `Bearer ${token}`
                 }
@@ -47,7 +47,7 @@ function JadwalPic() {
                     nama: item.nama,
                     nim: item.nomor_identitas,
                     instansi: item.instansi,
-                    profil: `http://localhost:3000/static/images/${item.foto_diri}`
+                    profil: `${API_BASE_URL}/static/images/${item.foto_diri}`
 
                 })
                 return acc

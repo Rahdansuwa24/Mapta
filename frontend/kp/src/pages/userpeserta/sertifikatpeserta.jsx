@@ -10,7 +10,7 @@ import { FaFileDownload } from "react-icons/fa";
 import { FaFileInvoice } from "react-icons/fa6";
 import { IoDocumentText } from "react-icons/io5";
 import { FaDownload } from "react-icons/fa";
-import axios from "axios";
+import api, { API_BASE_URL } from "../../config/api";
 import { toast } from "react-toastify";
 
 import "../../styles/user.css";
@@ -27,13 +27,13 @@ function SertifikatPeserta() {
     const fetchSertifikat = async()=>{
         const token = localStorage.getItem("token")
         try{
-            const res  = await axios.get("http://localhost:3000/peserta/sertifikat", {
+            const res  = await api.get("/peserta/sertifikat", {
                 headers: { Authorization: `Bearer ${token}` },
             })
             const sertifikat = res.data.sertifikat
             console.log(sertifikat)
             if(sertifikat){
-                setFileUrl(`http://localhost:3000/static/document-sertif/${sertifikat}`);
+                setFileUrl(`${API_BASE_URL}/static/document-sertif/${sertifikat}`);
                 setFileName(sertifikat);
             }else{
                 setFileUrl(null);
@@ -50,7 +50,7 @@ function SertifikatPeserta() {
         if (!fileUrl) return;
 
         const link = document.createElement("a");
-        link.href = `http://localhost:3000/peserta/sertifikat/download/${fileName}`;
+        link.href = `${API_BASE_URL}/peserta/sertifikat/download/${fileName}`;
         link.setAttribute("download", fileName);
         document.body.appendChild(link);
         link.click();

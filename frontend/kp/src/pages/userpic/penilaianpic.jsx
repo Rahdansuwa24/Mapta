@@ -9,7 +9,7 @@ import { TbEdit } from "react-icons/tb";
 import { BiSolidCalendar } from "react-icons/bi";
 import { RiBallPenFill } from "react-icons/ri";
 import { FaFileDownload } from "react-icons/fa";
-import axios from 'axios'
+import api, { API_BASE_URL } from '../../config/api'
 import { toast } from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
@@ -29,7 +29,7 @@ function PenilaianPic() {
     const fetchDataPesertaPerInstansi = async()=>{
         const token = localStorage.getItem("token")
         try{
-            const res = await axios.get("http://localhost:3000/pic/penilaian/peserta", {
+            const res = await api.get("/pic/penilaian/peserta", {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }
@@ -45,7 +45,7 @@ function PenilaianPic() {
     const fetchDataAspek = async()=>{
         const token = localStorage.getItem("token")
         try{
-            const res = await axios.get("http://localhost:3000/pic/penilaian/aspek", {
+            const res = await api.get("/pic/penilaian/aspek", {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }
@@ -61,7 +61,7 @@ function PenilaianPic() {
     const fetchNilai = async()=>{
         const token = localStorage.getItem("token")
         try{
-            const res = await axios.get("http://localhost:3000/pic/penilaian", {
+            const res = await api.get("/pic/penilaian", {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }
@@ -211,15 +211,15 @@ function PenilaianPic() {
             for (const a of aspekSemua.filter(a => a.nilai !== null)) {
                 if (a.id_penilaian) {
                     // update
-                    await axios.patch(
-                        `http://localhost:3000/pic/penilaian/update/${a.id_penilaian}`,
+                    await api.patch(
+                        `/pic/penilaian/update/${a.id_penilaian}`,
                         { penilaian: a.nilai },
                         { headers: { Authorization: `Bearer ${token}` } }
                     );
                 } else {
                     // insert
-                    await axios.post(
-                        "http://localhost:3000/pic/penilaian/store",
+                    await api.post(
+                        "/pic/penilaian/store",
                         {
                             id_aspek: Number(a.id_aspek),
                             id_peserta_magang: Number(selectedPeserta.id_peserta_magang),
@@ -254,7 +254,7 @@ function PenilaianPic() {
         try{
             await Promise.all(
                 [...(peserta.aspekTeknis || []), ...(peserta.aspekNonTeknis || [])].map((a) =>
-                    axios.delete(`http://localhost:3000/pic/penilaian/delete/${a.id_penilaian}`, {
+                    api.delete(`/pic/penilaian/delete/${a.id_penilaian}`, {
                         headers: { Authorization: `Bearer ${token}` },
                     })
                 )
@@ -577,7 +577,7 @@ function PenilaianPic() {
                                 {/* Foto profil */}
                                 {selectedPeserta && (
                                     <div className="jp-profile-pic">
-                                        <img src={`http://localhost:3000/static/images/${selectedPeserta.foto_diri}`} alt="profil" />
+                                        <img src={`${API_BASE_URL}/static/images/${selectedPeserta.foto_diri}`} alt="profil" />
                                     </div>
                                 )}
 

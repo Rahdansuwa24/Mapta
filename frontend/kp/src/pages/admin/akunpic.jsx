@@ -6,7 +6,7 @@ import NavbarAdmTm from "../../components/navbar-adm";
 import { FaTimes } from "react-icons/fa";
 import { TbEdit } from "react-icons/tb";
 import { MdDeleteOutline } from "react-icons/md";
-import axios from 'axios'
+import api from '../../config/api'
 import { toast } from "react-toastify";
 
 import "../../styles/dashboard.css";
@@ -51,7 +51,7 @@ function AkunPIC() {
     const fetchDataAkun = async()=>{
             const token = localStorage.getItem("token")
             try{
-                const res = await axios.get("http://localhost:3000/admin/pic", {
+                const res = await api.get("/admin/pic", {
                     headers:{
                         Authorization: `Bearer ${token}`
                     }
@@ -87,7 +87,7 @@ function AkunPIC() {
             if (editingIndex !== null) {
 
             const akunId = akunList[editingIndex].id_pic;
-            await axios.patch(`http://localhost:3000/admin/pic/update/${akunId}`, data, {
+            await api.patch(`/admin/pic/update/${akunId}`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json" 
@@ -95,7 +95,7 @@ function AkunPIC() {
             })
                 toast.success("Data akun PIC berhasil diperbarui");
             } else {
-            await axios.post(`http://localhost:3000/admin/pic/store`, data, {
+            await api.post(`/admin/pic/store`, data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json" 
@@ -124,7 +124,7 @@ function AkunPIC() {
         if (!confirmDelete) return;
         try{
             const token = localStorage.getItem("token")
-            await axios.delete(`http://localhost:3000/admin/pic/delete/${akunId}`,{
+            await api.delete(`/admin/pic/delete/${akunId}`,{
                     headers: {
                     Authorization: `Bearer ${token}`,
                 },

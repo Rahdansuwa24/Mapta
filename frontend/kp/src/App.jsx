@@ -28,7 +28,7 @@ import JadwalPeserta from "./pages/userpeserta/jadwalpeserta.jsx";
 import LaporanPeserta from "./pages/userpeserta/laporanpeserta.jsx";
 import SertifikatPeserta from "./pages/userpeserta/sertifikatpeserta.jsx";
 import {jwtDecode} from "jwt-decode";
-import axios from 'axios';
+import api from './config/api';
 import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -65,12 +65,12 @@ function Protection({allowedRoles, children}){
 }
 function App() {
   useEffect(()=>{
-    const constraints = axios.interceptors.response.use(
+    const constraints = api.interceptors.response.use(
       (response)=> response,
       (error)=> {
         const originalRequest = error.config
 
-        if(error.response && error.response.status === 401 && originalRequest.url !== "http://localhost:3000/login"){
+        if(error.response && error.response.status === 401 && !originalRequest?.url?.includes('/login')){
           localStorage.removeItem("token");
           window.location.href = '/login'; 
           return Promise.reject(error);
@@ -79,7 +79,7 @@ function App() {
       }
     )
     return()=>{
-      axios.interceptors.response.eject(constraints);
+      api.interceptors.response.eject(constraints);
     }
   }, [])
   return (

@@ -8,7 +8,7 @@ import "../../styles/dashboard.css";
 import "../../styles/user.css";
 import "../../styles/datanilaiaspek.css";
 import { toast } from "react-toastify";
-import axios from 'axios'
+import api from '../../config/api'
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 dayjs.locale('id');
@@ -139,7 +139,7 @@ const highlightText = (text, highlight) => {
     const fetchJadwalPeserta = async ()=>{
         const token = localStorage.getItem("token")
         try{
-            const res = await axios.get("http://localhost:3000/admin/jadwal/cekSemuaJadwal", {
+            const res = await api.get("/admin/jadwal/cekSemuaJadwal", {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }

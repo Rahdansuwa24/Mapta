@@ -9,7 +9,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { FaFileDownload } from "react-icons/fa";
 import { FaFileInvoice } from "react-icons/fa6";
 import { IoDocumentText } from "react-icons/io5";
-import axios from 'axios'
+import api from '../../config/api'
 import { toast } from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
@@ -27,7 +27,7 @@ function NilaiPeserta() {
     const fetchNilaiPeserta = async()=>{
         const token = localStorage.getItem("token")
         try{
-            const res = await axios.get("http://localhost:3000/peserta/penilaian", {
+            const res = await api.get("/peserta/penilaian", {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }

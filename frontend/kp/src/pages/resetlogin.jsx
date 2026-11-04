@@ -6,7 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import "../styles/login.css";
 import vectorBg from "../assets/images/vector_1.png";
-import axios from 'axios'
+import api from '../config/api'
 
 export default function LoginPage() {
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function LoginPage() {
     }
 
     try{
-      const response = await axios.patch("http://localhost:3000/peserta/update-password", {email})
+      const response = await api.patch("/peserta/update-password", {email})
       alert(response.data.message);
       navigate("/login");
     }catch(error){

@@ -8,7 +8,7 @@ import { ImEye, ImEyeBlocked } from "react-icons/im";
 import "../styles/login.css";
 import { useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
-import axios from 'axios'
+import api from '../config/api'
 
 import vectorBg from "../assets/images/vector_1.png";
 
@@ -31,7 +31,7 @@ export default function LoginPage() {
     }
     const handleLogin = async ()=>{
         try{
-            const response = await axios.post("http://localhost:3000/login", formData)
+            const response = await api.post("/login", formData)
             if(response.data.status){
                 localStorage.setItem("token", response.data.token)
                 const decoded = jwtDecode(response.data.token)

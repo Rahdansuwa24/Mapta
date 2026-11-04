@@ -7,7 +7,7 @@ import { LuAlignJustify } from "react-icons/lu";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
-import axios from 'axios'
+import api, { API_BASE_URL } from '../../config/api'
 import dayjs from 'dayjs';
 import { toast } from "react-toastify";
 import 'dayjs/locale/id';
@@ -36,7 +36,7 @@ function Dashboard() {
     const fetchPeserta = async() =>{
             const token = localStorage.getItem("token");
             try{
-                const res = await axios.get("http://localhost:3000/admin/dasbor",{
+                const res = await api.get("/admin/dasbor",{
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -49,7 +49,7 @@ function Dashboard() {
     const getKuota = async() =>{
             const token = localStorage.getItem("token");
             try{
-                const res = await axios.get("http://localhost:3000/admin/dasbor/max-peserta",{
+                const res = await api.get("/admin/dasbor/max-peserta",{
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -141,7 +141,7 @@ function Dashboard() {
     const handleSaveKuota = async() => {
         const token = localStorage.getItem("token")
         try{
-            await axios.patch("http://localhost:3000/admin/dasbor/update-max-peserta", {
+            await api.patch("/admin/dasbor/update-max-peserta", {
                 total: kuota
             }, {
                 headers: { Authorization: `Bearer ${token}` },
@@ -239,7 +239,7 @@ function Dashboard() {
                                         <td>{idx + 1}</td>
                                         <td className="nama-cell">
                                             <img
-                                            src={`http://localhost:3000/static/images/${peserta.foto_diri}`}
+                                            src={`${API_BASE_URL}/static/images/${peserta.foto_diri}`}
                                             alt="Foto Profil"
                                             />
                                             <span>{highlightText(peserta.nama, searchTerm)}</span>
@@ -268,8 +268,8 @@ function Dashboard() {
                                                 );
                                                 const token = localStorage.getItem("token");
                                                 try {
-                                                    await axios.patch(
-                                                    `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
+                                                    await api.patch(
+                                                    `/admin/dasbor/update/${peserta.id_peserta_magang}`,
                                                     { status_penerimaan: "Diterima" },
                                                     {
                                                         headers: {
@@ -297,8 +297,8 @@ function Dashboard() {
                                                 );
                                                 const token = localStorage.getItem("token");
                                                 try {
-                                                    await axios.patch(
-                                                    `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
+                                                    await api.patch(
+                                                    `/admin/dasbor/update/${peserta.id_peserta_magang}`,
                                                     { status_penerimaan: "Ditolak" },
                                                     {
                                                         headers: {
@@ -353,7 +353,7 @@ function Dashboard() {
                                         <td>{idx + 1}</td>
                                         <td className="nama-cell">
                                             <img
-                                            src={`http://localhost:3000/static/images/${peserta.foto_diri}`}
+                                            src={`${API_BASE_URL}/static/images/${peserta.foto_diri}`}
                                             alt="Foto Profil"
                                             />
                                             <span>{highlightText(peserta.nama, searchTerm)}</span>
@@ -382,8 +382,8 @@ function Dashboard() {
                                                 );
                                                 const token = localStorage.getItem("token");
                                                 try {
-                                                    await axios.patch(
-                                                    `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
+                                                    await api.patch(
+                                                    `/admin/dasbor/update/${peserta.id_peserta_magang}`,
                                                     { status_penerimaan: "Diterima" },
                                                     {
                                                         headers: {
@@ -410,8 +410,8 @@ function Dashboard() {
                                                 );
                                                 const token = localStorage.getItem("token");
                                                 try {
-                                                    await axios.patch(
-                                                    `http://localhost:3000/admin/dasbor/update/${peserta.id_peserta_magang}`,
+                                                    await api.patch(
+                                                    `/admin/dasbor/update/${peserta.id_peserta_magang}`,
                                                     { status_penerimaan: "Ditolak" },
                                                     {
                                                         headers: {
@@ -462,7 +462,7 @@ function Dashboard() {
                             <div className="modal-body">
                                 <div className="profile-pic">
                                     <img
-                                        src={`http://localhost:3000/static/images/${selectedPeserta.foto_diri}`}
+                                        src={`${API_BASE_URL}/static/images/${selectedPeserta.foto_diri}`}
                                         alt="Profil"
                                         style={{ width: "90px", height: "90px", borderRadius: "10px" }}
                                     />
@@ -511,7 +511,7 @@ function Dashboard() {
                                                 <span>{doc}</span>
                                                 <div className="dokumen-actions">
                                                     <button className="btn-download" onClick={()=>{
-                                                        window.open(`http://localhost:3000/static/document/${doc}`,"_blank", "noopener,noreferrer")
+                                                        window.open(`${API_BASE_URL}/static/document/${doc}`,"_blank", "noopener,noreferrer")
                                                     }}>Download</button>
                                                 </div>
                                             </div>

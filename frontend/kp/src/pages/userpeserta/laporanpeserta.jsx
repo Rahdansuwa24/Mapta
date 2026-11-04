@@ -9,7 +9,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoDocumentText } from "react-icons/io5";
 import { FaFileInvoice } from "react-icons/fa6";
 import { FaFileDownload, FaFileUpload } from "react-icons/fa";
-import axios from "axios";
+import api, { API_BASE_URL } from "../../config/api";
 import { toast } from "react-toastify";
 
 import "../../styles/user.css";
@@ -28,13 +28,13 @@ function UploadLaporanAkhir() {
     const fetchUploadedLaporan = async () => {
         const token = localStorage.getItem("token");
         try {
-            const res = await axios.get("http://localhost:3000/peserta/sertifikat/laporan-magang", {
+            const res = await api.get("/peserta/sertifikat/laporan-magang", {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
             const laporan_magang = res.data.laporan_magang;
             if (laporan_magang) {
-                setUploadedFileUrl(`http://localhost:3000/static/document-laporan/${laporan_magang}`);
+                setUploadedFileUrl(`${API_BASE_URL}/static/document-laporan/${laporan_magang}`);
             } else {
                 setUploadedFileUrl(null);
             }
@@ -72,7 +72,7 @@ function UploadLaporanAkhir() {
         const token = localStorage.getItem("token");
 
         try {
-            await axios.patch("http://localhost:3000/peserta/sertifikat/unggah-laporan", formData, {
+            await api.patch("/peserta/sertifikat/unggah-laporan", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     Authorization: `Bearer ${token}`,

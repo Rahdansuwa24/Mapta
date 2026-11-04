@@ -5,7 +5,7 @@ import SidebarAdmSf from "../../components/sidebar-adm";
 import NavbarAdmSf from "../../components/navbar-adm";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
-import axios from 'axios'
+import api, { API_BASE_URL } from '../../config/api'
 import { toast } from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
@@ -35,7 +35,7 @@ function Sertifikat() {
     const fetchDataPesertaSelesai = async()=>{
         const token = localStorage.getItem("token")
         try{
-            const res = await axios.get("http://localhost:3000/admin/sertifikat", {
+            const res = await api.get("/admin/sertifikat", {
                 headers:{
                     Authorization: `Bearer ${token}`
                 }
@@ -104,8 +104,8 @@ function Sertifikat() {
         formData.append("sertifikat", file);
         
         try{
-            await axios.patch(
-            `http://localhost:3000/admin/sertifikat/update-sertifikat/${pesertaId}`,
+            await api.patch(
+            `/admin/sertifikat/update-sertifikat/${pesertaId}`,
             formData,
                 {
                     headers: {
@@ -126,7 +126,7 @@ function Sertifikat() {
     };
 
     const handleDownload = (peserta) => {
-        window.open(`http://localhost:3000/admin/sertifikat/download-sertifikat/${peserta.id_peserta_magang}`, "_blank");
+        window.open(`${API_BASE_URL}/admin/sertifikat/download-sertifikat/${peserta.id_peserta_magang}`, "_blank");
     };
 
     const handleOpenModal = (peserta) => {
@@ -171,7 +171,7 @@ function Sertifikat() {
                     <tr key={peserta.id_peserta_magang}>
                         <td>{idx + 1}</td>
                         <td className="nama-cell">
-                        <img src={`http://localhost:3000/static/images/${peserta.foto_diri}`} alt="Foto Profil" />
+                        <img src={`${API_BASE_URL}/static/images/${peserta.foto_diri}`} alt="Foto Profil" />
                         <span>{highlightText(peserta.nama, searchTerm)}</span>
                         </td>
                         <td>{highlightText(peserta.instansi, searchTerm)}</td>
@@ -303,7 +303,7 @@ function Sertifikat() {
                                             className="btn-download"
                                             onClick={() => {
                                                 window.open(
-                                                    `http://localhost:3000/static/document-laporan/${selectedPeserta.laporan_magang}`,
+                                                    `${API_BASE_URL}/static/document-laporan/${selectedPeserta.laporan_magang}`,
                                                     "_blank",
                                                     "noopener,noreferrer"
                                                 );
@@ -323,8 +323,8 @@ function Sertifikat() {
                         <button className="btn-finalisasi" onClick={async()=>{
                              const token = localStorage.getItem("token");
                             try {
-                                await axios.patch(
-                                `http://localhost:3000/admin/sertifikat/finalisasi/${selectedPeserta.id_peserta_magang}`,
+                                await api.patch(
+                                `/admin/sertifikat/finalisasi/${selectedPeserta.id_peserta_magang}`,
                                 {status_penerimaan: "Final"},
                                 {
                                     headers: {
