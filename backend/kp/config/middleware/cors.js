@@ -1,22 +1,43 @@
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
-const allowedOrigins = process.env.CORS_ORIGIN 
+const isProduction = process.env.NODE_ENV === 'production';
+
+// Di production: HANYA baca dari .env (CORS_ORIGIN)
+// Di development: Gunakan daftar .env dan izinkan fallback port lokal
+const configuredOrigins = process.env.CORS_ORIGIN 
     ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim()) 
-    : ['http://localhost:5173', 'http://localhost:5000', 'http://localhost:3000'];
+    : [];
+
+const localDevOrigins = ['http://localhost:5000', 'http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5000', 'http://127.0.0.1:5173', 'http://127.0.0.1:3000'];
+
+const allowedOrigins = isProduction 
+    ? configuredOrigins 
+    : [...new Set([...configuredOrigins, ...localDevOrigins])];
 
 const backendDomain = {
     origin: function (origin, callback) {
-        // Izinkan request tanpa origin (seperti Postman atau server-to-server)
-        if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
-            callback(null, true);
-        } else {
-            callback(new Error(`CORS blocked: Origin ${origin} is not allowed`));
+        // Izinkan request tanpa origin (seperti Postman, Cron internal, atau server-to-server)
+        if (!origin) return callback(null, true);
+
+        // Cek apakah origin ada di daftar allowedOrigins
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
         }
+
+        // Khusus di development: Toleransi port localhost apapun
+        if (!isProduction && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+            return callback(null, true);
+        }
+
+        // Ditolak jika tidak memenuhi syarat
+        console.warn(`[CORS Blocked] Origin ditolak: ${origin} (Mode: ${process.env.NODE_ENV || 'development'})`);
+        return callback(null, false);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    optionsSuccessStatus: 200
 };
 
 module.exports = { backendDomain };

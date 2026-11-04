@@ -205,10 +205,10 @@ const fadeUp = {
                     Pendaftaran magang dibuka bagi peserta yang ingin mengikuti program magang di lingkungan Dinas Perpustakaan dan Kearsipan Provinsi Jawa Timur.
                 </p>
                 <Link to="/choose-role">
-                    <motion.a href="#" className="btn-daftar">
+                    <motion.div className="btn-daftar">
                     <span className="text">Daftar</span>
                     <span className="arrow"><FaArrowRight /></span>
-                </motion.a>
+                </motion.div>
                 </Link>
             </section>
         </motion.section>
@@ -348,3 +348,4 @@ const fadeUp = {
 };
 
 export default LandingMapta;
+
