@@ -162,4 +162,57 @@ router.delete('/delete/penolakan/(:id)', verifyToken('admin'), async(req, res)=>
     }
 })
 
+
+router.get('/statistik', verifyToken('admin'), async (req, res) => {
+    try {
+        const currentYear = new Date().getFullYear();
+        const selectedYear = parseInt(req.query.year, 10) || currentYear;
+
+        const dbYears = await Model_Admin.getStatistikPendaftarTahun();
+        const dbMonths = await Model_Admin.getStatistikPendaftarBulan(selectedYear);
+        const dbInstansi = await Model_Admin.getStatistikInstansi();
+
+        const dbYearMap = {};
+        dbYears.forEach(r => { dbYearMap[r.year] = Number(r.count); });
+        const allDbYears = dbYears.map(r => Number(r.year)).filter(Boolean);
+        const minYear = allDbYears.length ? Math.min(...allDbYears, currentYear - 4) : currentYear - 4;
+        const maxYear = allDbYears.length ? Math.max(...allDbYears, currentYear) : currentYear;
+
+        const yearly = [];
+        for (let y = minYear; y <= maxYear; y++) {
+            yearly.push({
+                year: y,
+                count: dbYearMap[y] || 0
+            });
+        }
+
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const dbMonthMap = {};
+        dbMonths.forEach(r => { dbMonthMap[r.month] = Number(r.count); });
+        const monthly = monthNames.map((m, idx) => ({
+            month: m,
+            count: dbMonthMap[idx + 1] || 0
+        }));
+
+        const instansi = dbInstansi.map(r => ({
+            name: r.name,
+            value: Number(r.value)
+        }));
+
+        res.status(200).json({
+            status: true,
+            data: {
+                selectedYear,
+                yearly,
+                monthly,
+                instansi,
+                availableYears: yearly.map(y => y.year)
+            }
+        });
+    } catch (err) {
+        console.error('Error fetching statistics:', err);
+        res.status(500).json({ status: false, error: err.message });
+    }
+});
+
 module.exports = router

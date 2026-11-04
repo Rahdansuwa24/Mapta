@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SidebarAdmTm from "../../components/sidebar-adm";
 import NavbarAdmTm from "../../components/navbar-adm";
+import api from "../../config/api";
 import {
     ResponsiveContainer,
     BarChart,
@@ -21,7 +22,6 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import autoTable from "jspdf-autotable";
 
-// generate warna unlimited
 const generateColor = (index) => {
     const hue = (index * 137.508) % 360;
     return `hsl(${hue}, 65%, 55%)`;
@@ -29,55 +29,43 @@ const generateColor = (index) => {
 
 export default function AdminChartsMapta() {
     useEffect(() => {
-        document.title = "Admin MAPTA";
+        document.title = "Admin MAPTA - Statistik";
     }, []);
 
     const [yearlyData, setYearlyData] = useState([]);
     const [monthlyData, setMonthlyData] = useState([]);
     const [categoryData, setCategoryData] = useState([]);
+    const [availableYears, setAvailableYears] = useState([]);
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const yd = [
-            { year: 2021, count: 42 },
-            { year: 2022, count: 78 },
-            { year: 2023, count: 105 },
-            { year: 2024, count: 149 },
-            { year: 2025, count: 96 },
-        ];
+        const fetchStatistics = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                const res = await api.get('/admin/dasbor/statistik', {
+                    params: { year: selectedYear },
+                });
+                if (res.data?.status && res.data?.data) {
+                    const { yearly, monthly, instansi, availableYears: years } = res.data.data;
+                    setYearlyData(yearly || []);
+                    setMonthlyData(monthly || []);
+                    setCategoryData(instansi || []);
+                    if (years && years.length > 0) {
+                        setAvailableYears(years);
+                    }
+                }
+            } catch (err) {
+                console.error("Gagal memuat statistik:", err);
+                setError("Gagal memuat data statistik dari server.");
+            } finally {
+                setLoading(false);
+            }
+        };
 
-        const mdTemplate = () => [
-            { month: 'Jan', count: Math.floor(Math.random() * 30) },
-            { month: 'Feb', count: Math.floor(Math.random() * 30) },
-            { month: 'Mar', count: Math.floor(Math.random() * 30) },
-            { month: 'Apr', count: Math.floor(Math.random() * 30) },
-            { month: 'May', count: Math.floor(Math.random() * 30) },
-            { month: 'Jun', count: Math.floor(Math.random() * 30) },
-            { month: 'Jul', count: Math.floor(Math.random() * 30) },
-            { month: 'Aug', count: Math.floor(Math.random() * 30) },
-            { month: 'Sep', count: Math.floor(Math.random() * 30) },
-            { month: 'Oct', count: Math.floor(Math.random() * 30) },
-            { month: 'Nov', count: Math.floor(Math.random() * 30) },
-            { month: 'Dec', count: Math.floor(Math.random() * 30) },
-        ];
-
-        const cd = [
-            { name: 'ITS', value: 91 },
-            { name: 'PNJ', value: 77 },
-            { name: 'PENS', value: 63 },
-            { name: 'UNESA', value: 44 },
-            { name: 'UPN Veteran Jatim', value: 38 },
-            { name: 'POLINEMA', value: 33 },
-            { name: 'Universitas Airlangga', value: 29 },
-            { name: 'Universitas Brawijaya', value: 26 },
-            { name: 'UMM', value: 22 },
-            { name: 'Politeknik Negeri Jember', value: 16 },
-            { name: 'Universitas Trunojoyo', value: 11 },
-        ];
-
-        setYearlyData(yd);
-        setMonthlyData(mdTemplate(selectedYear));
-        setCategoryData(cd);
+        fetchStatistics();
     }, [selectedYear]);
 
     const handleDownloadChartsPDF = async () => {
@@ -117,9 +105,9 @@ export default function AdminChartsMapta() {
         pdf.setFontSize(14);
         pdf.text("Detail Data Statistik", 10, 15);
 
-        // 1️⃣ Tabel Pendaftar per Tahun
+        // 1. Tabel Pendaftar per Tahun
         pdf.text("Pendaftar per Tahun", 10, 25);
-        pdf.autoTable({
+        autoTable(pdf, {
             startY: 30,
             head: [['Tahun', 'Jumlah']],
             body: yearlyData.map((row) => [row.year, row.count]),
@@ -127,10 +115,10 @@ export default function AdminChartsMapta() {
             headStyles: { fillColor: [45, 90, 156], textColor: 255 },
         });
 
-        // 2️⃣ Tabel Pendaftar per Bulan
-        let finalY = pdf.lastAutoTable.finalY + 10;
+        // 2. Tabel Pendaftar per Bulan
+        let finalY = (pdf.lastAutoTable ? pdf.lastAutoTable.finalY : 30) + 10;
         pdf.text(`Pendaftar per Bulan (${selectedYear})`, 10, finalY);
-        pdf.autoTable({
+        autoTable(pdf, {
             startY: finalY + 5,
             head: [['Bulan', 'Jumlah']],
             body: monthlyData.map((row) => [row.month, row.count]),
@@ -138,10 +126,10 @@ export default function AdminChartsMapta() {
             headStyles: { fillColor: [45, 90, 156], textColor: 255 },
         });
 
-        // 3️⃣ Tabel Distribusi per Instansi
-        finalY = pdf.lastAutoTable.finalY + 10;
+        // 3. Tabel Distribusi per Instansi
+        finalY = (pdf.lastAutoTable ? pdf.lastAutoTable.finalY : finalY) + 10;
         pdf.text("Distribusi Peserta per Instansi / Universitas", 10, finalY);
-        pdf.autoTable({
+        autoTable(pdf, {
             startY: finalY + 5,
             head: [['Instansi / Universitas', 'Jumlah']],
             body: categoryData.map((row) => [row.name, row.value]),
@@ -149,8 +137,12 @@ export default function AdminChartsMapta() {
             headStyles: { fillColor: [45, 90, 156], textColor: 255 },
         });
 
-        pdf.save(`data-statistik-peserta-magang.pdf`);
+        pdf.save(`data-statistik-peserta-magang-${selectedYear}.pdf`);
     };
+
+    const yearOptions = availableYears.length > 0 
+        ? availableYears 
+        : yearlyData.map(y => y.year);
 
     return (
         <div className="app-layout">
@@ -161,8 +153,16 @@ export default function AdminChartsMapta() {
                     <div className="max-w-7xl mx-auto">
 
                         <div className="download-wrapper mb-3 flex justify-between items-center">
-                            <p className="judul-chart-daftar">Statistik Pendaftaran Peserta Magang</p>
-                            <button onClick={handleDownloadChartsPDF} className="bg-green-600">
+                            <div>
+                                <p className="judul-chart-daftar">Statistik Pendaftaran Peserta Magang</p>
+                                {loading && (
+                                    <span className="text-xs text-blue-600 font-medium">Memuat data terbaru...</span>
+                                )}
+                                {error && (
+                                    <span className="text-xs text-red-500 font-medium">{error}</span>
+                                )}
+                            </div>
+                            <button onClick={handleDownloadChartsPDF} className="bg-green-600 hover:bg-green-700 transition">
                                 <span className="icon">Download Data</span>
                             </button>
                         </div>
@@ -183,7 +183,7 @@ export default function AdminChartsMapta() {
                                             </defs>
                                             <CartesianGrid strokeDasharray="3 3" stroke="#D3DAE6" />
                                             <XAxis dataKey="year" />
-                                            <YAxis />
+                                            <YAxis allowDecimals={false} />
                                             <Tooltip />
                                             <Legend />
                                             <Bar dataKey="count" name="Jumlah" radius={[8, 8, 0, 0]} fill="url(#colorBar)" />
@@ -199,11 +199,11 @@ export default function AdminChartsMapta() {
                                     <select
                                         value={selectedYear}
                                         onChange={(e) => setSelectedYear(Number(e.target.value))}
-                                        className="border rounded-md px-2 py-1 text-sm bg-gray-50"
+                                        className="border rounded-md px-2 py-1 text-sm bg-gray-50 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                     >
-                                        {yearlyData.map((y) => (
-                                            <option key={y.year} value={y.year}>
-                                                {y.year}
+                                        {yearOptions.map((year) => (
+                                            <option key={year} value={year}>
+                                                {year}
                                             </option>
                                         ))}
                                     </select>
@@ -214,7 +214,7 @@ export default function AdminChartsMapta() {
                                         <LineChart data={monthlyData}>
                                             <CartesianGrid strokeDasharray="3 3" stroke="#D3DAE6" />
                                             <XAxis dataKey="month" />
-                                            <YAxis />
+                                            <YAxis allowDecimals={false} />
                                             <Tooltip />
                                             <Legend />
                                             <Line
@@ -235,30 +235,36 @@ export default function AdminChartsMapta() {
                                     Distribusi Peserta per Instansi / Universitas
                                 </h2>
                                 <div style={{ width: '100%', height: 260 }}>
-                                    <ResponsiveContainer>
-                                        <PieChart>
-                                            <Tooltip />
-                                            <Legend />
-                                            <Pie
-                                                data={categoryData}
-                                                dataKey="value"
-                                                nameKey="name"
-                                                cx="50%"
-                                                cy="50%"
-                                                outerRadius={80}
-                                                label={(entry) => entry.name}
-                                            >
-                                                {categoryData.map((entry, index) => (
-                                                    <Cell
-                                                        key={`cell-${index}`}
-                                                        fill={generateColor(index)}
-                                                        stroke="#ffffff"
-                                                        strokeWidth={2}
-                                                    />
-                                                ))}
-                                            </Pie>
-                                        </PieChart>
-                                    </ResponsiveContainer>
+                                    {categoryData.length === 0 ? (
+                                        <div className="flex items-center justify-center h-full text-gray-400 text-sm">
+                                            Belum ada data instansi
+                                        </div>
+                                    ) : (
+                                        <ResponsiveContainer>
+                                            <PieChart>
+                                                <Tooltip />
+                                                <Legend />
+                                                <Pie
+                                                    data={categoryData}
+                                                    dataKey="value"
+                                                    nameKey="name"
+                                                    cx="50%"
+                                                    cy="50%"
+                                                    outerRadius={80}
+                                                    label={(entry) => entry.name}
+                                                >
+                                                    {categoryData.map((entry, index) => (
+                                                        <Cell
+                                                            key={`cell-${index}`}
+                                                            fill={generateColor(index)}
+                                                            stroke="#ffffff"
+                                                            strokeWidth={2}
+                                                        />
+                                                    ))}
+                                                </Pie>
+                                            </PieChart>
+                                        </ResponsiveContainer>
+                                    )}
                                 </div>
                             </div>
 

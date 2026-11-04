@@ -478,5 +478,50 @@ static async storeAspek(data){
         }
     }
 
+
+    static async getStatistikPendaftarTahun(){
+        try{
+            const [result] = await db.query(`
+                SELECT YEAR(tanggal_mulai_magang) as year, COUNT(id_peserta_magang) as count 
+                FROM peserta_magang 
+                WHERE tanggal_mulai_magang IS NOT NULL 
+                GROUP BY YEAR(tanggal_mulai_magang) 
+                ORDER BY year ASC
+            `);
+            return result;
+        }catch(error){
+            throw(error);
+        }
+    }
+
+    static async getStatistikPendaftarBulan(year){
+        try{
+            const [result] = await db.query(`
+                SELECT MONTH(tanggal_mulai_magang) as month, COUNT(id_peserta_magang) as count 
+                FROM peserta_magang 
+                WHERE tanggal_mulai_magang IS NOT NULL AND YEAR(tanggal_mulai_magang) = ? 
+                GROUP BY MONTH(tanggal_mulai_magang) 
+                ORDER BY month ASC
+            `, [year]);
+            return result;
+        }catch(error){
+            throw(error);
+        }
+    }
+
+    static async getStatistikInstansi(){
+        try{
+            const [result] = await db.query(`
+                SELECT TRIM(instansi) as name, COUNT(id_peserta_magang) as value 
+                FROM peserta_magang 
+                WHERE instansi IS NOT NULL AND TRIM(instansi) != '' 
+                GROUP BY TRIM(instansi) 
+                ORDER BY value DESC
+            `);
+            return result;
+        }catch(error){
+            throw(error);
+        }
+    }
 }
 module.exports = Model_Admin
