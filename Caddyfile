@@ -1,5 +1,5 @@
-# Subdomain DuckDNS diambil otomatis dari environment variable DOMAIN di .env
-{$DOMAIN:mapta-rahdan.duckdns.org} {
+# Reverse proxy MAPTA berjalan di port dinamis (default: 8086)
+:{$PORT_HTTP:8086} {
     # 1. Routing API ke container backend (Express.js)
     handle /api/* {
         uri strip_prefix /api

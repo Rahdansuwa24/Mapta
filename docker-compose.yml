@@ -3,10 +3,10 @@ services:
     image: caddy:2-alpine
     restart: always
     ports:
-      - "80:80"
-      - "443:443"
+      - "${PORT_HTTP:-8086}:${PORT_HTTP:-8086}"
     environment:
       - DOMAIN=${DOMAIN:-mapta-rahdan.duckdns.org}
+      - PORT_HTTP=${PORT_HTTP:-8086}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
@@ -23,7 +23,9 @@ services:
     environment:
       - PORT=3001
       - NODE_ENV=production
-      - CORS_ORIGIN=https://${DOMAIN:-mapta-rahdan.duckdns.org}
+      - DOMAIN=${DOMAIN:-mapta-rahdan.duckdns.org}
+      - PORT_HTTP=${PORT_HTTP:-8086}
+      - CORS_ORIGIN=https://${DOMAIN:-mapta-rahdan.duckdns.org},http://${DOMAIN:-mapta-rahdan.duckdns.org}:${PORT_HTTP:-8086},http://localhost:${PORT_HTTP:-8086}
       - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
     env_file:
       - .env

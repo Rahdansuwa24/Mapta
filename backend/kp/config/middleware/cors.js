@@ -25,6 +25,17 @@ const backendDomain = {
             return callback(null, true);
         }
 
+        // Toleransi domain yang cocok dengan variabel DOMAIN (apapun protokol dan port-nya)
+        const domain = process.env.DOMAIN;
+        if (domain) {
+            try {
+                const originUrl = new URL(origin);
+                if (originUrl.hostname === domain || originUrl.hostname.endsWith(`.${domain}`)) {
+                    return callback(null, true);
+                }
+            } catch (_) {}
+        }
+
         // Khusus di development: Toleransi port localhost apapun
         if (!isProduction && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
             return callback(null, true);
