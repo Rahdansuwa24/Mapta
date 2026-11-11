@@ -1,5 +1,5 @@
-# Reverse proxy MAPTA berjalan di port dinamis (default: 8086)
-:{$PORT_HTTP:8086} {
+# Reverse proxy MAPTA berjalan di port dinamis (default: 8065)
+:{$PORT_HTTP:8065} {
     # 1. Routing API ke container backend (Express.js)
     handle /api/* {
         uri strip_prefix /api
