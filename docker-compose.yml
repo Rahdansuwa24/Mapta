@@ -1,0 +1,45 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+      - frontend
+
+  backend:
+    build:
+      context: ./backend/kp
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - PORT=3001
+      - NODE_ENV=production
+    env_file:
+      - ./backend/kp/.env
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+        reservations:
+          memory: 512M
+
+  frontend:
+    build:
+      context: ./frontend/kp
+      dockerfile: Dockerfile
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+volumes:
+  caddy_data:
+  caddy_config:
