@@ -2,12 +2,20 @@ const mysql = require('mysql2/promise');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
+const sslConfig = (process.env.DB_SSL === 'true' || process.env.TIDB_ENABLE_SSL === 'true')
+    ? {
+        minVersion: 'TLSv1.2',
+        rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false'
+      }
+    : undefined;
+
 const db = mysql.createPool({
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '3306', 10),
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || 'mapta',
+    ssl: sslConfig,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -16,7 +24,7 @@ const db = mysql.createPool({
 const testConnection = async () => {
     try {
         const connection = await db.getConnection();
-        console.log(`Terhubung dengan MySQL2 [Database: ${process.env.DB_NAME || 'mapta'}]`);
+        console.log(`Terhubung dengan MySQL2 [Database: ${process.env.DB_NAME || 'mapta'}] (SSL: ${sslConfig ? 'Enabled' : 'Disabled'})`);
         connection.release(); 
     } catch (error) {
         console.error('Error koneksi database:', error.message);

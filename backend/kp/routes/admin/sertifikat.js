@@ -3,7 +3,7 @@ var router = express.Router();
 var verifyToken = require('../../config/middleware/jwt')
 var Model_Admin = require('../../model/Model_Admin')
 var ejs = require("ejs")
-var puppeteer = require("puppeteer")
+const { renderPdfFromHtml } = require('../../config/puppeteer');
 const path = require("path")
 const {upload, hapusFiles} = require('../../config/middleware/multer-sertif')
 const dayjs = require("dayjs")
@@ -98,11 +98,11 @@ router.get('/download-sertifikat/:id', async(req, res)=>{
         { peserta, teknis: teknisNumbered, nonTeknis: nonTeknisNumbered, teknisJumlah, teknisRata, teknisHuruf, nonJumlah, nonRata, nonHuruf }
         );
 
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        await page.setContent(html, { waitUntil: "networkidle0" });
-        const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
-        await browser.close();
+        const pdfBuffer = await renderPdfFromHtml(html, { format: "A4", printBackground: true });
+
+
+
+
 
         const sanitize = (str) => str.replace(/\s+/g, "_").replace(/[^a-zA-Z0-9._-]/g, "");
         const fileName = `sertifikat_${sanitize(peserta.nama)}_${sanitize(peserta.instansi)}.pdf`;

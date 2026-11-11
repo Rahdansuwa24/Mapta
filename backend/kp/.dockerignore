@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log
+.env
+.git
+.gitignore
+.vscode
+public/document-peserta/*
+public/document-sertif/*
+public/foto-peserta/*
+!public/document-peserta/.gitkeep
+!public/document-sertif/.gitkeep
+!public/foto-peserta/.gitkeep

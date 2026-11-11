@@ -39,7 +39,32 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 // app.use(axios)
-app.use(cors(backendDomain))
+app.use(cors(backendDomain));
+
+// Health check endpoint untuk Docker & Caddy monitoring
+app.get('/health', async (req, res) => {
+    try {
+        const db = require('./config/database');
+        const connection = await db.getConnection();
+        connection.release();
+        return res.status(200).json({
+            status: 'healthy',
+            service: 'backend-mapta',
+            uptime: Math.floor(process.uptime()),
+            timestamp: new Date().toISOString(),
+            database: 'connected'
+        });
+    } catch (err) {
+        return res.status(503).json({
+            status: 'degraded',
+            service: 'backend-mapta',
+            uptime: Math.floor(process.uptime()),
+            timestamp: new Date().toISOString(),
+            database: 'error',
+            error: err.message
+        });
+    }
+});
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

@@ -1,0 +1,47 @@
+# ========================================================
+# MAPTA Git Ignore Configuration (Standard Industry)
+# ========================================================
+
+# 1. Environment & Sensitive Credentials (JANGAN DI-PUSH)
+.env
+.env.*
+!.env.example
+*firebase-adminsdk*.json
+
+# 2. Database Backup & Raw Dumps (JANGAN DI-PUSH)
+# Mengabaikan seluruh dump acak lokal, tetapi mengizinkan seeder resmi di database/
+*.sql
+*.dump
+*.bak
+!database/*.sql
+
+# 3. Dependencies & Build Artifacts (JANGAN DI-PUSH)
+node_modules/
+dist/
+dist-ssr/
+frontend/kp/dist/
+
+# 4. Uploaded User Media & Documents (JANGAN DI-PUSH)
+backend/kp/public/document-admin/*
+backend/kp/public/document-peserta/*
+backend/kp/public/document-sertif/*
+backend/kp/public/foto-peserta/*
+!backend/kp/public/document-admin/.gitkeep
+!backend/kp/public/document-peserta/.gitkeep
+!backend/kp/public/document-sertif/.gitkeep
+!backend/kp/public/foto-peserta/.gitkeep
+
+# 5. Logs & Temporary Files
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 6. Operating System & Editor Files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
