@@ -1,5 +1,5 @@
-# Masukkan subdomain DuckDNS Anda di sini (contoh: mapta-rahdan.duckdns.org)
-{$MAPTA_DOMAIN:mapta-rahdan.duckdns.org} {
+# Subdomain DuckDNS diambil otomatis dari environment variable DOMAIN di .env
+{$DOMAIN:mapta-rahdan.duckdns.org} {
     # 1. Routing API ke container backend (Express.js)
     handle /api/* {
         uri strip_prefix /api
