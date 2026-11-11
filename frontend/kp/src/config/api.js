@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const env = typeof import.meta !== "undefined" && import.meta.env ? import.meta.env : {};
 
-export const API_BASE_URL = env.VITE_API_BASE_URL || 'http://localhost:3000';
+export const API_BASE_URL = env.VITE_API_BASE_URL || (import.meta.env?.PROD ? '/api' : 'http://localhost:3000');
 
 const api = axios.create({
   baseURL: API_BASE_URL,
