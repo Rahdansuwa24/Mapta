@@ -10,6 +10,7 @@ import notificationImg from "../assets/images/notification.png";
 import gedungImg from "../assets/images/gedung.jpg";
 import group1Img from "../assets/images/Group1.png";
 import group2Img from "../assets/images/Group2.png";
+import DemoAccountsModal from "../components/DemoAccountsModal";
 import "../styles/landingmapta.css";
 
 const fadeUp = {
@@ -343,6 +344,9 @@ const fadeUp = {
             </div>
             <div className="footer-mapta">MAPTA</div>
         </motion.footer>
+
+        {/* Modal Akun Demo Portofolio */}
+        <DemoAccountsModal />
     </section>
     );
 };

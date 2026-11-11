@@ -44,6 +44,8 @@ export default function NavbarAdm({ onSearch, onNewNotif }) {
   }, []);
 
   useEffect(() => {
+    if (!db) return;
+
     const q = query(
       collection(db, "notifikasi"),
       orderBy("tanggal", "asc"),

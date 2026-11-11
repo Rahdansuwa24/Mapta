@@ -5,13 +5,13 @@ import { getAnalytics, isSupported } from "firebase/analytics";
 const env = typeof import.meta !== "undefined" && import.meta.env ? import.meta.env : {};
 
 const firebaseConfig = {
-  apiKey: env.VITE_FIREBASE_API_KEY,
-  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: env.VITE_FIREBASE_APP_ID,
-  measurementId: env.VITE_FIREBASE_MEASUREMENT_ID
+  apiKey: env.VITE_FIREBASE_API_KEY || "AIzaSyDAyUo3Gs7aaR9Fa52leRBPp1r8ioQdook",
+  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN || "mapta-realtime-notification.firebaseapp.com",
+  projectId: env.VITE_FIREBASE_PROJECT_ID || "mapta-realtime-notification",
+  storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET || "mapta-realtime-notification.firebasestorage.app",
+  messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID || "1044003645083",
+  appId: env.VITE_FIREBASE_APP_ID || "1:1044003645083:web:73ec28184360b156de483e",
+  measurementId: env.VITE_FIREBASE_MEASUREMENT_ID || "G-8XKRGXQ4EE"
 };
 
 // Inisialisasi Firebase secara aman jika konfigurasi tersedia
